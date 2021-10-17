@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class NextPageButton extends StatelessWidget {
   const NextPageButton({
@@ -23,11 +22,11 @@ class NextPageButton extends StatelessWidget {
             shape: BoxShape.circle,
             color: Colors.white,
           ),
-          child: Center(
+          child: const Center(
             child: Icon(
-              PlatformIcons(context).rightChevron,
+              Icons.arrow_forward,
               color: Colors.black,
-              size: 14,
+              size: 20,
             ),
           ),
         ),

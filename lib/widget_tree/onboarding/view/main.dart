@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/widget_tree/onboarding/model/list_page_data.dart';
-import 'package:global_strongman/widget_tree/onboarding/model/next_page_button.dart';
 import 'package:global_strongman/widget_tree/onboarding/view/create_page.dart';
+import 'package:global_strongman/widget_tree/onboarding/view/next_page_button.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 class OnBoarding extends StatefulWidget {
@@ -17,10 +17,10 @@ class _OnBoardingState extends State<OnBoarding> {
 
   @override
   Widget build(BuildContext context) {
-    var activeColor = pageDataList[currentIndex].color;
+    var activeColor = pageDataList(context: context)[currentIndex].color;
     return PlatformScaffold(
       body: IntroductionScreen(
-          pages: pageDataList
+          pages: pageDataList(context: context)
               .map((pageData) => createPage(
                     context: context,
                     assetName: pageData.imageUrl,
