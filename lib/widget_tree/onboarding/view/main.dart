@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/widget_tree/onboarding/model/list_page_data.dart';
 import 'package:global_strongman/widget_tree/onboarding/view/create_page.dart';
 import 'package:global_strongman/widget_tree/onboarding/view/next_page_button.dart';
@@ -54,6 +55,7 @@ class _OnBoardingState extends State<OnBoarding> {
               cupertino: (data) => data.scaffoldBackgroundColor,
             ),
           ),
+          controlsPadding: const EdgeInsets.all(kSpacing),
           dotsDecorator: DotsDecorator(
               size: const Size.square(10.0),
               activeSize: const Size(20.0, 10.0),
