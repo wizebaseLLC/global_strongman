@@ -17,18 +17,21 @@ class OnBoarding extends StatefulWidget {
 
 class _OnBoardingState extends State<OnBoarding> {
   int currentIndex = 0;
-
+  final introKey = GlobalKey<IntroductionScreenState>();
   @override
   Widget build(BuildContext context) {
-    var activeColor = pageDataList(context: context)[currentIndex].color;
+    var activeColor = pageDataList(context: context, controller: introKey)[currentIndex].color;
     return PlatformScaffold(
       body: IntroductionScreen(
-          pages: pageDataList(context: context)
+          key: introKey,
+          pages: pageDataList(context: context, controller: introKey)
               .map((pageData) => createPage(
                     context: context,
                     assetName: pageData.imageUrl,
                     backgroundColor: pageData.color,
                     body: pageData.pageBody,
+                    controller: introKey,
+                    title: pageData.title,
                   ))
               .toList(),
           done: Text(
@@ -39,9 +42,11 @@ class _OnBoardingState extends State<OnBoarding> {
             ),
           ),
           next: NextPageButton(activeColor: activeColor),
-          onChange: (value) => setState(() {
-                currentIndex = value;
-              }),
+          onChange: (value) {
+            setState(() {
+              currentIndex = value;
+            });
+          },
           dotsContainerDecorator: BoxDecoration(
             color: platformThemeData(
               context,
