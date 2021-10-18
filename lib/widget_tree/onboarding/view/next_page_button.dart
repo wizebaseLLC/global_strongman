@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// The button on the bottom right
 class NextPageButton extends StatelessWidget {
   const NextPageButton({
     Key? key,

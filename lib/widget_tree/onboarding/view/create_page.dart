@@ -1,9 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:global_strongman/widget_tree/onboarding/view/barbell_icon.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
+/// Returns a [PageViewModel]
+///
+/// This includes the [backgroundColor], the image ([assetName]), and the [body]
 PageViewModel createPage({required BuildContext context, required Color backgroundColor, required String assetName, required List<Widget> body}) {
   var height = MediaQuery.of(context).size.height;
 
@@ -35,10 +37,10 @@ PageViewModel createPage({required BuildContext context, required Color backgrou
       ),
     ),
     image: Stack(children: [
-      _buildBarbellIcons(top: 0, left: -25),
-      _buildBarbellIcons(top: 0, right: -25),
-      _buildBarbellIcons(top: 150, left: -25),
-      _buildBarbellIcons(top: 150, right: -25),
+      const BarbellIcon(top: 0, left: -25),
+      const BarbellIcon(top: 0, right: -25),
+      const BarbellIcon(top: 150, left: -25),
+      const BarbellIcon(top: 150, right: -25),
       Image.asset(assetName),
     ]),
     decoration: PageDecoration(
@@ -50,31 +52,6 @@ PageViewModel createPage({required BuildContext context, required Color backgrou
       contentMargin: const EdgeInsets.only(
         left: 0,
         right: 0,
-      ),
-    ),
-  );
-}
-
-Positioned _buildBarbellIcons({
-  double? top,
-  double? left,
-  double? right,
-  double? bottom,
-}) {
-  var angle = Random().nextInt(360).toDouble();
-  return Positioned(
-    top: top,
-    left: left,
-    right: right,
-    bottom: bottom,
-    child: Transform.rotate(
-      angle: angle,
-      child: Opacity(
-        opacity: .3,
-        child: Image.asset(
-          "assets/images/barbell_icon.png",
-          height: 120,
-        ),
       ),
     ),
   );

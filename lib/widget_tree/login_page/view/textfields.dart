@@ -4,6 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/widget_tree/list_icon_cupertino.dart';
 
+/// Platform aware text-fields.
 class LoginTextFields extends StatelessWidget {
   const LoginTextFields({
     required this.userController,

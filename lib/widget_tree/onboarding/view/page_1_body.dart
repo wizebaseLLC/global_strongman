@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:global_strongman/constants.dart';
 
+/// Returns a List of Widgets that is placed in a column
+///
+/// This is used as the body of the on-boarding page.
 List<Widget> page1Body({required BuildContext context}) => [
       Container(
         margin: const EdgeInsets.only(top: kSpacing * 2),

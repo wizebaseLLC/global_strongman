@@ -5,6 +5,9 @@ import 'package:global_strongman/widget_tree/onboarding/view/create_page.dart';
 import 'package:global_strongman/widget_tree/onboarding/view/next_page_button.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
+/// Screen used to onboard a user.
+///
+/// Only visible until it is submitted once.
 class OnBoarding extends StatefulWidget {
   const OnBoarding({Key? key}) : super(key: key);
 

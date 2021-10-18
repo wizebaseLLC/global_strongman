@@ -153,7 +153,7 @@ class SignupPage extends StatelessWidget {
 
   Widget _buildSignInButton({required ButtonType button, required Function() onPress}) {
     return Container(
-      padding: EdgeInsets.only(left: kSpacing * 4, right: kSpacing * 4, bottom: kSpacing),
+      padding: const EdgeInsets.only(left: kSpacing * 4, right: kSpacing * 4, bottom: kSpacing),
       child: SignInButton(
         buttonType: button,
         onPressed: onPress,
