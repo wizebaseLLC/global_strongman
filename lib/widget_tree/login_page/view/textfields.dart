@@ -47,6 +47,7 @@ class LoginTextFields extends StatelessWidget {
             TextFormField(
               controller: userController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
                 labelText: "Username",
                 prefixIcon: Icon(Icons.person),
@@ -56,6 +57,7 @@ class LoginTextFields extends StatelessWidget {
             TextFormField(
               controller: passwordController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
+              textInputAction: TextInputAction.done,
               obscureText: true,
               decoration: const InputDecoration(
                 labelText: "Password",

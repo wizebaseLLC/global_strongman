@@ -46,11 +46,10 @@ will get you there''',
             const SizedBox(
               height: kSpacing * 4,
             ),
-            if (MediaQuery.of(context).size.height > 800)
-              GetStartedButton(
-                controller: controller,
-                backgroundColor: backgroundColor,
-              ),
+            GetStartedButton(
+              controller: controller,
+              backgroundColor: const Color.fromRGBO(170, 186, 82, 1),
+            ),
           ],
         ),
       ),

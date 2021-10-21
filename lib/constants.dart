@@ -11,7 +11,9 @@ const kPrimaryGradient = LinearGradient(colors: [
   Color(0xff00d4ff),
 ]);
 
-const kSeconaryGradient = LinearGradient(colors: [
+const kSecondaryGradient = LinearGradient(colors: [
   Color(0xff750211),
   Color(0xffFF7E7E),
 ]);
+
+const List<String> kGenders = ["Male", "Female", "Other", "Non-Binary"];

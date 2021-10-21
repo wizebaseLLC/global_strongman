@@ -37,7 +37,8 @@ class BarbellIcon extends StatelessWidget {
             opacity: .3,
             child: Image.asset(
               "assets/images/barbell_icon.png",
-              height: 120,
+              height: 75,
+              cacheHeight: 75,
             ),
           ),
         ),

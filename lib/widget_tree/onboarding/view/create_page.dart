@@ -23,20 +23,25 @@ PageViewModel createPage({
       children: body,
     ),
     image: Stack(children: [
-      const BarbellIcon(top: 0, left: -25),
-      const BarbellIcon(top: 0, right: -25),
-      const BarbellIcon(top: 150, left: -25),
-      const BarbellIcon(top: 150, right: -25),
-      Image.asset(assetName),
+      const BarbellIcon(top: 0, left: 0),
+      const BarbellIcon(top: 0, right: 0),
+      const BarbellIcon(top: 120, left: 0),
+      const BarbellIcon(top: 120, right: 0),
+      Image.asset(
+        assetName,
+        height: 200,
+        cacheHeight: 200,
+        width: double.infinity,
+      ),
     ]),
     decoration: PageDecoration(
       titleTextStyle: const TextStyle(
         fontSize: 24,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w900,
       ),
       pageColor: backgroundColor,
-      bodyFlex: height > 800 ? 5 : 1,
-      imageFlex: height > 800 ? 4 : 1,
+      bodyFlex: height > 800 ? 6 : 3,
+      imageFlex: height > 800 ? 3 : 2,
       imageAlignment: Alignment.bottomCenter,
       contentMargin: const EdgeInsets.only(
         left: 0,
