@@ -1,21 +1,44 @@
-import 'package:flutter/material.dart';
-import 'package:global_strongman/constants.dart';
+import 'dart:io';
 
-class FormAvatar extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:global_strongman/constants.dart';
+import 'package:image_picker/image_picker.dart';
+
+class FormAvatar extends StatefulWidget {
   const FormAvatar({
     Key? key,
   }) : super(key: key);
 
   @override
+  State<FormAvatar> createState() => _FormAvatarState();
+}
+
+class _FormAvatarState extends State<FormAvatar> {
+  final ImagePicker _picker = ImagePicker();
+  XFile? file;
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const SizedBox(
+        SizedBox(
           width: 75,
           height: 75,
           child: CircleAvatar(
-            backgroundImage: NetworkImage(
-                "https://www.biography.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTc5NjIyODM0ODM2ODc0Mzc3/dwayne-the-rock-johnson-gettyimages-1061959920.jpg"),
+            child: file?.path == null
+                ? Icon(
+                    PlatformIcons(context).person,
+                    size: 50,
+                  )
+                : null,
+            backgroundImage: file?.path != null
+                ? ResizeImage(
+                    FileImage(
+                      File(file!.path),
+                    ),
+                    width: 262,
+                  )
+                : null,
           ),
         ),
         Align(
@@ -23,17 +46,24 @@ class FormAvatar extends StatelessWidget {
           child: Container(
             height: 28,
             decoration: const BoxDecoration(
-              gradient: kPrimaryGradient,
+              gradient: kSecondaryGradient,
               shape: BoxShape.circle,
             ),
             child: IconButton(
-              icon: const Icon(
-                Icons.edit,
+              icon: Icon(
+                PlatformIcons(context).edit,
                 color: Colors.white,
                 size: 14,
               ),
-              onPressed: () {
-                print("pressed");
+              onPressed: () async {
+                final XFile? image = await _picker.pickImage(
+                  source: ImageSource.gallery,
+                );
+                if (image?.path != null) {
+                  setState(() {
+                    file = image;
+                  });
+                }
               },
               color: Colors.black,
             ),

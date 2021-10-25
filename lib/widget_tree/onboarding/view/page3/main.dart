@@ -23,22 +23,3 @@ List<Widget> page3Body({
         ],
       ),
     ];
-
-/*
-avatar
-first_name
-last_name
-age
- */
-
-/*
-gender
-height
-weight
- */
-
-/*
-goals
-experience
-injuries
- */

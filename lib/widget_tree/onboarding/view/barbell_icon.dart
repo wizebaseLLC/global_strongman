@@ -28,19 +28,20 @@ class BarbellIcon extends StatelessWidget {
       right: right,
       bottom: bottom,
       child: TweenAnimationBuilder(
-        duration: const Duration(seconds: 2),
-        tween: Tween<double>(begin: 0, end: Random().nextInt(5).toDouble()),
+        duration: const Duration(seconds: 3),
+        tween: Tween<double>(begin: 0, end: Random().nextInt(360).toDouble()),
         curve: Sprung(),
-        builder: (_, double angle, __) => Transform.rotate(
-          angle: angle,
-          child: Opacity(
-            opacity: .3,
-            child: Image.asset(
-              "assets/images/barbell_icon.png",
-              height: 75,
-              cacheHeight: 75,
-            ),
+        child: Opacity(
+          opacity: .3,
+          child: Image.asset(
+            "assets/images/barbell_icon.png",
+            height: 75,
+            cacheHeight: 75,
           ),
+        ),
+        builder: (_, double angle, child) => Transform.rotate(
+          angle: angle * pi / 180,
+          child: child
         ),
       ),
     );

@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
         material: (_, __) => MaterialAppData(
           theme: ThemeData(
             primaryColor: const Color(0xff1F26B7),
+            visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
         ),
         cupertino: (_, __) => CupertinoAppData(

@@ -13,11 +13,17 @@ List<Widget> page1Body({
 }) =>
     [
       Container(
-        padding: const EdgeInsets.all(kSpacing * 2),
+        padding: const EdgeInsets.all(
+          kSpacing * 2,
+        ).copyWith(
+          bottom: kSpacing * 4,
+        ),
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(kSpacing * 4),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(kSpacing * 8),
+          ),
         ),
         child: Column(
           children: [

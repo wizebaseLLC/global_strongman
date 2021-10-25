@@ -16,7 +16,7 @@ class CupertinoFormFields extends StatelessWidget {
     for (var ft in feet) {
       {
         for (var inc in inches) {
-          combined.add("$ft'$inc");
+          combined.add("$ft' $inc");
         }
       }
     }
@@ -30,64 +30,59 @@ class CupertinoFormFields extends StatelessWidget {
       backgroundColor: backgroundColor,
       margin: const EdgeInsets.all(kSpacing),
       children: [
-        CupertinoFormRow(
-          prefix: Text(
-            'Height',
-            style: CupertinoTheme.of(context).textTheme.pickerTextStyle.copyWith(
-                  color: Colors.grey,
-                ),
-          ),
-          child: SizedBox(
-            height: 100,
-            width: MediaQuery.of(context).size.width * .6,
-            child: CupertinoPicker(
-              itemExtent: 30,
-              onSelectedItemChanged: (value) {
-                print(value + 1);
-              },
-              children: _getHeightList(),
-            ),
-          ),
+        _buildCupertinoFormRow(
+          context: context,
+          list: _getHeightList(),
+          prefix: "Height",
+          onChanged: (value) {
+            print(value + 1);
+          },
         ),
-        CupertinoFormRow(
-          prefix: Text(
-            'Weight',
-            style: CupertinoTheme.of(context).textTheme.pickerTextStyle.copyWith(
-                  color: Colors.grey,
-                ),
-          ),
-          child: SizedBox(
-            height: 100,
-            width: MediaQuery.of(context).size.width * .6,
-            child: CupertinoPicker(
-              itemExtent: 30,
-              onSelectedItemChanged: (value) {
-                print(value + 1);
-              },
-              children: [for (var i = 60; i <= 600; i++) Text(i.toString())],
-            ),
-          ),
+        _buildCupertinoFormRow(
+          context: context,
+          list: [for (var i = 60; i <= 600; i++) Text(i.toString())],
+          prefix: "Weight",
+          onChanged: (value) {
+            print(value + 1);
+          },
         ),
-        CupertinoFormRow(
-          prefix: Text(
-            'Gender',
-            style: CupertinoTheme.of(context).textTheme.pickerTextStyle.copyWith(
-                  color: Colors.grey,
-                ),
-          ),
-          child: SizedBox(
-            height: 100,
-            width: MediaQuery.of(context).size.width * .6,
-            child: CupertinoPicker(
-              itemExtent: 30,
-              onSelectedItemChanged: (value) {
-                print(kGenders[value]);
-              },
-              children: kGenders.map((gender) => Text(gender)).toList(),
-            ),
-          ),
+        _buildCupertinoFormRow(
+          context: context,
+          list: kGenders.map((gender) => Text(gender)).toList(),
+          prefix: "Gender",
+          onChanged: (value) {
+            print(value + 1);
+          },
         ),
       ],
+    );
+  }
+
+  CupertinoFormRow _buildCupertinoFormRow({
+    required BuildContext context,
+    required String prefix,
+    required List<Widget> list,
+    required Function(int) onChanged,
+  }) {
+    return CupertinoFormRow(
+      prefix: Text(
+        prefix,
+        style: CupertinoTheme.of(context).textTheme.pickerTextStyle.copyWith(
+              color: Colors.grey,
+            ),
+      ),
+      child: SizedBox(
+        height: 100,
+        width: MediaQuery.of(context).size.width * .6,
+        child: CupertinoPicker(
+          itemExtent: 30,
+          onSelectedItemChanged: onChanged,
+          selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
+            background: backgroundColor.withOpacity(.4),
+          ),
+          children: list,
+        ),
+      ),
     );
   }
 }

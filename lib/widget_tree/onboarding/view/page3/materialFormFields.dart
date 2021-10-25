@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/widget_tree/onboarding/constants.dart';
 
 class MaterialFormFields extends StatelessWidget {
   const MaterialFormFields({
@@ -13,7 +14,7 @@ class MaterialFormFields extends StatelessWidget {
     for (var ft in feet) {
       {
         for (var inc in inches) {
-          combined.add("$ft'$inc");
+          combined.add("$ft' $inc");
         }
       }
     }
@@ -30,61 +31,53 @@ class MaterialFormFields extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Container(
-            margin: const EdgeInsets.only(left: 12, right: 12),
-            child: DropdownButton<String>(
-              items: _getHeightList().map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              hint: const Text("Height"),
-              isExpanded: true,
+          _buildMaterialField(
+              hint: "Height",
+              list: _getHeightList(),
               onChanged: (value) {
                 print(value);
-              },
-            ),
-          ),
+              }),
           const SizedBox(
             height: kSpacing,
           ),
-          Container(
-            margin: const EdgeInsets.only(left: 12, right: 12),
-            child: DropdownButton<String>(
-              items: [for (var i = 60; i <= 600; i++) i.toString()].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              hint: const Text("Weight"),
-              isExpanded: true,
+          _buildMaterialField(
+              hint: "Weight",
+              list: [for (var i = 60; i <= 600; i++) i.toString()],
               onChanged: (value) {
                 print(value);
-              },
-            ),
-          ),
+              }),
           const SizedBox(
             height: kSpacing,
           ),
-          Container(
-            margin: const EdgeInsets.only(left: 12, right: 12),
-            child: DropdownButton<String>(
-              items: kGenders.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              hint: const Text("Gender"),
-              isExpanded: true,
+          _buildMaterialField(
+              hint: "Gender",
+              list: kGenders,
               onChanged: (value) {
                 print(value);
-              },
-            ),
-          ),
+              }),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMaterialField({
+    required String hint,
+    required List<String> list,
+    required Function(String?) onChanged,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(left: 12, right: 12),
+      child: DropdownButton<String>(
+        underline: kMaterialDivider,
+        items: list.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        hint: Text(hint),
+        isExpanded: true,
+        onChanged: onChanged,
       ),
     );
   }

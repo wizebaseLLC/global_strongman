@@ -17,3 +17,34 @@ const kSecondaryGradient = LinearGradient(colors: [
 ]);
 
 const List<String> kGenders = ["Male", "Female", "Other", "Non-Binary"];
+
+const List<String> kGoals = [
+  "Strongman",
+  "Build Strength",
+  "Lose Weight",
+  "Build Muscle",
+  "Improve Endurance",
+];
+
+const List<String> kExperience = [
+  "Beginner",
+  "Intermediate",
+  "Advanced",
+];
+
+const List<String> kInjuries = [
+  "None",
+  "Neck",
+  "Shoulder area",
+  "Back",
+  "Biceps",
+  "Triceps",
+  "Pectoral",
+  "Abdominal",
+  "Hips",
+  "Glutes",
+  "Hamstrings",
+  "Quadriceps",
+  "Ankles",
+  "Feet"
+];

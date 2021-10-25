@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:global_strongman/constants.dart';
-import 'package:global_strongman/widget_tree/onboarding/view/page4/avatar.dart';
 import 'package:global_strongman/widget_tree/onboarding/view/page4/cupertinoFields.dart';
 import 'package:global_strongman/widget_tree/onboarding/view/page4/materialFormFields.dart';
 
@@ -16,14 +14,6 @@ List<Widget> page4Body({
     [
       Column(
         children: [
-          const SizedBox(
-            width: 75,
-            height: 75,
-            child: FormAvatar(),
-          ),
-          const SizedBox(
-            height: kSpacing * 2,
-          ),
           PlatformWidget(
             cupertino: (_, __) => CupertinoFormFields(
               backgroundColor: backgroundColor,
