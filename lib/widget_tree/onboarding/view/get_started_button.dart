@@ -28,7 +28,7 @@ class GetStartedButton extends StatelessWidget {
         child: PlatformText(
           'Get Started',
           style: const TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),

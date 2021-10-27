@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:global_strongman/widget_tree/onboarding/view/barbell_icon.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 /// Returns a [PageViewModel]
@@ -22,27 +21,41 @@ PageViewModel createPage({
       mainAxisAlignment: MainAxisAlignment.start,
       children: body,
     ),
-    image: Stack(children: [
-      const BarbellIcon(top: 0, left: 0),
-      const BarbellIcon(top: 0, right: 0),
-      const BarbellIcon(top: 120, left: 0),
-      const BarbellIcon(top: 120, right: 0),
-      Image.asset(
+    image: ShaderMask(
+      shaderCallback: (rect) {
+        return const LinearGradient(
+          begin: Alignment.center,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.black,
+            Colors.transparent,
+          ],
+        ).createShader(Rect.fromLTRB(
+          0,
+          0,
+          rect.width,
+          rect.height,
+        ));
+      },
+      blendMode: BlendMode.dstIn,
+      child: Image.asset(
         assetName,
-        height: 200,
-        cacheHeight: 200,
         width: double.infinity,
+        cacheWidth: 800,
       ),
-    ]),
+    ),
     decoration: PageDecoration(
-      titleTextStyle: const TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.w900,
-      ),
+      titleTextStyle: Theme.of(context).textTheme.headline6!.copyWith(
+            color: Colors.white,
+          ),
       pageColor: backgroundColor,
-      bodyFlex: height > 800 ? 6 : 3,
-      imageFlex: height > 800 ? 3 : 2,
-      imageAlignment: Alignment.bottomCenter,
+      bodyFlex: height > 800 ? 6 : 4,
+      imageFlex: height > 800 ? 3 : 3,
+      imageAlignment: Alignment.topCenter,
+      imagePadding: const EdgeInsets.only(
+        left: 0,
+        right: 0,
+      ),
       contentMargin: const EdgeInsets.only(
         left: 0,
         right: 0,

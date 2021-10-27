@@ -67,15 +67,21 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
     return CupertinoFormRow(
       prefix: Text(
         prefix,
-        style: CupertinoTheme.of(context).textTheme.pickerTextStyle.copyWith(
-              color: Colors.grey,
-            ),
+        style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
       ),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * .6,
         child: MultiSelectDialogField(
+          backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.transparent,
+              ),
+            ),
+          ),
           chipDisplay: MultiSelectChipDisplay(
-            chipColor: const Color.fromRGBO(37, 81, 108, 1),
+            chipColor: kPrimaryColor,
             textStyle: const TextStyle(
               color: Colors.white,
               fontSize: 12,
@@ -85,11 +91,28 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
           buttonIcon: Icon(
             PlatformIcons(context).rightChevron,
             size: 16,
+            color: Colors.grey.shade700,
           ),
-          items: list.map((e) => MultiSelectStringChip(name: e)).toList().map((e) => MultiSelectItem(e.name, e.name)).toList(),
+          items: list
+              .map((e) => MultiSelectStringChip(name: e))
+              .toList()
+              .map((e) => MultiSelectItem(
+                    e.name,
+                    e.name,
+                  ))
+              .toList(),
           listType: MultiSelectListType.CHIP,
-          title: Text(prefix),
-          buttonText: Text(buttonText),
+          title: Text(prefix,
+              style: const TextStyle(
+                color: Colors.white,
+              )),
+          buttonText: Text(
+            buttonText,
+            style: CupertinoTheme.of(context).textTheme.pickerTextStyle.copyWith(
+                  color: Colors.white60,
+                  fontSize: 16,
+                ),
+          ),
           onConfirm: (values) {
             setState(() {
               initialState = values;
@@ -108,26 +131,23 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
     return CupertinoFormRow(
       prefix: Text(
         title,
-        style: CupertinoTheme.of(context).textTheme.pickerTextStyle.copyWith(
-              color: Colors.grey,
-            ),
+        style: CupertinoTheme.of(context).textTheme.pickerTextStyle,
       ),
       child: SizedBox(
-        height: 100,
+        height: 120,
         width: MediaQuery.of(context).size.width * .6,
         child: CupertinoPicker(
-          itemExtent: 18,
-          selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
-            background: widget.backgroundColor.withOpacity(.3),
-          ),
+          itemExtent: 22,
           onSelectedItemChanged: (value) {
             print(value);
           },
           children: list
-              .map((x) => Text(
-                    x,
-                    style: const TextStyle(
-                      fontSize: 14,
+              .map((x) => Center(
+                    child: Text(
+                      x,
+                      style: const TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
                   ))
               .toList(),

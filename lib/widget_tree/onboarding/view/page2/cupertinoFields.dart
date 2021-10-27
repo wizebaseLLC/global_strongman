@@ -38,9 +38,6 @@ class CupertinoFormFields extends StatelessWidget {
             onSelectedItemChanged: (value) {
               print(value + 18);
             },
-            selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
-              background: backgroundColor.withOpacity(.5),
-            ),
             children: [for (var i = 18; i <= 99; i++) Text(i.toString())],
           ),
         ),

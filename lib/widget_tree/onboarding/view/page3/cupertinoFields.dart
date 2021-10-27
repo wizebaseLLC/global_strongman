@@ -77,9 +77,6 @@ class CupertinoFormFields extends StatelessWidget {
         child: CupertinoPicker(
           itemExtent: 30,
           onSelectedItemChanged: onChanged,
-          selectionOverlay: CupertinoPickerDefaultSelectionOverlay(
-            background: backgroundColor.withOpacity(.4),
-          ),
           children: list,
         ),
       ),

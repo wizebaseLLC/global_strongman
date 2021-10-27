@@ -30,10 +30,13 @@ class SignupPage extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   child: Text(
                     "Signup",
-                    style: Theme.of(context).textTheme.headline4?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                    style: platformThemeData(
+                      context,
+                      material: (data) => data.textTheme.headline4?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      cupertino: (data) => data.textTheme.navLargeTitleTextStyle,
+                    ),
                   ),
                 ), //Login
                 const SizedBox(
@@ -95,7 +98,12 @@ class SignupPage extends StatelessWidget {
                           print(_passwordController.value.text),
                         }
                     },
-                    child: PlatformText('Sign Up'),
+                    child: PlatformText(
+                      'Sign Up',
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                     material: (_, __) => MaterialRaisedButtonData(
                         textColor: Colors.white,
                         shape: RoundedRectangleBorder(
@@ -129,8 +137,14 @@ class SignupPage extends StatelessWidget {
                         text: 'Log in',
                         style: platformThemeData(
                           context,
-                          material: (data) => data.textTheme.caption?.copyWith(fontSize: 14, color: data.primaryColor),
-                          cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14, color: data.primaryColor),
+                          material: (data) => data.textTheme.caption?.copyWith(
+                            fontSize: 14,
+                            color: Colors.blue,
+                          ),
+                          cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(
+                            fontSize: 14,
+                            color: Colors.blue,
+                          ),
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => Navigator.pop(

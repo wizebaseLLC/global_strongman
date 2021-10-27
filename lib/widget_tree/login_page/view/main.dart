@@ -31,10 +31,13 @@ class LoginPage extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   child: Text(
                     "Login",
-                    style: Theme.of(context).textTheme.headline4?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                    style: platformThemeData(
+                      context,
+                      material: (data) => data.textTheme.headline4?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      cupertino: (data) => data.textTheme.navLargeTitleTextStyle,
+                    ),
                   ),
                 ), //Login
                 Container(
@@ -55,8 +58,13 @@ class LoginPage extends StatelessWidget {
                     'Forgot Password?',
                     style: platformThemeData(
                       context,
-                      material: (data) => data.textTheme.caption?.copyWith(color: data.primaryColor),
-                      cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(color: data.primaryColor, fontSize: 14),
+                      material: (data) => data.textTheme.caption?.copyWith(
+                        color: Colors.blue,
+                      ),
+                      cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(
+                        color: Colors.blue,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ),
@@ -77,7 +85,12 @@ class LoginPage extends StatelessWidget {
                           print(_passwordController.value.text),
                         }
                     },
-                    child: PlatformText('Sign In'),
+                    child: PlatformText(
+                      'Sign In',
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                     material: (_, __) => MaterialRaisedButtonData(
                         textColor: Colors.white,
                         shape: RoundedRectangleBorder(
@@ -146,8 +159,14 @@ class LoginPage extends StatelessWidget {
                         text: 'Sign up',
                         style: platformThemeData(
                           context,
-                          material: (data) => data.textTheme.caption?.copyWith(fontSize: 14, color: data.primaryColor),
-                          cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14, color: data.primaryColor),
+                          material: (data) => data.textTheme.caption?.copyWith(
+                            fontSize: 14,
+                            color: Colors.blue,
+                          ),
+                          cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(
+                            fontSize: 14,
+                            color: Colors.blue,
+                          ),
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => Navigator.push(

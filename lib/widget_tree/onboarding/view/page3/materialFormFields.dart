@@ -24,7 +24,6 @@ class MaterialFormFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
       padding: const EdgeInsets.only(
         top: kSpacing,
         bottom: kSpacing,

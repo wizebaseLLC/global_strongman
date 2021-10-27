@@ -9,7 +9,6 @@ class MaterialFormFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
       padding: const EdgeInsets.only(
         top: kSpacing,
         bottom: kSpacing,
@@ -18,13 +17,18 @@ class MaterialFormFields extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildTextFormField(labelText: "First Name"),
+          _buildTextFormField(
+            labelText: "First Name",
+            textInputAction: TextInputAction.next,
+          ),
           const SizedBox(
             height: kSpacing,
           ),
-          _buildTextFormField(labelText: "Last Name"),
+          _buildTextFormField(
+            labelText: "Last Name",
+          ),
           const SizedBox(
-            height: kSpacing,
+            height: 12,
           ),
           _buildMaterialField(
               hint: "Age",
@@ -37,11 +41,11 @@ class MaterialFormFields extends StatelessWidget {
     );
   }
 
-  Widget _buildTextFormField({required String labelText}) {
+  Widget _buildTextFormField({required String labelText, TextInputAction? textInputAction}) {
     return TextFormField(
       // Todo  controller: userController,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      textInputAction: TextInputAction.done,
+      textInputAction: textInputAction ?? TextInputAction.done,
 
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(left: 12, right: 12),

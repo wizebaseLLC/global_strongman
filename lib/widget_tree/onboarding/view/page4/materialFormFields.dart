@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/widget_tree/onboarding/constants.dart';
 import 'package:global_strongman/widget_tree/onboarding/model/multi_select_string_chip.dart';
-import 'package:multi_select_flutter/chip_display/multi_select_chip_display.dart';
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class MaterialFormFields extends StatefulWidget {
@@ -29,7 +27,6 @@ class _MaterialFormFieldsState extends State<MaterialFormFields> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
       padding: const EdgeInsets.only(
         top: kSpacing,
         bottom: kSpacing,
@@ -117,6 +114,15 @@ class _MaterialFormFieldsState extends State<MaterialFormFields> {
     return Container(
       margin: const EdgeInsets.only(left: 12, right: 12),
       child: MultiSelectDialogField(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey.shade800,
+            ),
+          ),
+        ),
+        confirmText: const Text("Ok"),
+        cancelText: const Text("Cancel"),
         chipDisplay: MultiSelectChipDisplay(
           chipColor: const Color.fromRGBO(37, 81, 108, 1),
           textStyle: const TextStyle(
