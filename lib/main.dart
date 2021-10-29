@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:global_strongman/widget_tree/onboarding/view/main.dart';
+import 'package:global_strongman/widget_tree/login_page/view/main.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           DefaultCupertinoLocalizations.delegate,
         ],
         title: 'Flutter Platform Widgets',
-        home: const OnBoarding(),
+        home: LoginPage(),
         material: (_, __) => MaterialAppData(
           theme: ThemeData(
             primaryColor: const Color(0xff1F26B7),

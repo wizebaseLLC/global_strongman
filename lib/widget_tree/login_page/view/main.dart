@@ -15,6 +15,17 @@ class LoginPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  void _handleLoginWithEmail() {
+    if (_formKey.currentState!.validate()) {
+      print(_usernameController.value.text);
+      print(_passwordController.value.text);
+    }
+  }
+
+  void _handleSocialLogin(ButtonType buttonType) {
+    print(buttonType.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
@@ -29,157 +40,28 @@ class LoginPage extends StatelessWidget {
                   const HeaderImageAndLogo(
                     image: "assets/images/people2.webp",
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 60, left: kSpacing),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Login",
-                      style: platformThemeData(
-                        context,
-                        material: (data) => data.textTheme.headline4?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        cupertino: (data) => data.textTheme.navLargeTitleTextStyle,
-                      ),
-                    ),
-                  ), //Login
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: kSpacing,
-                    ),
-                    child: LoginTextFields(
-                      userController: _usernameController,
-                      passwordController: _passwordController,
-                    ),
-                  ),
+                  _buildLoginTextHeader(context), //Login
+                  _buildLoginTextFields(),
                   const SizedBox(
                     height: kSpacing,
                   ),
-                  TextButton(
-                    onPressed: () => print('send'),
-                    child: Text(
-                      'Forgot Password?',
-                      style: platformThemeData(
-                        context,
-                        material: (data) => data.textTheme.caption?.copyWith(
-                          color: Colors.blue,
-                        ),
-                        cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(
-                          color: Colors.blue,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _buildForgotPasswordButton(context),
                   const SizedBox(
                     height: kSpacing,
                   ),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(
-                      left: kSpacing * 2,
-                      right: kSpacing * 2,
-                    ),
-                    child: PlatformButton(
-                      onPressed: () => {
-                        if (_formKey.currentState!.validate())
-                          {
-                            print(_usernameController.value.text),
-                            print(_passwordController.value.text),
-                          }
-                      },
-                      child: PlatformText(
-                        'Sign In',
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      material: (_, __) => MaterialRaisedButtonData(
-                          textColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          )),
-                      cupertino: (_, __) => CupertinoButtonData(),
-                      color: platformThemeData(
-                        context,
-                        material: (data) => data.primaryColor,
-                        cupertino: (data) => data.primaryColor,
-                      ),
-                    ),
-                  ),
+                  _buildSignInButtonWidget(context),
                   const SizedBox(
                     height: kSpacing * 2,
                   ),
-                  Text(
-                    'Or, login with ...',
-                    style: platformThemeData(
-                      context,
-                      material: (data) => data.textTheme.caption?.copyWith(fontSize: 14),
-                      cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
-                    ),
-                  ),
+                  _buildOrLoginWithText(context),
                   const SizedBox(
                     height: kSpacing * 2,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildSignInButton(
-                        button: ButtonType.facebook,
-                        onPress: () {
-                          print("login");
-                        },
-                      ),
-                      _buildSignInButton(
-                        button: ButtonType.google,
-                        onPress: () {
-                          print("login");
-                        },
-                      ),
-                      _buildSignInButton(
-                        button: ButtonType.apple,
-                        onPress: () {
-                          print("login");
-                        },
-                      ),
-                    ],
-                  ),
+                  _buildSocialLoginButtons(),
                   const SizedBox(
                     height: kSpacing * 2,
                   ),
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'New to Global Strongman? ',
-                          style: platformThemeData(
-                            context,
-                            material: (data) => data.textTheme.caption?.copyWith(fontSize: 14),
-                            cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
-                          ),
-                        ),
-                        TextSpan(
-                          text: 'Sign up',
-                          style: platformThemeData(
-                            context,
-                            material: (data) => data.textTheme.caption?.copyWith(
-                              fontSize: 14,
-                              color: Colors.blue,
-                            ),
-                            cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(
-                              fontSize: 14,
-                              color: Colors.blue,
-                            ),
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => SignupPage()),
-                                ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildSignupText(context),
                   const SizedBox(
                     height: kSpacing * 4,
                   ),
@@ -188,6 +70,151 @@ class LoginPage extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Container _buildLoginTextHeader(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 60, left: kSpacing),
+      alignment: Alignment.topLeft,
+      child: Text(
+        "Login",
+        style: platformThemeData(
+          context,
+          material: (data) => data.textTheme.headline4?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+          cupertino: (data) => data.textTheme.navLargeTitleTextStyle,
+        ),
+      ),
+    );
+  }
+
+  Container _buildLoginTextFields() {
+    return Container(
+      margin: const EdgeInsets.only(
+        top: kSpacing,
+      ),
+      child: LoginTextFields(
+        userController: _usernameController,
+        passwordController: _passwordController,
+      ),
+    );
+  }
+
+  TextButton _buildForgotPasswordButton(BuildContext context) {
+    return TextButton(
+      onPressed: () => print('send'),
+      child: Text(
+        'Forgot Password?',
+        style: platformThemeData(
+          context,
+          material: (data) => data.textTheme.caption?.copyWith(
+            color: Colors.blue,
+          ),
+          cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(
+            color: Colors.blue,
+            fontSize: 14,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container _buildSignInButtonWidget(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(
+        left: kSpacing * 2,
+        right: kSpacing * 2,
+      ),
+      child: PlatformButton(
+        onPressed: _handleLoginWithEmail,
+        child: PlatformText(
+          'Sign In',
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        material: (_, __) => MaterialRaisedButtonData(
+            textColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            )),
+        cupertino: (_, __) => CupertinoButtonData(),
+        color: platformThemeData(
+          context,
+          material: (data) => data.primaryColor,
+          cupertino: (data) => data.primaryColor,
+        ),
+      ),
+    );
+  }
+
+  Text _buildOrLoginWithText(BuildContext context) {
+    return Text(
+      'Or, login with ...',
+      style: platformThemeData(
+        context,
+        material: (data) => data.textTheme.caption?.copyWith(fontSize: 14),
+        cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
+      ),
+    );
+  }
+
+  Row _buildSocialLoginButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildSignInButton(
+          button: ButtonType.facebook,
+          onPress: () => _handleSocialLogin(ButtonType.facebook),
+        ),
+        _buildSignInButton(
+          button: ButtonType.google,
+          onPress: () => _handleSocialLogin(ButtonType.google),
+        ),
+        _buildSignInButton(
+          button: ButtonType.apple,
+          onPress: () => _handleSocialLogin(ButtonType.apple),
+        ),
+      ],
+    );
+  }
+
+  RichText _buildSignupText(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        children: <TextSpan>[
+          TextSpan(
+            text: 'New to Global Strongman? ',
+            style: platformThemeData(
+              context,
+              material: (data) => data.textTheme.caption?.copyWith(fontSize: 14),
+              cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
+            ),
+          ),
+          TextSpan(
+            text: 'Sign up',
+            style: platformThemeData(
+              context,
+              material: (data) => data.textTheme.caption?.copyWith(
+                fontSize: 14,
+                color: Colors.blue,
+              ),
+              cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(
+                fontSize: 14,
+                color: Colors.blue,
+              ),
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignupPage()),
+                  ),
+          ),
+        ],
       ),
     );
   }
