@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "760421952561",
+    "project_id": "global-strongman",
+    "storage_bucket": "global-strongman.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760421952561:android:374ffbcdfa7dd01cf1f910",
+        "android_client_info": {
+          "package_name": "com.wizebase.global_strongman"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "760421952561-pptuvpjj6gg0qp2h9a6nbi30pbu5amuq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwrcznI5x5rZ4ZS6bamFZM_CUrHBt0how"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "760421952561-pptuvpjj6gg0qp2h9a6nbi30pbu5amuq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
