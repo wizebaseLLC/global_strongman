@@ -37,9 +37,10 @@ class HeaderImageAndLogo extends StatelessWidget {
                 "assets/images/global_strongman_logo.png",
                 width: 159.0,
                 height: 159.0,
+                cacheHeight: 159,
               ),
             ),
-          )
+          ),
         ],
       ),
     );
