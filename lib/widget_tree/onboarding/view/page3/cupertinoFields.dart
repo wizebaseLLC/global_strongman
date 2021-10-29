@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/widget_tree/onboarding/model/list_page_data.dart';
 
 class CupertinoFormFields extends StatelessWidget {
   const CupertinoFormFields({
-    required this.backgroundColor,
     Key? key,
   }) : super(key: key);
-  final Color backgroundColor;
 
-  List<Widget> _getHeightList() {
-    List<int> feet = [for (var i = 4; i <= 8; i++) i];
+  List<String> _getHeightList() {
+    List<int> feet = [for (var i = 5; i <= 8; i++) i];
     List<int> inches = [for (var i = 1; i <= 11; i++) i];
     List<String> combined = [];
     for (var ft in feet) {
@@ -21,7 +21,7 @@ class CupertinoFormFields extends StatelessWidget {
       }
     }
 
-    return combined.map((e) => Text(e)).toList();
+    return combined;
   }
 
   @override
@@ -34,25 +34,22 @@ class CupertinoFormFields extends StatelessWidget {
           context: context,
           list: _getHeightList(),
           prefix: "Height",
-          onChanged: (value) {
-            print(value + 1);
-          },
+          name: "height",
+          initialValue: "5' 0",
         ),
         _buildCupertinoFormRow(
           context: context,
-          list: [for (var i = 60; i <= 600; i++) Text(i.toString())],
+          list: [for (var i = 80; i <= 600; i++) i.toString()],
           prefix: "Weight",
-          onChanged: (value) {
-            print(value + 1);
-          },
+          name: "weight",
+          initialValue: "80",
         ),
         _buildCupertinoFormRow(
           context: context,
-          list: kGenders.map((gender) => Text(gender)).toList(),
+          list: kGenders,
           prefix: "Gender",
-          onChanged: (value) {
-            print(value + 1);
-          },
+          name: "gender",
+          initialValue: "Male",
         ),
       ],
     );
@@ -60,9 +57,10 @@ class CupertinoFormFields extends StatelessWidget {
 
   CupertinoFormRow _buildCupertinoFormRow({
     required BuildContext context,
+    required String name,
     required String prefix,
-    required List<Widget> list,
-    required Function(int) onChanged,
+    required dynamic initialValue,
+    required List<String> list,
   }) {
     return CupertinoFormRow(
       prefix: Text(
@@ -74,11 +72,18 @@ class CupertinoFormFields extends StatelessWidget {
       child: SizedBox(
         height: 100,
         width: MediaQuery.of(context).size.width * .6,
-        child: CupertinoPicker(
-          itemExtent: 30,
-          onSelectedItemChanged: onChanged,
-          children: list,
-        ),
+        child: FormBuilderField(
+            name: name,
+            initialValue: initialValue,
+            builder: (FormFieldState<dynamic> field) {
+              return CupertinoPicker(
+                itemExtent: 30,
+                onSelectedItemChanged: (value) {
+                  field.didChange(list[value]);
+                },
+                children: list.map((e) => Text(e)).toList(),
+              );
+            }),
       ),
     );
   }

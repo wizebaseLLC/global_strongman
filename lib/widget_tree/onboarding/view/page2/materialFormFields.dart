@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:global_strongman/constants.dart';
 
 class MaterialFormFields extends StatelessWidget {
@@ -17,36 +18,43 @@ class MaterialFormFields extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _buildTextFormField(
-            labelText: "First Name",
-            textInputAction: TextInputAction.next,
-          ),
+          _buildTextFormField(labelText: "First Name", name: "first_name", textInputAction: TextInputAction.next, context: context),
           const SizedBox(
             height: kSpacing,
           ),
           _buildTextFormField(
             labelText: "Last Name",
+            name: "last_name",
+            context: context,
           ),
           const SizedBox(
             height: 12,
           ),
           _buildMaterialField(
-              hint: "Age",
-              list: [for (var i = 18; i <= 99; i++) i.toString()],
-              onChanged: (value) {
-                print(value);
-              }),
+            hint: "Age",
+            list: [for (var i = 18; i <= 99; i++) i.toString()],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildTextFormField({required String labelText, TextInputAction? textInputAction}) {
-    return TextFormField(
+  Widget _buildTextFormField({
+    required String labelText,
+    TextInputAction? textInputAction,
+    required String name,
+    required BuildContext context,
+  }) {
+    return FormBuilderTextField(
+      name: name,
       // Todo  controller: userController,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       textInputAction: textInputAction ?? TextInputAction.done,
-
+      validator: FormBuilderValidators.compose(
+        [
+          FormBuilderValidators.minLength(context, 3),
+          FormBuilderValidators.required(context),
+        ],
+      ),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(left: 12, right: 12),
         labelText: labelText,
@@ -58,13 +66,13 @@ class MaterialFormFields extends StatelessWidget {
   Widget _buildMaterialField({
     required String hint,
     required List<String> list,
-    required Function(String?) onChanged,
   }) {
-    return DropdownButton<String>(
-      underline: Divider(
-        height: 1,
-        thickness: .75,
-        color: Colors.grey.shade500,
+    return FormBuilderDropdown<String>(
+      name: "age",
+      decoration: InputDecoration(
+        isDense: true,
+        contentPadding: const EdgeInsets.only(left: 12),
+        label: Text(hint),
       ),
       items: list.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
@@ -72,15 +80,7 @@ class MaterialFormFields extends StatelessWidget {
           child: Text(value),
         );
       }).toList(),
-      hint: Container(
-        margin: const EdgeInsets.only(
-          left: 12,
-          bottom: 12,
-        ),
-        child: Text(hint),
-      ),
       isExpanded: true,
-      onChanged: onChanged,
     );
   }
 }

@@ -9,15 +9,12 @@ import 'package:global_strongman/widget_tree/onboarding/view/page3/materialFormF
 /// This is used as the body of the on-boarding page.
 List<Widget> page3Body({
   required BuildContext context,
-  required Color backgroundColor,
 }) =>
     [
       Column(
         children: [
           PlatformWidget(
-            cupertino: (_, __) => CupertinoFormFields(
-              backgroundColor: backgroundColor,
-            ),
+            cupertino: (_, __) => const CupertinoFormFields(),
             material: (_, __) => const MaterialFormFields(),
           )
         ],

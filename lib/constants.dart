@@ -16,7 +16,13 @@ const kSecondaryGradient = LinearGradient(colors: [
   Color(0xffFF7E7E),
 ]);
 
-const List<String> kGenders = ["Male", "Female", "Other", "Non-Binary"];
+const List<String> kGenders = [
+  "Male",
+  "Female",
+  "Other",
+  "Non-Binary",
+  "No answer",
+];
 
 const List<String> kGoals = [
   "Strongman",

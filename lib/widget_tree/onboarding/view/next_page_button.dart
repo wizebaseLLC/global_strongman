@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:global_strongman/widget_tree/onboarding/model/list_page_data.dart';
 
 /// The button on the bottom right
 class NextPageButton extends StatelessWidget {
   const NextPageButton({
     Key? key,
-    required this.activeColor,
   }) : super(key: key);
-
-  final Color activeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +13,10 @@ class NextPageButton extends StatelessWidget {
       duration: const Duration(milliseconds: 400),
       height: 50,
       width: 50,
-      decoration: BoxDecoration(color: activeColor, shape: BoxShape.circle),
+      decoration: const BoxDecoration(
+        color: backgroundColor,
+        shape: BoxShape.circle,
+      ),
       child: Center(
         child: Container(
           constraints: const BoxConstraints(maxHeight: 25, maxWidth: 25),

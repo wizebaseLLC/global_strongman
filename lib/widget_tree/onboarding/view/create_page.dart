@@ -3,10 +3,9 @@ import 'package:introduction_screen/introduction_screen.dart';
 
 /// Returns a [PageViewModel]
 ///
-/// This includes the [backgroundColor], the image ([assetName]), and the [body]
+/// This includes the image ([assetName]), and the [body]
 PageViewModel createPage({
   required BuildContext context,
-  required Color backgroundColor,
   required String assetName,
   required List<Widget> body,
   required GlobalKey<IntroductionScreenState> controller,
@@ -48,7 +47,6 @@ PageViewModel createPage({
       titleTextStyle: Theme.of(context).textTheme.headline6!.copyWith(
             color: Colors.white,
           ),
-      pageColor: backgroundColor,
       bodyFlex: height > 800 ? 6 : 4,
       imageFlex: height > 800 ? 3 : 3,
       imageAlignment: Alignment.topCenter,

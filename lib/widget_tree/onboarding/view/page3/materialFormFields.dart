@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:global_strongman/constants.dart';
-import 'package:global_strongman/widget_tree/onboarding/constants.dart';
 
 class MaterialFormFields extends StatelessWidget {
   const MaterialFormFields({
@@ -31,29 +31,29 @@ class MaterialFormFields extends StatelessWidget {
       child: Column(
         children: [
           _buildMaterialField(
-              hint: "Height",
-              list: _getHeightList(),
-              onChanged: (value) {
-                print(value);
-              }),
+            hint: "Height",
+            name: 'height',
+            list: _getHeightList(),
+            context: context,
+          ),
           const SizedBox(
             height: kSpacing,
           ),
           _buildMaterialField(
-              hint: "Weight",
-              list: [for (var i = 60; i <= 600; i++) i.toString()],
-              onChanged: (value) {
-                print(value);
-              }),
+            hint: "Weight",
+            name: "weight",
+            list: [for (var i = 60; i <= 600; i++) i.toString()],
+            context: context,
+          ),
           const SizedBox(
             height: kSpacing,
           ),
           _buildMaterialField(
-              hint: "Gender",
-              list: kGenders,
-              onChanged: (value) {
-                print(value);
-              }),
+            hint: "Gender",
+            name: "gender",
+            list: kGenders,
+            context: context,
+          ),
         ],
       ),
     );
@@ -61,22 +61,27 @@ class MaterialFormFields extends StatelessWidget {
 
   Widget _buildMaterialField({
     required String hint,
+    required String name,
+    required BuildContext context,
     required List<String> list,
-    required Function(String?) onChanged,
   }) {
     return Container(
       margin: const EdgeInsets.only(left: 12, right: 12),
-      child: DropdownButton<String>(
-        underline: kMaterialDivider,
+      child: FormBuilderDropdown<String>(
+        name: name,
+        validator: FormBuilderValidators.required(context),
+        decoration: InputDecoration(
+          isDense: true,
+          contentPadding: const EdgeInsets.only(left: 12),
+          label: Text(hint),
+        ),
         items: list.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),
           );
         }).toList(),
-        hint: Text(hint),
         isExpanded: true,
-        onChanged: onChanged,
       ),
     );
   }

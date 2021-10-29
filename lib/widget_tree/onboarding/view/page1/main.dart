@@ -9,7 +9,6 @@ import 'package:introduction_screen/introduction_screen.dart';
 /// This is used as the body of the on-boarding page.
 List<Widget> page1Body({
   required BuildContext context,
-  required Color backgroundColor,
   required GlobalKey<IntroductionScreenState> controller,
 }) =>
     [
