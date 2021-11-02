@@ -48,8 +48,9 @@ class LoginTextFields extends StatelessWidget {
               controller: userController,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
-                labelText: "Username",
+                labelText: "Email",
                 prefixIcon: Icon(Icons.person),
               ),
               validator: _validateEmail,
@@ -77,7 +78,8 @@ class LoginTextFields extends StatelessWidget {
               gradient: kPrimaryGradient,
             ),
             child: CupertinoTextFormFieldRow(
-              placeholder: "Username",
+              placeholder: "Email",
+              keyboardType: TextInputType.emailAddress,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: userController,
               textInputAction: TextInputAction.next,

@@ -1,29 +1,42 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/widget_tree/login_page/controller/sign_in_controller.dart';
 import 'package:global_strongman/widget_tree/login_page/view/header_image_and_logo.dart';
 import 'package:global_strongman/widget_tree/login_page/view/signup_page.dart';
 import 'package:global_strongman/widget_tree/login_page/view/textfields.dart';
 import 'package:sign_button/sign_button.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _handleLoginWithEmail() {
+  void _handleLoginWithEmail(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      print(_usernameController.value.text);
-      print(_passwordController.value.text);
+      SignInController signupController = SignInController(
+        userController: _usernameController,
+        passwordController: _passwordController,
+      );
+
+      signupController.handleSignInFromEmail(context);
     }
   }
 
   void _handleSocialLogin(ButtonType buttonType) {
-    print(buttonType.toString());
+    SignInController().handleSocialLogin(buttonType: buttonType);
   }
 
   @override
@@ -105,7 +118,7 @@ class LoginPage extends StatelessWidget {
 
   TextButton _buildForgotPasswordButton(BuildContext context) {
     return TextButton(
-      onPressed: () => print('send'),
+      onPressed: () => SignInController().handleForgotPassword(context),
       child: Text(
         'Forgot Password?',
         style: platformThemeData(
@@ -130,7 +143,7 @@ class LoginPage extends StatelessWidget {
         right: kSpacing * 2,
       ),
       child: PlatformButton(
-        onPressed: _handleLoginWithEmail,
+        onPressed: () => _handleLoginWithEmail(context),
         child: PlatformText(
           'Sign In',
           style: const TextStyle(
@@ -175,10 +188,11 @@ class LoginPage extends StatelessWidget {
           button: ButtonType.google,
           onPress: () => _handleSocialLogin(ButtonType.google),
         ),
-        _buildSignInButton(
-          button: ButtonType.apple,
-          onPress: () => _handleSocialLogin(ButtonType.apple),
-        ),
+        if (Platform.isIOS == true)
+          _buildSignInButton(
+            button: ButtonType.apple,
+            onPress: () => _handleSocialLogin(ButtonType.apple),
+          ),
       ],
     );
   }
@@ -220,10 +234,13 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _buildSignInButton({required ButtonType button, required Function() onPress}) {
-    return SignInButton.mini(
-      buttonType: button,
-      padding: kSpacing,
-      onPressed: onPress,
+    return InkWell(
+      onTap: onPress,
+      child: SignInButton.mini(
+        buttonType: button,
+        padding: kSpacing,
+        onPressed: onPress,
+      ),
     );
   }
 }

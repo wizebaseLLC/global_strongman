@@ -3,26 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/widget_tree/login_page/controller/sign_in_controller.dart';
 import 'package:global_strongman/widget_tree/login_page/view/header_image_and_logo.dart';
 import 'package:global_strongman/widget_tree/login_page/view/textfields.dart';
 import 'package:sign_button/sign_button.dart';
 
-class SignupPage extends StatelessWidget {
-  SignupPage({Key? key}) : super(key: key);
+class SignupPage extends StatefulWidget {
+  const SignupPage({Key? key}) : super(key: key);
 
+  @override
+  State<SignupPage> createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _handleSignupFromEmail() {
+  void _handleSignupFromEmail(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      print(_usernameController.value.text);
-      print(_passwordController.value.text);
+      SignInController signupController = SignInController(
+        userController: _usernameController,
+        passwordController: _passwordController,
+      );
+
+      signupController.handleSignupFromEmail(context);
     }
   }
 
   void _handleSocialLogin(ButtonType buttonType) {
-    print(buttonType.toString());
+    SignInController().handleSocialLogin(buttonType: buttonType);
   }
 
   @override
@@ -138,7 +148,7 @@ class SignupPage extends StatelessWidget {
         right: kSpacing * 2,
       ),
       child: PlatformButton(
-        onPressed: _handleSignupFromEmail,
+        onPressed: () => _handleSignupFromEmail(context),
         child: PlatformText(
           'Sign Up',
           style: const TextStyle(

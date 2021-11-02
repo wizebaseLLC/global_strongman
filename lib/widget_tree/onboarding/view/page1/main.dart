@@ -22,21 +22,43 @@ List<Widget> page1Body({
         child: Column(
           children: [
             Container(
-              margin: const EdgeInsets.only(top: kSpacing * 2),
+              margin: const EdgeInsets.only(bottom: kSpacing),
               child: Text(
-                '''Looking to be your strongest self?
-Looking to lose weight or
-improve confidence?''',
+                '''The best strongman platform on the market''',
                 style: platformThemeData(
                   context,
-                  material: (data) => data.textTheme.subtitle1,
-                  cupertino: (data) => data.textTheme.textStyle,
+                  material: (data) => data.textTheme.subtitle1?.copyWith(color: Colors.grey),
+                  cupertino: (data) => data.textTheme.textStyle.copyWith(color: Colors.grey),
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(
-              height: kSpacing * 8,
+              height: kSpacing * 2,
+            ),
+            Text(
+              '''Learn from the best Strongman Trainer in the world''',
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.subtitle1,
+                cupertino: (data) => data.textTheme.textStyle,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: kSpacing * 4,
+            ),
+            Text(
+              'Global Strongman helps you easily track your fitness.  Train interactively and plan your workouts.',
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.subtitle1?.copyWith(color: Colors.grey, fontSize: 14),
+                cupertino: (data) => data.textTheme.textStyle.copyWith(color: Colors.grey, fontSize: 14),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: kSpacing * 4,
             ),
             GetStartedButton(
               controller: controller,
