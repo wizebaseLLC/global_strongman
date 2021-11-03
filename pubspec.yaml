@@ -27,6 +27,8 @@ dependencies:
   page_transition: "^2.0.4"
   google_sign_in: ^5.0.3
   flutter_facebook_auth: "^3.5.3"
+  sign_in_with_apple: ^3.2.0
+  crypto: ^3.0.1
 
 dev_dependencies:
   flutter_test:

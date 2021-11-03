@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/widget_tree/login_page/controller/sign_in_with_apple.dart';
 import 'package:global_strongman/widget_tree/login_page/controller/sign_in_with_facebook.dart';
 import 'package:global_strongman/widget_tree/login_page/controller/sign_in_with_google.dart';
 import 'package:global_strongman/widget_tree/onboarding/view/main.dart';
@@ -34,7 +35,8 @@ class SignInController {
 
       case ButtonType.apple:
         {
-          // statements;
+          print("apple");
+          await signInWithApple().catchError((e) => print(e));
         }
         break;
 
