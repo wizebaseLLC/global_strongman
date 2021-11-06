@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HeaderImageAndLogo extends StatelessWidget {
@@ -33,11 +36,15 @@ class HeaderImageAndLogo extends StatelessWidget {
             bottom: -75.0,
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: Image.asset(
-                "assets/images/global_strongman_logo.png",
-                width: 159.0,
-                height: 159.0,
-                cacheHeight: 159,
+              child: CircleAvatar(
+                backgroundColor: Platform.isIOS ? CupertinoTheme.of(context).scaffoldBackgroundColor : Theme.of(context).scaffoldBackgroundColor,
+                radius: 79.5,
+                child: Hero(
+                  tag: "LoginLogo",
+                  child: Image.asset(
+                    "assets/images/global_strongman_logo.png",
+                  ),
+                ),
               ),
             ),
           ),

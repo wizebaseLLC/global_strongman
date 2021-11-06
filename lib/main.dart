@@ -20,14 +20,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late FirebaseAuth _auth;
   User? _user;
-
   @override
   void initState() {
     Firebase.initializeApp().then((_) {
       setState(() {
         _auth = FirebaseAuth.instance;
       });
-      _auth.idTokenChanges().listen((User? user) {
+      _auth.idTokenChanges().listen((User? user) async {
         if (user == null) {
           print("not signed in");
           setState(() {
@@ -37,8 +36,7 @@ class _MyAppState extends State<MyApp> {
           setState(() {
             _user = user;
           });
-
-          print(user);
+          //    print(user);
         }
       });
     });
@@ -47,6 +45,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    //print(_user);
     return PlatformProvider(
       settings: PlatformSettingsData(
         iosUsesMaterialWidgets: true,
@@ -59,7 +58,7 @@ class _MyAppState extends State<MyApp> {
           DefaultCupertinoLocalizations.delegate,
         ],
         title: 'Flutter Platform Widgets',
-        home: _user == null ? const LoginPage() : const LoginPage(),
+        home: const LoginPage(),
         material: (_, __) => MaterialAppData(
           theme: ThemeData(
             primaryColor: const Color(0xff1F26B7),

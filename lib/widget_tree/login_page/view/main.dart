@@ -35,8 +35,11 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _handleSocialLogin(ButtonType buttonType) {
-    SignInController().handleSocialLogin(buttonType: buttonType);
+  void _handleSocialLogin(
+    ButtonType buttonType,
+    BuildContext context,
+  ) {
+    SignInController().handleSocialLogin(buttonType: buttonType, context: context);
   }
 
   @override
@@ -70,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: kSpacing * 2,
                   ),
-                  _buildSocialLoginButtons(),
+                  _buildSocialLoginButtons(context),
                   const SizedBox(
                     height: kSpacing * 2,
                   ),
@@ -176,22 +179,22 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Row _buildSocialLoginButtons() {
+  Row _buildSocialLoginButtons(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildSignInButton(
           button: ButtonType.facebook,
-          onPress: () => _handleSocialLogin(ButtonType.facebook),
+          onPress: () => _handleSocialLogin(ButtonType.facebook, context),
         ),
         _buildSignInButton(
           button: ButtonType.google,
-          onPress: () => _handleSocialLogin(ButtonType.google),
+          onPress: () => _handleSocialLogin(ButtonType.google, context),
         ),
         if (Platform.isIOS == true)
           _buildSignInButton(
             button: ButtonType.apple,
-            onPress: () => _handleSocialLogin(ButtonType.apple),
+            onPress: () => _handleSocialLogin(ButtonType.apple, context),
           ),
       ],
     );
