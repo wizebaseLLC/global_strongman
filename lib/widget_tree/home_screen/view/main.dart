@@ -24,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   // Display the Appbar or not.
+  // TODO: Make this a List<PlatformAppBar>
   final List<bool> _showsScreenAppBar = [
     ProfileScreen.usesAppbar,
     ProfileScreen.usesAppbar,

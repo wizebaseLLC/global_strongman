@@ -276,6 +276,7 @@ class SignInController {
           // Add download url to the avatar value for the map.
           copiedValues["avatar"] = uploadedAvatarUrl;
         }
+        copiedValues["email"] = user.email;
 
         // Call the user's CollectionReference to add a new user
         await users.doc(user.email).set(copiedValues);
