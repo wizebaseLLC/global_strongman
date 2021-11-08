@@ -277,7 +277,7 @@ class SignInController {
           copiedValues["avatar"] = uploadedAvatarUrl;
         }
         copiedValues["email"] = user.email;
-
+        copiedValues["age"] = values["age"].toString();
         // Call the user's CollectionReference to add a new user
         await users.doc(user.email).set(copiedValues);
       }

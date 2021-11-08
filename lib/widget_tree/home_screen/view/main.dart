@@ -38,7 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return PlatformScaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: _screens[_selectedTabIndex],
+        child: IndexedStack(
+          children: _screens,
+          index: _selectedTabIndex,
+        ),
       ),
       appBar: _showsScreenAppBar[_selectedTabIndex] == true
           ? PlatformAppBar(
