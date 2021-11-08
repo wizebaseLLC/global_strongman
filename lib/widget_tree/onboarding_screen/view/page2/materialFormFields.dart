@@ -33,6 +33,7 @@ class MaterialFormFields extends StatelessWidget {
           _buildMaterialField(
             hint: "Age",
             list: [for (var i = 18; i <= 99; i++) i.toString()],
+            context: context,
           ),
         ],
       ),
@@ -65,10 +66,12 @@ class MaterialFormFields extends StatelessWidget {
 
   Widget _buildMaterialField({
     required String hint,
+    required BuildContext context,
     required List<String> list,
   }) {
     return FormBuilderDropdown<String>(
       name: "age",
+      validator: FormBuilderValidators.required(context),
       decoration: InputDecoration(
         isDense: true,
         contentPadding: const EdgeInsets.only(left: 12),
