@@ -29,38 +29,7 @@ class ProfileBody extends StatelessWidget {
                   // The avatar, name and level.
                   ProfileHeader(firebaseUser: firebaseUser),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ProfileBadge(
-                  icon: Icon(
-                    PlatformIcons(context).clockSolid,
-                    color: Colors.white,
-                  ),
-                  color: Colors.blue,
-                  title: "10",
-                  subtitle: "Total Time (h)",
-                ),
-                ProfileBadge(
-                  icon: const Icon(
-                    Icons.star,
-                    color: Colors.white,
-                  ),
-                  color: Colors.yellow.shade700,
-                  title: "3/28",
-                  subtitle: "Goals Achieved",
-                ),
-                ProfileBadge(
-                  icon: const FaIcon(
-                    FontAwesomeIcons.award,
-                    color: Colors.white,
-                  ),
-                  color: Colors.red.shade400,
-                  title: "5/15",
-                  subtitle: "Badges Collected",
-                ),
-              ],
-            ),
+            _buildProfileBadgeRow(context),
             const SizedBox(
               height: kSpacing * 3,
             ),
@@ -68,67 +37,161 @@ class ProfileBody extends StatelessWidget {
             const SizedBox(
               height: kSpacing * 3,
             ),
-            ProfileList(
-              header: "Account",
-              listTiles: [
-                ProfileListTile(
-                  title: "Edit Profile",
-                  icon: Icon(
-                    PlatformIcons(context).personSolid,
-                    color: Colors.blue,
-                    size: 30,
-                  ),
-                  onTap: () {},
-                ),
-                ProfileListTile(
-                  title: "Privacy",
-                  icon: Icon(
-                    PlatformIcons(context).eyeSlashSolid,
-                    color: Colors.red.shade400,
-                    size: 30,
-                  ),
-                  onTap: () {},
-                ),
-              ],
-            ),
+            _buildAccountProfileList(context),
             const SizedBox(
               height: kSpacing * 2,
             ),
-            ProfileList(
-              header: "Fitness",
-              listTiles: [
-                ProfileListTile(
-                  title: "Progress Gallery",
-                  icon: Icon(
-                    PlatformIcons(context).photoLibrarySolid,
-                    color: Colors.yellow.shade700,
-                    size: 30,
-                  ),
-                  onTap: () {},
-                ),
-                ProfileListTile(
-                  title: "Fitness Programs",
-                  icon: const FaIcon(
-                    FontAwesomeIcons.award,
-                    color: Colors.blue,
-                    size: 30,
-                  ),
-                  onTap: () {},
-                ),
-                ProfileListTile(
-                  title: "Routines",
-                  icon: FaIcon(
-                    FontAwesomeIcons.dumbbell,
-                    color: Colors.purple.shade300,
-                    size: 30,
-                  ),
-                  onTap: () {},
-                ),
-              ],
+            _buildFitnessProfileList(context),
+            const SizedBox(
+              height: kSpacing * 2,
+            ),
+            _buildCommunityProfileList(),
+            const SizedBox(
+              height: kSpacing * 4,
             ),
           ],
         ),
       ),
+    );
+  }
+
+  ProfileList _buildCommunityProfileList() {
+    return ProfileList(
+      header: "Community",
+      listTiles: [
+        ProfileListTile(
+          title: "Posts",
+          icon: FaIcon(
+            FontAwesomeIcons.users,
+            color: Colors.indigo.shade400,
+            size: 30,
+          ),
+          onTap: () {},
+        ),
+        ProfileListTile(
+          title: "Likes",
+          icon: const FaIcon(
+            FontAwesomeIcons.thumbsUp,
+            color: Colors.blue,
+            size: 30,
+          ),
+          onTap: () {},
+        ),
+        ProfileListTile(
+          title: "Blocked",
+          icon: FaIcon(
+            FontAwesomeIcons.userLock,
+            color: Colors.amber.shade400,
+            size: 30,
+          ),
+          onTap: () {},
+        ),
+      ],
+    );
+  }
+
+  ProfileList _buildFitnessProfileList(BuildContext context) {
+    return ProfileList(
+      header: "Fitness",
+      listTiles: [
+        ProfileListTile(
+          title: "Progress Gallery",
+          icon: Icon(
+            PlatformIcons(context).photoLibrarySolid,
+            color: Colors.green.shade300,
+            size: 30,
+          ),
+          onTap: () {},
+        ),
+        ProfileListTile(
+          title: "Fitness Programs",
+          icon: const FaIcon(
+            FontAwesomeIcons.award,
+            color: Colors.blue,
+            size: 30,
+          ),
+          onTap: () {},
+        ),
+        ProfileListTile(
+          title: "Routines",
+          icon: FaIcon(
+            FontAwesomeIcons.dumbbell,
+            color: Colors.purple.shade300,
+            size: 30,
+          ),
+          onTap: () {},
+        ),
+      ],
+    );
+  }
+
+  ProfileList _buildAccountProfileList(BuildContext context) {
+    return ProfileList(
+      header: "Account",
+      listTiles: [
+        ProfileListTile(
+          title: "Edit Profile",
+          icon: Icon(
+            PlatformIcons(context).personSolid,
+            color: Colors.blue,
+            size: 30,
+          ),
+          onTap: () {},
+        ),
+        ProfileListTile(
+          title: "Membership",
+          icon: FaIcon(
+            FontAwesomeIcons.fire,
+            color: Colors.orange.shade300,
+            size: 30,
+          ),
+          onTap: () {},
+        ),
+        ProfileListTile(
+          title: "Privacy",
+          icon: Icon(
+            PlatformIcons(context).eyeSlashSolid,
+            color: Colors.red.shade400,
+            size: 30,
+          ),
+          onTap: () {},
+        ),
+      ],
+    );
+  }
+
+  Row _buildProfileBadgeRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        ProfileBadge(
+          icon: Icon(
+            PlatformIcons(context).clockSolid,
+            color: Colors.white,
+          ),
+          color: Colors.blue,
+          title: "10",
+          subtitle: "Total Time (h)",
+        ),
+        ProfileBadge(
+          icon: const Icon(
+            Icons.star,
+            color: Colors.white,
+          ),
+          color: Colors.yellow.shade700,
+          title: "3/28",
+          subtitle: "Goals Achieved",
+        ),
+        ProfileBadge(
+          icon: const FaIcon(
+            FontAwesomeIcons.award,
+            color: Colors.white,
+          ),
+          color: Colors.red.shade400,
+          title: "5/15",
+          subtitle: "Badges Collected",
+        ),
+      ],
     );
   }
 }
