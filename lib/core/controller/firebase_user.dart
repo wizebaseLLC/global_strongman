@@ -1,5 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_controller.dart';
 
 class FirebaseUser {
   FirebaseUser({
@@ -81,6 +86,21 @@ class FirebaseUser {
       return FirebaseAuth.instance.currentUser;
     } catch (e) {
       print(e);
+    }
+  }
+
+  /// Updates user Avatar image and firestore's reference to it.
+  Future<void> addUserAvatarToStorage({
+    required BuildContext context,
+    required File file,
+  }) async {
+    try {
+      final Reference ref = FirebaseStorage.instance.ref("Users").child(email).child("/avatar.jpg");
+      TaskSnapshot uploadTask = await ref.putFile(file);
+      final url = await uploadTask.ref.getDownloadURL();
+      getDocumentReference().update({"avatar": url});
+    } catch (e) {
+      SignInController().showDialog(context, "Failed to upload image: $e");
     }
   }
 }

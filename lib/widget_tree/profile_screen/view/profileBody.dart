@@ -171,25 +171,25 @@ class ProfileBody extends StatelessWidget {
           ),
           color: Colors.blue,
           title: "10",
-          subtitle: "Total Time (h)",
-        ),
-        ProfileBadge(
-          icon: const Icon(
-            Icons.star,
-            color: Colors.white,
-          ),
-          color: Colors.yellow.shade700,
-          title: "3/28",
-          subtitle: "Goals Achieved",
+          subtitle: "Active Days",
         ),
         ProfileBadge(
           icon: const FaIcon(
-            FontAwesomeIcons.award,
+            FontAwesomeIcons.solidStar,
+            color: Colors.white,
+          ),
+          color: Colors.yellow.shade700,
+          title: "28",
+          subtitle: "Workouts Done",
+        ),
+        ProfileBadge(
+          icon: const FaIcon(
+            FontAwesomeIcons.trophy,
             color: Colors.white,
           ),
           color: Colors.red.shade400,
           title: "5/15",
-          subtitle: "Badges Collected",
+          subtitle: "Trophies Earned",
         ),
       ],
     );

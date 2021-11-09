@@ -292,7 +292,7 @@ class SignInController {
     required File file,
   }) async {
     try {
-      final Reference ref = storage.ref(email).child("/avatar.jpg");
+      final Reference ref = storage.ref("Users").child(email).child("/avatar.jpg");
       TaskSnapshot uploadTask = await ref.putFile(file);
       final url = await uploadTask.ref.getDownloadURL();
       return url;
