@@ -72,7 +72,7 @@ class MaterialFormFields extends StatelessWidget {
         validator: FormBuilderValidators.required(context),
         decoration: InputDecoration(
           isDense: true,
-          contentPadding: const EdgeInsets.only(left: 12),
+          contentPadding: const EdgeInsets.only(left: 12, right: 9),
           label: Text(hint),
         ),
         items: list.map<DropdownMenuItem<String>>((String value) {

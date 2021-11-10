@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/controller/firebase_user.dart';
 import 'package:global_strongman/widget_tree/onboarding_screen/model/multi_select_string_chip.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class MaterialFormFields extends StatefulWidget {
   const MaterialFormFields({
+    this.firebaseUser,
     Key? key,
   }) : super(key: key);
-
+  final FirebaseUser? firebaseUser;
   @override
   State<MaterialFormFields> createState() => _MaterialFormFieldsState();
 }
@@ -47,6 +49,7 @@ class _MaterialFormFieldsState extends State<MaterialFormFields> {
             buttonText: "What are your goals?",
             initialState: goals,
             prefix: "Goals",
+            firebaseUser: widget.firebaseUser,
           ),
           const SizedBox(
             height: kSpacing,
@@ -58,6 +61,7 @@ class _MaterialFormFieldsState extends State<MaterialFormFields> {
             buttonText: "Do you have injuries?",
             initialState: injuries,
             prefix: "Injuries",
+            firebaseUser: widget.firebaseUser,
           ),
         ],
       ),
@@ -105,17 +109,20 @@ class _MaterialFormFieldsState extends State<MaterialFormFields> {
     required List<String> list,
     required String buttonText,
     required List<Object?> initialState,
+    required FirebaseUser? firebaseUser,
   }) {
+    Map<String, dynamic>? user = firebaseUser?.toJson();
     return Container(
       margin: const EdgeInsets.only(left: 12, right: 12),
       child: FormBuilderField(
           name: name,
+          initialValue: user?[name] != null ? user![name] : null,
           builder: (FormFieldState<dynamic> field) {
             return MultiSelectDialogField(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: Colors.grey.shade600,
+                    color: Colors.grey,
                   ),
                 ),
               ),
@@ -136,12 +143,16 @@ class _MaterialFormFieldsState extends State<MaterialFormFields> {
                   fontSize: 12,
                 ),
               ),
-              initialValue: initialState,
+              initialValue: user?[name] != null ? user![name] : initialState,
               buttonIcon: Icon(
                 Icons.arrow_drop_down,
                 color: Colors.grey.shade700,
               ),
-              items: list.map((e) => MultiSelectStringChip(name: e)).toList().map((e) => MultiSelectItem(e.name, e.name)).toList(),
+              items: list
+                  .map((e) => MultiSelectStringChip(name: e))
+                  .toList()
+                  .map((e) => MultiSelectItem(e.name, e.name))
+                  .toList(),
               listType: MultiSelectListType.CHIP,
               buttonText: Text(
                 buttonText,

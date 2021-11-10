@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/controller/firebase_user.dart';
 
 class MaterialFormFields extends StatelessWidget {
   const MaterialFormFields({
+    this.firebaseUser,
     Key? key,
   }) : super(key: key);
+  final FirebaseUser? firebaseUser;
 
   @override
   Widget build(BuildContext context) {
@@ -13,12 +16,16 @@ class MaterialFormFields extends StatelessWidget {
       padding: const EdgeInsets.only(
         top: kSpacing,
         bottom: kSpacing,
-        left: kSpacing,
-        right: kSpacing,
+        left: 12,
+        right: 12,
       ),
       child: Column(
         children: [
-          _buildTextFormField(labelText: "First Name", name: "first_name", textInputAction: TextInputAction.next, context: context),
+          _buildTextFormField(
+              labelText: "First Name",
+              name: "first_name",
+              textInputAction: TextInputAction.next,
+              context: context),
           const SizedBox(
             height: kSpacing,
           ),
@@ -34,6 +41,7 @@ class MaterialFormFields extends StatelessWidget {
             hint: "Age",
             list: [for (var i = 18; i <= 99; i++) i.toString()],
             context: context,
+            firebaseUser: firebaseUser,
           ),
         ],
       ),
@@ -68,13 +76,15 @@ class MaterialFormFields extends StatelessWidget {
     required String hint,
     required BuildContext context,
     required List<String> list,
+    required FirebaseUser? firebaseUser,
   }) {
     return FormBuilderDropdown<String>(
       name: "age",
+      initialValue: firebaseUser?.age?.toString(),
       validator: FormBuilderValidators.required(context),
       decoration: InputDecoration(
         isDense: true,
-        contentPadding: const EdgeInsets.only(left: 12),
+        contentPadding: const EdgeInsets.only(left: 12, right: 9),
         label: Text(hint),
       ),
       items: list.map<DropdownMenuItem<String>>((String value) {

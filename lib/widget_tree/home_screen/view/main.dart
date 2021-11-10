@@ -17,10 +17,14 @@ class _HomeScreenState extends State<HomeScreen> {
   // Screens for the bottom tab bars.
   final List<Widget> _screens = [
     const ProfileScreen(),
-    const ProfileScreen(),
-    const ProfileScreen(),
-    const ProfileScreen(),
-    const ProfileScreen(),
+    Container(),
+    Container(),
+    Container(),
+    Container(),
+    // const ProfileScreen(),
+    // const ProfileScreen(),
+    // const ProfileScreen(),
+    // const ProfileScreen(),
   ];
 
   // Display the Appbar or not.
@@ -59,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
           fixedColor: Colors.blue,
         ),
         cupertino: (_, __) => CupertinoTabBarData(
-          activeColor: Colors.blue,
+          activeColor: Colors.lightBlueAccent,
         ),
         items: [
           BottomNavigationBarItem(

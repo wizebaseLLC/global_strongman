@@ -54,7 +54,8 @@ class OnboardForm extends StatefulWidget {
 class _OnboardFormState extends State<OnboardForm> {
   bool saving = false;
 
-  void Function() onDone(BuildContext context, GlobalKey<FormBuilderState> formKey) {
+  void Function() onDone(
+      BuildContext context, GlobalKey<FormBuilderState> formKey) {
     return () {
       try {
         setState(() {
@@ -68,14 +69,16 @@ class _OnboardFormState extends State<OnboardForm> {
             setState(() {
               saving = false;
             });
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()));
           });
         } else {
           showPlatformDialog(
             context: context,
             builder: (_) => PlatformAlertDialog(
               title: const Text('Missing Required Fields'),
-              content: const Text('Please go back and check for unanswered required fields'),
+              content: const Text(
+                  'Please go back and check for unanswered required fields'),
               actions: <Widget>[
                 PlatformDialogAction(
                   child: PlatformText(
@@ -116,13 +119,15 @@ class _OnboardFormState extends State<OnboardForm> {
                 controller: widget.introKey,
                 formKey: widget._formKey,
               )
-                  .map((pageData) => createPage(
-                        context: context,
-                        assetName: pageData.imageUrl,
-                        body: pageData.pageBody,
-                        controller: widget.introKey,
-                        title: pageData.title,
-                      ))
+                  .map(
+                    (pageData) => createPage(
+                      context: context,
+                      assetName: pageData.imageUrl,
+                      body: pageData.pageBody,
+                      controller: widget.introKey,
+                      title: pageData.title,
+                    ),
+                  )
                   .toList(),
               done: const Text(
                 "Submit",
@@ -146,7 +151,8 @@ class _OnboardFormState extends State<OnboardForm> {
                   activeColor: Colors.blue,
                   color: Colors.white,
                   spacing: const EdgeInsets.symmetric(horizontal: 3.0),
-                  activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0))),
+                  activeShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25.0))),
               onDone: onDone(context, widget._formKey)),
         ),
       ),

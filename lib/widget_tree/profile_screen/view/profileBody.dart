@@ -8,6 +8,7 @@ import 'package:global_strongman/widget_tree/profile_screen/view/profile_header.
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_list.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_list_tile.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/progress_card.dart';
+import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/edit_profile_screen.dart';
 
 class ProfileBody extends StatelessWidget {
   const ProfileBody({
@@ -136,7 +137,14 @@ class ProfileBody extends StatelessWidget {
             color: Colors.blue,
             size: 30,
           ),
-          onTap: () {},
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EditProfileScreen(
+                firebaseUser: firebaseUser,
+              ),
+            ),
+          ),
         ),
         ProfileListTile(
           title: "Membership",

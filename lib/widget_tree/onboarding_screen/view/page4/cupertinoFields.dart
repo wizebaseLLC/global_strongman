@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/controller/firebase_user.dart';
 import 'package:global_strongman/widget_tree/onboarding_screen/model/list_page_data.dart';
 import 'package:global_strongman/widget_tree/onboarding_screen/model/multi_select_string_chip.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class CupertinoFormFields extends StatefulWidget {
   const CupertinoFormFields({
+    this.firebaseUser,
     Key? key,
   }) : super(key: key);
+  final FirebaseUser? firebaseUser;
 
   @override
   State<CupertinoFormFields> createState() => _CupertinoFormFieldsState();
@@ -39,6 +42,7 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
           title: "Experience",
           name: "experience",
           initialValue: "Beginner",
+          firebaseUser: widget.firebaseUser,
         ),
         _buildMultiSelectFormRow(
           context: context,
@@ -47,6 +51,7 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
           buttonText: "What are your goals?",
           initialState: goals,
           prefix: "Goals",
+          firebaseUser: widget.firebaseUser,
         ),
         _buildMultiSelectFormRow(
           context: context,
@@ -55,6 +60,7 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
           buttonText: "Do you have injuries?",
           initialState: injuries,
           prefix: "Injuries",
+          firebaseUser: widget.firebaseUser,
         ),
       ],
     );
@@ -67,7 +73,10 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
     required String name,
     required String buttonText,
     required List<Object?> initialState,
+    required FirebaseUser? firebaseUser,
   }) {
+    Map<String, dynamic>? user = firebaseUser?.toJson();
+
     return CupertinoFormRow(
       prefix: Text(
         prefix,
@@ -77,9 +86,12 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
         width: MediaQuery.of(context).size.width * .6,
         child: FormBuilderField(
             name: name,
+            initialValue: user?[name] != null ? user![name] : null,
             builder: (FormFieldState<dynamic> field) {
               return MultiSelectDialogField(
-                backgroundColor: CupertinoTheme.of(context).barBackgroundColor.withOpacity(1),
+                backgroundColor: CupertinoTheme.of(context)
+                    .barBackgroundColor
+                    .withOpacity(1),
                 decoration: const BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
@@ -104,7 +116,7 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
                     fontSize: 12,
                   ),
                 ),
-                initialValue: initialState,
+                initialValue: user?[name] != null ? user![name] : initialState,
                 buttonIcon: Icon(
                   PlatformIcons(context).rightChevron,
                   size: 16,
@@ -125,7 +137,10 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
                     )),
                 buttonText: Text(
                   buttonText,
-                  style: CupertinoTheme.of(context).textTheme.pickerTextStyle.copyWith(
+                  style: CupertinoTheme.of(context)
+                      .textTheme
+                      .pickerTextStyle
+                      .copyWith(
                         color: Colors.white60,
                         fontSize: 16,
                       ),
@@ -145,7 +160,10 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
     required String title,
     required String name,
     required String initialValue,
+    required FirebaseUser? firebaseUser,
   }) {
+    Map<String, dynamic>? user = firebaseUser?.toJson();
+
     return CupertinoFormRow(
       prefix: Text(
         title,
@@ -156,10 +174,15 @@ class _CupertinoFormFieldsState extends State<CupertinoFormFields> {
         width: MediaQuery.of(context).size.width * .6,
         child: FormBuilderField(
             name: name,
-            initialValue: initialValue,
+            initialValue: user?[name] != null ? user![name] : initialValue,
             builder: (FormFieldState<dynamic> field) {
               return CupertinoPicker(
                 itemExtent: 22,
+                scrollController: user?[name] != null
+                    ? FixedExtentScrollController(
+                        initialItem: list.indexOf(user![name]),
+                      )
+                    : null,
                 onSelectedItemChanged: (value) {
                   field.didChange(list[value]);
                 },

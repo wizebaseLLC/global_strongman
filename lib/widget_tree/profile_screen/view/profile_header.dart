@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/controller/firebase_user.dart';
+import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/profile_image_view.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -49,6 +50,7 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(key);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -64,14 +66,28 @@ class ProfileHeader extends StatelessWidget {
                 width: 100,
                 child: firebaseUser.avatar != null
                     ? ClipOval(
-                        child: Image.network(
-                          firebaseUser.avatar!,
-                          cacheHeight: 300,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => Icon(
-                            PlatformIcons(context).error,
-                            size: 60,
-                            color: Colors.white,
+                        child: InkWell(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileImageView(
+                                imageProvider:
+                                    NetworkImage(firebaseUser.avatar!),
+                              ),
+                            ),
+                          ),
+                          child: Hero(
+                            tag: "profile_gallery_avatar",
+                            child: Image.network(
+                              firebaseUser.avatar!,
+                              cacheHeight: 300,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Icon(
+                                PlatformIcons(context).error,
+                                size: 60,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
                       )
@@ -148,12 +164,12 @@ class ProfileHeader extends StatelessWidget {
           ),
         ),
         ListTile(
-          leading: const Icon(Icons.add_photo_alternate_rounded),
+          leading: const Icon(
+            Icons.add_photo_alternate_rounded,
+            color: Colors.amberAccent,
+          ),
           title: const Text(
             'Library',
-            style: TextStyle(
-              color: Colors.lightBlueAccent,
-            ),
           ),
           onTap: () {
             Navigator.pop(context);
@@ -162,12 +178,12 @@ class ProfileHeader extends StatelessWidget {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.add_a_photo_rounded),
+          leading: const Icon(
+            Icons.add_a_photo_rounded,
+            color: Colors.blueAccent,
+          ),
           title: const Text(
             'Camera',
-            style: TextStyle(
-              color: Colors.lightBlueAccent,
-            ),
           ),
           onTap: () {
             Navigator.pop(context);
@@ -193,6 +209,15 @@ class ProfileHeader extends StatelessWidget {
     return CupertinoActionSheet(
       title: const Text('Profile Image'),
       message: const Text('Upload a new Profile image'),
+      cancelButton: CupertinoActionSheetAction(
+        isDestructiveAction: true,
+        child: const Text(
+          'Cancel',
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
       actions: <CupertinoActionSheetAction>[
         CupertinoActionSheetAction(
           child: const Text(
@@ -216,16 +241,6 @@ class ProfileHeader extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        CupertinoActionSheetAction(
-          isDestructiveAction: true,
-          isDefaultAction: true,
-          child: const Text(
-            'Cancel',
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        )
       ],
     );
   }

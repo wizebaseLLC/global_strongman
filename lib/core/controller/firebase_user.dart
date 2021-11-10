@@ -21,7 +21,7 @@ class FirebaseUser {
     required this.email,
   });
 
-  final String? age;
+  final int? age;
   final String? avatar;
   final String email;
   final String? experience;
@@ -35,7 +35,7 @@ class FirebaseUser {
 
   FirebaseUser.fromJson(Map<String, Object?> json)
       : this(
-          age: json['age'].toString(),
+          age: json['age'] as int?,
           avatar: json['avatar'] as String?,
           email: json['email'] as String,
           experience: json['experience'] as String?,
@@ -65,8 +65,12 @@ class FirebaseUser {
 
   /// Get a reference to the single user.
   DocumentReference<FirebaseUser> getDocumentReference() {
-    return FirebaseFirestore.instance.collection('users').doc(email).withConverter<FirebaseUser>(
-          fromFirestore: (snapshot, _) => FirebaseUser.fromJson(snapshot.data()!),
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(email)
+        .withConverter<FirebaseUser>(
+          fromFirestore: (snapshot, _) =>
+              FirebaseUser.fromJson(snapshot.data()!),
           toFirestore: (movie, _) => movie.toJson(),
         );
   }
@@ -74,8 +78,11 @@ class FirebaseUser {
   /// Get a reference to the entire collection.
   /// Don't forget to add a where clause.
   CollectionReference<FirebaseUser> getCollectionReference() {
-    return FirebaseFirestore.instance.collection('users').withConverter<FirebaseUser>(
-          fromFirestore: (snapshot, _) => FirebaseUser.fromJson(snapshot.data()!),
+    return FirebaseFirestore.instance
+        .collection('users')
+        .withConverter<FirebaseUser>(
+          fromFirestore: (snapshot, _) =>
+              FirebaseUser.fromJson(snapshot.data()!),
           toFirestore: (movie, _) => movie.toJson(),
         );
   }
@@ -95,7 +102,10 @@ class FirebaseUser {
     required File file,
   }) async {
     try {
-      final Reference ref = FirebaseStorage.instance.ref("Users").child(email).child("/avatar.jpg");
+      final Reference ref = FirebaseStorage.instance
+          .ref("Users")
+          .child(email)
+          .child("/avatar.jpg");
       TaskSnapshot uploadTask = await ref.putFile(file);
       final url = await uploadTask.ref.getDownloadURL();
       getDocumentReference().update({"avatar": url});
