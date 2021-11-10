@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,7 +41,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         trailingActions: [
           TextButton(
             child: const Text("Save"),
-            onPressed: onDone(context, _formKey),
+            onPressed: () => onDone(context, _formKey),
           ),
         ],
       ),
@@ -90,52 +91,57 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  void Function() onDone(
+  Future<void> onDone(
     BuildContext context,
     GlobalKey<FormBuilderState> formKey,
-  ) {
-    return () {
-      try {
-        setState(() {
-          saving = true;
-        });
-        if (formKey.currentState?.saveAndValidate() == true) {
-          final Map<String, dynamic> formValues = formKey.currentState!.value;
-          print(formValues);
-          // SignInController().addUser(context, formValues).then((value) {
-          //   setState(() {
-          //     saving = false;
-          //   });
-          //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-          // });
-        } else {
-          showPlatformDialog(
-            context: context,
-            builder: (_) => PlatformAlertDialog(
-              title: const Text('Missing Required Fields'),
-              content: const Text(
-                  'Please go back and check for unanswered required fields'),
-              actions: <Widget>[
-                PlatformDialogAction(
-                  child: PlatformText(
-                    'Ok',
-                    style: const TextStyle(color: Colors.blue),
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
-            ),
-          );
-          setState(() {
-            saving = false;
-          });
+  ) async {
+    try {
+      setState(() {
+        saving = true;
+      });
+      if (formKey.currentState?.saveAndValidate() == true) {
+        final Map<String, dynamic> formValues = formKey.currentState!.value;
+        final userEmail = FirebaseAuth.instance.currentUser?.email;
+
+        if (userEmail != null) {
+          await FirebaseUser(email: userEmail)
+              .getDocumentReference()
+              .update(formValues);
         }
-      } catch (e) {
-        SignInController().showDialog(context, e.toString());
+        Navigator.pop(context);
+
+        setState(() {
+          saving = false;
+        });
+      } else {
+        showPlatformDialog(
+          context: context,
+          builder: (_) => PlatformAlertDialog(
+            title: const Text('Missing Required Fields'),
+            content: const Text(
+                'Please go back and check for unanswered required fields'),
+            actions: <Widget>[
+              PlatformDialogAction(
+                child: PlatformText(
+                  'Ok',
+                  style: const TextStyle(color: Colors.blue),
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        );
         setState(() {
           saving = false;
         });
       }
-    };
+    } catch (e) {
+      SignInController().showDialog(context, e.toString());
+      setState(
+        () {
+          saving = false;
+        },
+      );
+    }
   }
 }
