@@ -93,6 +93,7 @@ class CupertinoFormFields extends StatelessWidget {
               validator: FormBuilderValidators.compose(
                 [
                   FormBuilderValidators.minLength(context, 3),
+                  FormBuilderValidators.maxLength(context, 12),
                   FormBuilderValidators.required(context),
                 ],
               ),

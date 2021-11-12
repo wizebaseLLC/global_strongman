@@ -1,13 +1,11 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/controller/firebase_user.dart';
+import 'package:global_strongman/core/view/platform_scaffold_ios_sliver_title.dart';
 import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_controller.dart';
 import 'package:global_strongman/widget_tree/onboarding_screen/view/page2/main.dart';
 import 'package:global_strongman/widget_tree/onboarding_screen/view/page3/main.dart';
@@ -30,61 +28,53 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool saving = false;
   @override
   Widget build(BuildContext context) {
-    return PlatformScaffold(
-      backgroundColor: platformThemeData(
-        context,
-        material: (data) => data.scaffoldBackgroundColor,
-        cupertino: (data) => data.barBackgroundColor,
+    return PlatformScaffoldIosSliverTitle(
+      title: "Edit Profile",
+      body: _buildBody(context),
+      trailingActions: [
+        _buildAppBarTextButton(context),
+      ],
+    );
+  }
+
+  Widget _buildAppBarTextButton(BuildContext context) {
+    return PlatformTextButton(
+      child: const Text(
+        "Save",
+        style: TextStyle(color: Colors.lightBlueAccent),
       ),
-      appBar: PlatformAppBar(
-        title: const Text("Edit Profile"),
-        trailingActions: [
-          TextButton(
-            child: const Text("Save"),
-            onPressed: () => onDone(context, _formKey),
-          ),
-        ],
-      ),
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: SafeArea(
-          child: FormBuilder(
-            key: _formKey,
-            initialValue: widget.firebaseUser.toJson(),
-            child: ModalProgressHUD(
-              inAsyncCall: saving,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (Platform.isIOS)
-                      Padding(
-                        padding: const EdgeInsets.all(kSpacing),
-                        child: Text("Edit Profile",
-                            style: CupertinoTheme.of(context)
-                                .textTheme
-                                .navLargeTitleTextStyle),
-                      ),
-                    ...page2Body(
-                      context: context,
-                      shouldShowAvatar: false,
-                      firebaseUser: widget.firebaseUser,
-                    ),
-                    ...page3Body(
-                      context: context,
-                      firebaseUser: widget.firebaseUser,
-                    ),
-                    ...page4Body(
-                      context: context,
-                      firebaseUser: widget.firebaseUser,
-                    ),
-                    const SizedBox(
-                      height: kSpacing,
-                    ),
-                  ],
-                ),
+      onPressed: () => onDone(context, _formKey),
+      cupertino: (_, __) => CupertinoTextButtonData(padding: EdgeInsets.zero),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return FormBuilder(
+      key: _formKey,
+      initialValue: widget.firebaseUser.toJson(),
+      child: ModalProgressHUD(
+        inAsyncCall: saving,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...page2Body(
+                context: context,
+                shouldShowAvatar: false,
+                firebaseUser: widget.firebaseUser,
               ),
-            ),
+              ...page3Body(
+                context: context,
+                firebaseUser: widget.firebaseUser,
+              ),
+              ...page4Body(
+                context: context,
+                firebaseUser: widget.firebaseUser,
+              ),
+              const SizedBox(
+                height: kSpacing,
+              ),
+            ],
           ),
         ),
       ),
@@ -101,12 +91,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       });
       if (formKey.currentState?.saveAndValidate() == true) {
         final Map<String, dynamic> formValues = formKey.currentState!.value;
+        Map<String, dynamic> copiedValues =
+            Map<String, dynamic>.from(formValues);
+        if (copiedValues["age"] != null && !Platform.isIOS) {
+          copiedValues["age"] = int.tryParse(copiedValues["age"]);
+        }
         final userEmail = FirebaseAuth.instance.currentUser?.email;
 
         if (userEmail != null) {
           await FirebaseUser(email: userEmail)
               .getDocumentReference()
-              .update(formValues);
+              .update(copiedValues);
         }
         Navigator.pop(context);
 

@@ -39,7 +39,8 @@ class SignInController {
             await signInWithGoogle().catchError((e) => print(e));
             final firebaseUserExists = await getSignedInUserFromFireStore();
             if (firebaseUserExists) {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
             } else {
               Navigator.pushReplacement(
                   context,
@@ -61,7 +62,8 @@ class SignInController {
             await signInWithFacebook().catchError((e) => print(e));
             final firebaseUserExists = await getSignedInUserFromFireStore();
             if (firebaseUserExists) {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
             } else {
               Navigator.pushReplacement(
                   context,
@@ -83,7 +85,8 @@ class SignInController {
             await signInWithApple().catchError((e) => print(e));
             final firebaseUserExists = await getSignedInUserFromFireStore();
             if (firebaseUserExists) {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
             } else {
               Navigator.pushReplacement(
                   context,
@@ -112,7 +115,11 @@ class SignInController {
     try {
       final User? user = auth.currentUser;
       // Create a CollectionReference called users that references the firestore collection.
-      DocumentSnapshot<Map<String, dynamic>> firestoreUser = await FirebaseFirestore.instance.collection('users').doc(user?.email).get();
+      DocumentSnapshot<Map<String, dynamic>> firestoreUser =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user?.email)
+              .get();
 
       return firestoreUser.exists;
     } catch (e) {
@@ -159,7 +166,8 @@ class SignInController {
             onPressed: () async {
               try {
                 if (forgotPasswordEmail.length > 1) {
-                  FirebaseAuth.instance.sendPasswordResetEmail(email: forgotPasswordEmail);
+                  FirebaseAuth.instance
+                      .sendPasswordResetEmail(email: forgotPasswordEmail);
                   Navigator.pop(context);
                 }
               } catch (e) {
@@ -175,7 +183,8 @@ class SignInController {
 
   Future<void> handleSignupFromEmail(BuildContext context) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: userController!.value.text,
         password: passwordController!.value.text,
       );
@@ -204,13 +213,15 @@ class SignInController {
 
   Future<void> handleSignInFromEmail(BuildContext context) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: userController!.value.text,
         password: passwordController!.value.text,
       );
 
       if (userCredential.user != null) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
 
         if (!userCredential.user!.emailVerified) {
           await userCredential.user?.sendEmailVerification();
@@ -249,10 +260,12 @@ class SignInController {
     );
   }
 
-  Future<void> addUser(BuildContext context, Map<String, dynamic> values) async {
+  Future<void> addUser(
+      BuildContext context, Map<String, dynamic> values) async {
     try {
       // Create a CollectionReference called users that references the firestore collection.
-      CollectionReference users = FirebaseFirestore.instance.collection('users');
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
 
       // Extract the avatar file.
       XFile? avatar = values["avatar"];
@@ -277,7 +290,7 @@ class SignInController {
           copiedValues["avatar"] = uploadedAvatarUrl;
         }
         copiedValues["email"] = user.email;
-        copiedValues["age"] = values["age"].toString();
+        // copiedValues["age"] = values["age"].toString();
         // Call the user's CollectionReference to add a new user
         await users.doc(user.email).set(copiedValues);
       }
@@ -292,7 +305,8 @@ class SignInController {
     required File file,
   }) async {
     try {
-      final Reference ref = storage.ref("Users").child(email).child("/avatar.jpg");
+      final Reference ref =
+          storage.ref("Users").child(email).child("/avatar.jpg");
       TaskSnapshot uploadTask = await ref.putFile(file);
       final url = await uploadTask.ref.getDownloadURL();
       return url;
