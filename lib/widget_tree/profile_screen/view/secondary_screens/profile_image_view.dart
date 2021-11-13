@@ -6,20 +6,25 @@ import 'package:photo_view/photo_view.dart';
 class ProfileImageView extends StatelessWidget {
   const ProfileImageView({
     required this.imageProvider,
+    this.heroTag,
+    this.title,
     Key? key,
   }) : super(key: key);
+
+  final String? heroTag;
+  final String? title;
 
   final ImageProvider imageProvider;
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        title: const Text("Profile Image"),
+        title: Text(title ?? "Profile Image"),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Hero(
-          tag: "profile_gallery_avatar",
+          tag: heroTag ?? "profile_gallery_avatar",
           child: PhotoView(
             imageProvider: imageProvider,
             loadingBuilder: (context, event) => Center(

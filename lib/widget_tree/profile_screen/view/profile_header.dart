@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/controller/firebase_user.dart';
+import 'package:global_strongman/core/controller/showPlatformActionSheet.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/profile_image_view.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -17,7 +18,7 @@ class ProfileHeader extends StatelessWidget {
 
   final FirebaseUser firebaseUser;
 
-  Future<void> _uploadImageFromGallery({
+  Future<void> _uploadImage({
     required BuildContext context,
     required ImageSource imageSource,
   }) async {
@@ -39,18 +40,40 @@ class ProfileHeader extends StatelessWidget {
   }
 
   void _cupertinoActionSheet(BuildContext context) {
-    showPlatformModalSheet<void>(
+    cupertinoActionSheet(
       context: context,
-      builder: (BuildContext context) => PlatformWidget(
-        material: (_, __) => _buildMaterialBottomSheet(context),
-        cupertino: (_, __) => _buildCupertinoActionSheet(context),
+      actionSheetData: PlatformActionSheet(
+        title: "Add Progress Photo",
+        model: [
+          ActionSheetModel(
+            title: "Library",
+            textStyle: const TextStyle(color: Colors.lightBlueAccent),
+            onTap: () => _uploadImage(
+              context: context,
+              imageSource: ImageSource.gallery,
+            ),
+            iconMaterial: const Icon(
+              Icons.add_photo_alternate_rounded,
+            ),
+          ),
+          ActionSheetModel(
+            title: "Camera",
+            textStyle: const TextStyle(color: Colors.lightBlueAccent),
+            onTap: () => _uploadImage(
+              imageSource: ImageSource.camera,
+              context: context,
+            ),
+            iconMaterial: const Icon(
+              Icons.add_a_photo_rounded,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    print(key);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -147,99 +170,6 @@ class ProfileHeader extends StatelessWidget {
             cupertino: (data) => data.textTheme.navTitleTextStyle
                 .copyWith(fontSize: 16, color: Colors.grey),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMaterialBottomSheet(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "Update Profile Image",
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-        ),
-        ListTile(
-          leading: const Icon(
-            Icons.add_photo_alternate_rounded,
-            color: Colors.amberAccent,
-          ),
-          title: const Text(
-            'Library',
-          ),
-          onTap: () {
-            Navigator.pop(context);
-            _uploadImageFromGallery(
-                context: context, imageSource: ImageSource.gallery);
-          },
-        ),
-        ListTile(
-          leading: const Icon(
-            Icons.add_a_photo_rounded,
-            color: Colors.blueAccent,
-          ),
-          title: const Text(
-            'Camera',
-          ),
-          onTap: () {
-            Navigator.pop(context);
-            _uploadImageFromGallery(
-                imageSource: ImageSource.camera, context: context);
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.stop_rounded),
-          title: Text(
-            'Cancel',
-            style: TextStyle(color: Colors.red.shade400),
-          ),
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCupertinoActionSheet(BuildContext context) {
-    return CupertinoActionSheet(
-      title: const Text('Profile Image'),
-      message: const Text('Upload a new Profile image'),
-      cancelButton: CupertinoActionSheetAction(
-        isDestructiveAction: true,
-        child: const Text(
-          'Cancel',
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      actions: <CupertinoActionSheetAction>[
-        CupertinoActionSheetAction(
-          child: const Text(
-            'Library',
-            style: TextStyle(color: Colors.lightBlueAccent),
-          ),
-          onPressed: () {
-            _uploadImageFromGallery(
-                context: context, imageSource: ImageSource.gallery);
-            Navigator.pop(context);
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: const Text(
-            'Camera',
-            style: TextStyle(color: Colors.lightBlueAccent),
-          ),
-          onPressed: () {
-            _uploadImageFromGallery(
-                context: context, imageSource: ImageSource.camera);
-            Navigator.pop(context);
-          },
         ),
       ],
     );

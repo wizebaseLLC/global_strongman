@@ -19,7 +19,8 @@ class GalleryImageCardContainer extends StatelessWidget {
       shrinkWrap: true,
       itemCount: galleryList.length,
       padding: EdgeInsets.zero,
-      scrollDirection: Axis.vertical,
+      physics: const ScrollPhysics(),
+      //scrollDirection: Axis.vertical,
       itemBuilder: (context, index) => PlatformWidget(
         cupertino: (context, _) => CupertinoButton(
           onPressed: () {},
