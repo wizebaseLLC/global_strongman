@@ -24,22 +24,23 @@ class ProgressPhotoScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(kSpacing * 2),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileImageView(
-                          heroTag: "Progress Photo",
-                          title: "Progress Photo",
-                          imageProvider: FileImage(
-                            file,
-                          )),
-                    ),
+              child: PlatformTextButton(
+                padding: EdgeInsets.zero,
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileImageView(
+                        heroTag: "Progress Photo",
+                        title: "Progress Photo",
+                        imageProvider: FileImage(
+                          file,
+                        )),
                   ),
-                  child: Hero(
-                    tag: "Progress Photo",
+                ),
+                child: Hero(
+                  tag: "Progress Photo",
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
                     child: Image.file(
                       file,
                       height: 200,
@@ -64,7 +65,6 @@ class ProgressPhotoScreen extends StatelessWidget {
                 ),
                 dense: true,
                 title: PlatformTextField(
-                  autofocus: true,
                   material: (_, __) => MaterialTextFieldData(
                     decoration: const InputDecoration(
                       label: Text("Say Something"),
