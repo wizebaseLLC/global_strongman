@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/controller/platformPicker.dart';
 import 'package:global_strongman/core/view/platform_scaffold_ios_sliver_title.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/profile_image_view.dart';
+
+final DateTime now = DateTime.now();
 
 class ProgressPhotoScreen extends StatelessWidget {
   const ProgressPhotoScreen({required this.file, Key? key}) : super(key: key);
@@ -50,40 +53,54 @@ class ProgressPhotoScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Colors.grey.shade800.withOpacity(.5),
+            ListTile(
+              leading: const FaIcon(
+                FontAwesomeIcons.laughWink,
+                color: Colors.yellowAccent,
+              ),
+              dense: true,
+              title: PlatformTextField(
+                material: (_, __) => MaterialTextFieldData(
+                  decoration: const InputDecoration(
+                    label: Text("Say Something"),
+                    border: InputBorder.none,
+                  ),
+                ),
+                cupertino: (_, __) => CupertinoTextFieldData(
+                  placeholder: "Say Something",
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 0),
                   ),
                 ),
               ),
-              child: ListTile(
-                leading: const FaIcon(
-                  FontAwesomeIcons.laughWink,
-                  color: Colors.yellowAccent,
-                ),
-                dense: true,
-                title: PlatformTextField(
-                  material: (_, __) => MaterialTextFieldData(
-                    decoration: const InputDecoration(
-                      label: Text("Say Something"),
-                      border: InputBorder.none,
-                    ),
-                  ),
-                  cupertino: (_, __) => CupertinoTextFieldData(
-                    placeholder: "Say Something",
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 0),
-                    ),
-                  ),
-                ),
-                tileColor: platformThemeData(
+              tileColor: platformThemeData(
+                context,
+                material: (data) => data.scaffoldBackgroundColor,
+                cupertino: (data) => data.scaffoldBackgroundColor,
+              ),
+            ),
+            const Divider(
+              indent: kSpacing * 8,
+              color: Colors.grey,
+            ),
+            _buildListTile(
+              context: context,
+              title: "Date",
+              leading: const FaIcon(
+                FontAwesomeIcons.calendarDay,
+                color: Colors.amberAccent,
+              ),
+              trailing: Text(
+                DateTime(now.year, now.month, now.day)
+                    .toString()
+                    .substring(0, 10),
+                style: platformThemeData(
                   context,
-                  material: (data) => data.scaffoldBackgroundColor,
-                  cupertino: (data) => data.scaffoldBackgroundColor,
+                  material: (data) => data.textTheme.subtitle1,
+                  cupertino: (data) => data.textTheme.navTitleTextStyle,
                 ),
               ),
+              onPress: () {},
             ),
             _buildListTile(
               context: context,
@@ -96,7 +113,25 @@ class ProgressPhotoScreen extends StatelessWidget {
                 PlatformIcons(context).rightChevron,
                 color: Colors.grey,
               ),
-              onPress: () {},
+              onPress: () async {
+                final picker = PlatformPicker(list: [
+                  "hi",
+                  "bye",
+                  "fsdaf",
+                  "fdsfs",
+                  "hi",
+                  "bye",
+                  "fsdaf",
+                  "fdsfs",
+                ]);
+
+                await picker.showPicker(
+                  context: context,
+                  title: "Weight",
+                  message: "What was your weight when you took this picture",
+                );
+                print(picker.pickerValue);
+              },
             ),
             _buildListTile(
               context: context,
@@ -163,19 +198,6 @@ class ProgressPhotoScreen extends StatelessWidget {
               ),
               onPress: () {},
             ),
-            _buildListTile(
-              context: context,
-              title: "Date",
-              leading: const FaIcon(
-                FontAwesomeIcons.calendarDay,
-                color: Colors.amberAccent,
-              ),
-              trailing: Icon(
-                PlatformIcons(context).rightChevron,
-                color: Colors.grey,
-              ),
-              onPress: () {},
-            ),
           ],
         ),
       ),
@@ -189,33 +211,33 @@ class ProgressPhotoScreen extends StatelessWidget {
     required Widget trailing,
     required Function() onPress,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey.shade800.withOpacity(.5),
+    return Column(
+      children: [
+        ListTile(
+          leading: leading,
+          dense: true,
+          title: Text(
+            title,
+            style: platformThemeData(
+              context,
+              material: (data) => data.textTheme.subtitle1,
+              cupertino: (data) => data.textTheme.navTitleTextStyle,
+            ),
           ),
-        ),
-      ),
-      child: ListTile(
-        leading: leading,
-        dense: true,
-        title: Text(
-          title,
-          style: platformThemeData(
+          trailing: trailing,
+          onTap: onPress,
+          tileColor: platformThemeData(
             context,
-            material: (data) => data.textTheme.subtitle1,
-            cupertino: (data) => data.textTheme.navTitleTextStyle,
+            material: (data) => data.scaffoldBackgroundColor,
+            cupertino: (data) => data.scaffoldBackgroundColor,
           ),
         ),
-        trailing: trailing,
-        onTap: onPress,
-        tileColor: platformThemeData(
-          context,
-          material: (data) => data.scaffoldBackgroundColor,
-          cupertino: (data) => data.scaffoldBackgroundColor,
-        ),
-      ),
+        const Divider(
+          indent: kSpacing * 8,
+          color: Colors.grey,
+          height: 1,
+        )
+      ],
     );
   }
 

@@ -25,8 +25,10 @@ class ProfileList extends StatelessWidget {
               header,
               style: platformThemeData(
                 context,
-                material: (data) => data.textTheme.headline6?.copyWith(color: Colors.grey),
-                cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(fontSize: 20),
+                material: (data) =>
+                    data.textTheme.headline6?.copyWith(color: Colors.grey),
+                cupertino: (data) =>
+                    data.textTheme.tabLabelTextStyle.copyWith(fontSize: 20),
               ),
             ),
           ),
@@ -41,7 +43,7 @@ class ProfileList extends StatelessWidget {
             cupertino: (data) => data.scaffoldBackgroundColor,
           ),
           child: SizedBox(
-            height: 56.toDouble() * listTiles.length,
+            height: 58.toDouble() * listTiles.length,
             child: ListView(
               physics: const NeverScrollableScrollPhysics(),
               children: listTiles,
