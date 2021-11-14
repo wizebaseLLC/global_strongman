@@ -9,6 +9,7 @@ class PlatformPicker {
 
   final List<String> list;
   String? pickerValue;
+  DateTime? dateTimeValue;
 
   Future<void> showPicker({
     required BuildContext context,
@@ -74,6 +75,62 @@ class PlatformPicker {
           ),
         ),
       );
+    }
+  }
+
+  Future<void> showDateTimePicker({
+    required BuildContext context,
+    required String title,
+    String? message,
+    DateTime? maxDate,
+  }) async {
+    if (Platform.isIOS) {
+      await showCupertinoModalPopup(
+        context: context,
+        builder: (context) {
+          return CupertinoActionSheet(
+            title: Text(
+              title,
+              style: CupertinoTheme.of(context)
+                  .textTheme
+                  .navTitleTextStyle
+                  .copyWith(fontSize: 20),
+            ),
+            message: message != null
+                ? Text(
+                    message,
+                    style:
+                        CupertinoTheme.of(context).textTheme.textStyle.copyWith(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                  )
+                : null,
+            cancelButton: CupertinoActionSheetAction(
+              isDestructiveAction: true,
+              child: const Text(
+                'Done',
+                style: TextStyle(color: Colors.lightBlueAccent),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            actions: [createCupertinoDateTimePicker(maxDate)],
+          );
+        },
+      );
+    } else {
+      final DateTime? picked = await showDatePicker(
+        context: context,
+        firstDate: DateTime(2015, 8),
+        lastDate: maxDate ?? DateTime(2101),
+        initialDate: DateTime.now(),
+      );
+
+      if (picked != null) {
+        dateTimeValue = picked;
+      }
     }
   }
 
@@ -150,6 +207,22 @@ class PlatformPicker {
                         ),
                       ))
                   .toList(),
+            ),
+          ),
+        ],
+      );
+
+  Widget createCupertinoDateTimePicker(DateTime? maxDate) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 200,
+            child: CupertinoDatePicker(
+              maximumDate: maxDate,
+              mode: CupertinoDatePickerMode.date,
+              onDateTimeChanged: (value) {
+                dateTimeValue = value;
+              },
             ),
           ),
         ],

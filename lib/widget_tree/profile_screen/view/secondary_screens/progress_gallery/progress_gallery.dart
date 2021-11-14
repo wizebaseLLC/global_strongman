@@ -92,10 +92,12 @@ class ProgressGallery extends StatelessWidget {
                   ShareOrAddButton(
                     icon: PlatformIcons(context).share,
                     title: "Share",
+                    firebaseUser: firebaseUser,
                   ),
                   ShareOrAddButton(
                     icon: PlatformIcons(context).add,
                     title: "Add",
+                    firebaseUser: firebaseUser,
                   ),
                 ],
               ),

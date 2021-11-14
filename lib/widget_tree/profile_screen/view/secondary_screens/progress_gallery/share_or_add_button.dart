@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:global_strongman/core/controller/firebase_user.dart';
 import 'package:global_strongman/core/controller/showPlatformActionSheet.dart';
 import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_controller.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/progress_gallery/new_progress_photo_screen.dart';
@@ -12,10 +13,12 @@ class ShareOrAddButton extends StatelessWidget {
     Key? key,
     required this.title,
     required this.icon,
+    required this.firebaseUser,
   }) : super(key: key);
 
   final String title;
   final IconData icon;
+  final FirebaseUser firebaseUser;
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +92,10 @@ class ShareOrAddButton extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ProgressPhotoScreen(file: File(image!.path)),
+            builder: (_) => ProgressPhotoScreen(
+              file: File(image!.path),
+              firebaseUser: firebaseUser,
+            ),
           ),
         );
       }
