@@ -1,23 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/model/ProgressGalleryCard.dart';
 
-class ProgressLineChart extends StatefulWidget {
-  const ProgressLineChart({Key? key}) : super(key: key);
+const List<Color> gradientColors = [
+  Color(0xff23b6e6),
+  Color(0xff02d39a),
+];
 
-  @override
-  ProgressLineChartState createState() => ProgressLineChartState();
-}
+class ProgressLineChart extends StatelessWidget {
+  const ProgressLineChart({
+    required this.streamedGallery,
+    required this.initialWeight,
+    Key? key,
+  }) : super(key: key);
 
-class ProgressLineChartState extends State<ProgressLineChart> {
-  List<Color> gradientColors = [
-    const Color(0xff23b6e6),
-    const Color(0xff02d39a),
-  ];
+  final List<QueryDocumentSnapshot<ProgressGalleryCard>>? streamedGallery;
+  final String initialWeight;
 
   @override
   Widget build(BuildContext context) {
+    final currentWeight = streamedGallery?.first?.data().weight;
+    final direction = currentWeight == null
+        ? "n/a"
+        : int.parse(initialWeight) > int.parse(currentWeight)
+            ? "-"
+            : "+";
+    final difference = direction == "-"
+        ? int.parse(initialWeight) - int.parse(currentWeight!)
+        : int.parse(currentWeight!) - int.parse(initialWeight);
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: kSpacing * 2,
@@ -47,18 +61,20 @@ class ProgressLineChartState extends State<ProgressLineChart> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
+            children: [
               ProgressWeightText(
                 title: "Current Weight",
-                secondaryTitle: "115 lbs",
+                secondaryTitle: "$currentWeight lbs",
               ),
               ProgressWeightText(
                 title: "Start Weight",
-                secondaryTitle: "125 lbs",
+                secondaryTitle: "$initialWeight lbs",
               ),
               ProgressWeightText(
                 title: "Progress",
-                secondaryTitle: "-5 lbs",
+                secondaryTitle: direction == "n/a"
+                    ? "n/a"
+                    : "$direction${difference.toString()}",
               ),
             ],
           ),
