@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/profile_image_view.dart';
 
 class GalleryImageCardContainer extends StatelessWidget {
   const GalleryImageCardContainer({
@@ -20,17 +21,40 @@ class GalleryImageCardContainer extends StatelessWidget {
       itemCount: galleryList.length,
       padding: EdgeInsets.zero,
       physics: const ScrollPhysics(),
-      //scrollDirection: Axis.vertical,
       itemBuilder: (context, index) => PlatformWidget(
         cupertino: (context, _) => CupertinoButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileImageView(
+                  heroTag: galleryList[index].imageUrl,
+                  title: "Progress Photo",
+                  imageProvider:
+                      CachedNetworkImageProvider(galleryList[index].imageUrl),
+                ),
+              ),
+            );
+          },
           padding: EdgeInsets.zero,
           child: galleryList[index],
         ),
         material: (context, _) => InkWell(
           borderRadius: BorderRadius.circular(16),
           splashColor: kPrimaryColor,
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileImageView(
+                  heroTag: galleryList[index].imageUrl,
+                  title: "Progress Photo",
+                  imageProvider:
+                      CachedNetworkImageProvider(galleryList[index].imageUrl),
+                ),
+              ),
+            );
+          },
           child: galleryList[index],
         ),
       ),
@@ -83,11 +107,14 @@ class GalleryImageCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: CachedNetworkImage(
-                  imageUrl: imageUrl,
-                  fit: BoxFit.fill,
-                  memCacheHeight: 300,
-                  width: MediaQuery.of(context).size.width * .4,
+                child: Hero(
+                  tag: imageUrl,
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.fill,
+                    memCacheHeight: 300,
+                    width: MediaQuery.of(context).size.width * .3,
+                  ),
                 ),
               ),
               Expanded(
@@ -103,13 +130,15 @@ class GalleryImageCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CardStatText(
-                                title: 'Weight: $weight lbs',
+                                title:
+                                    'Weight: ${weight ?? ""} ${weight != null ? "lbs" : ""}',
                               ),
                               CardStatText(
-                                title: 'Bust: $bust in',
+                                title:
+                                    'Bust: ${bust ?? ""} ${bust != null ? "in" : ""}',
                               ),
                               CardStatText(
-                                title: 'BMI: $bmi',
+                                title: 'BMI: ${bmi ?? ""}',
                               ),
                             ],
                           ),
@@ -120,13 +149,16 @@ class GalleryImageCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CardStatText(
-                                title: 'Waist: $waist in',
+                                title:
+                                    'Waist: ${waist ?? ""}  ${waist != null ? "in" : ""}',
                               ),
                               CardStatText(
-                                title: 'Hip: $hip in',
+                                title:
+                                    'Hip: ${hip ?? ""}  ${hip != null ? "in" : ""}',
                               ),
                               CardStatText(
-                                title: 'Body Fat: $bodyFat %',
+                                title:
+                                    'Body Fat: ${bodyFat ?? ""}  ${bodyFat != null ? "%" : ""}',
                               ),
                             ],
                           ),
@@ -134,7 +166,8 @@ class GalleryImageCard extends StatelessWidget {
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: kSpacing / 2),
+                      padding:
+                          const EdgeInsets.symmetric(vertical: kSpacing ),
                       child: Text(
                         date,
                         style: platformThemeData(

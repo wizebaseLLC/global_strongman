@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:global_strongman/core/model/ProgressGalleryCard.dart';
 import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_controller.dart';
 
 class FirebaseUser {
@@ -71,7 +72,7 @@ class FirebaseUser {
         .withConverter<FirebaseUser>(
           fromFirestore: (snapshot, _) =>
               FirebaseUser.fromJson(snapshot.data()!),
-          toFirestore: (movie, _) => movie.toJson(),
+          toFirestore: (data, _) => data.toJson(),
         );
   }
 
@@ -83,7 +84,22 @@ class FirebaseUser {
         .withConverter<FirebaseUser>(
           fromFirestore: (snapshot, _) =>
               FirebaseUser.fromJson(snapshot.data()!),
-          toFirestore: (movie, _) => movie.toJson(),
+          toFirestore: (data, _) => data.toJson(),
+        );
+  }
+
+  /// Get a reference to the entire collection.
+  /// Don't forget to add a where clause.
+  CollectionReference<ProgressGalleryCard>
+      getProgressGalleryCollectionReference() {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(email)
+        .collection("progress_photos")
+        .withConverter<ProgressGalleryCard>(
+          fromFirestore: (snapshot, _) =>
+              ProgressGalleryCard.fromJson(snapshot.data()!),
+          toFirestore: (data, _) => data.toJson(),
         );
   }
 
@@ -109,6 +125,44 @@ class FirebaseUser {
       TaskSnapshot uploadTask = await ref.putFile(file);
       final url = await uploadTask.ref.getDownloadURL();
       getDocumentReference().update({"avatar": url});
+    } catch (e) {
+      SignInController().showDialog(context, "Failed to upload image: $e");
+    }
+  }
+
+  /// Adds a progress Photo to storage
+  Future<void> addProgressPhoto({
+    required BuildContext context,
+    required File file,
+    required DateTime date,
+    String? weight,
+    String? bust,
+    String? bmi,
+    String? waist,
+    String? hip,
+    String? bodyFat,
+    String? description,
+  }) async {
+    try {
+      final Reference ref = FirebaseStorage.instance
+          .ref("Users")
+          .child(email)
+          .child("progress_photos")
+          .child("/${DateTime.now().toString()}");
+
+      TaskSnapshot uploadTask = await ref.putFile(file);
+      final url = await uploadTask.ref.getDownloadURL();
+      getDocumentReference().collection("progress_photos").add({
+        "url": url,
+        "date": date,
+        "weight": weight,
+        "bust": bust,
+        "bmi": bmi,
+        "waist": waist,
+        "hip": hip,
+        "bodyFat": bodyFat,
+        "description": description,
+      });
     } catch (e) {
       SignInController().showDialog(context, "Failed to upload image: $e");
     }
