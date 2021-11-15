@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -43,8 +44,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         "Save",
         style: TextStyle(color: Colors.lightBlueAccent),
       ),
-      onPressed: () => onDone(context, _formKey),
-      cupertino: (_, __) => CupertinoTextButtonData(padding: EdgeInsets.zero),
+      onPressed: () => saving ? null : onDone(context, _formKey),
+      cupertino: (_, __) => CupertinoTextButtonData(
+        padding: EdgeInsets.zero,
+      ),
     );
   }
 

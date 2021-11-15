@@ -22,15 +22,13 @@ class ProgressLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentWeight = streamedGallery?.first?.data().weight;
-    final direction = currentWeight == null
-        ? "n/a"
-        : int.parse(initialWeight) > int.parse(currentWeight)
-            ? "-"
-            : "+";
+    final currentWeight =
+        streamedGallery?.first?.data().weight ?? initialWeight;
+    final direction =
+        int.parse(initialWeight) > int.parse(currentWeight) ? "-" : "+";
     final difference = direction == "-"
-        ? int.parse(initialWeight) - int.parse(currentWeight!)
-        : int.parse(currentWeight!) - int.parse(initialWeight);
+        ? int.parse(initialWeight) - int.parse(currentWeight)
+        : int.parse(currentWeight) - int.parse(initialWeight);
 
     return Padding(
       padding: const EdgeInsets.symmetric(
