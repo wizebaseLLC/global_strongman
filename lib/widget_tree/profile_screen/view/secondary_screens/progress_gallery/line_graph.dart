@@ -1,5 +1,5 @@
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
@@ -44,17 +44,20 @@ class ProgressLineChart extends StatelessWidget {
                     Radius.circular(18),
                   ),
                   color: Color(0xff232d37)),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  right: 18.0,
-                  left: 12.0,
-                  top: 60,
-                  bottom: 12,
-                ),
-                child: LineChart(
-                  mainData(),
-                ),
-              ),
+              child: streamedGallery != null && streamedGallery!.isNotEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                        right: 18.0,
+                        left: 12.0,
+                        top: 60,
+                        bottom: 12,
+                      ),
+                      child: SimpleTimeSeriesChart(
+                        animate: true,
+                        seriesList: streamedGallery!,
+                      ),
+                    )
+                  : null,
             ),
           ),
           Row(
@@ -78,111 +81,6 @@ class ProgressLineChart extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  LineChartData mainData() {
-    return LineChartData(
-      gridData: FlGridData(
-        show: true,
-        drawVerticalLine: true,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            color: const Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        rightTitles: SideTitles(showTitles: false),
-        topTitles: SideTitles(showTitles: false),
-        bottomTitles: SideTitles(
-          showTitles: true,
-          reservedSize: 22,
-          interval: 1,
-          getTextStyles: (context, value) => const TextStyle(
-              color: Color(0xff68737d),
-              fontWeight: FontWeight.bold,
-              fontSize: 12),
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 2:
-                return 'MAR';
-              case 5:
-                return 'JUN';
-              case 8:
-                return 'SEP';
-            }
-            return '';
-          },
-          margin: 8,
-        ),
-        leftTitles: SideTitles(
-          showTitles: true,
-          interval: 1,
-          getTextStyles: (context, value) => const TextStyle(
-            color: Color(0xff67727d),
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-          ),
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 1:
-                return '10k';
-              case 3:
-                return '30k';
-              case 5:
-                return '50k';
-            }
-            return '';
-          },
-          reservedSize: 32,
-          margin: 12,
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(
-          color: const Color(0xff37434d),
-          width: 1,
-        ),
-      ),
-      minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
-          isCurved: true,
-          colors: gradientColors,
-          barWidth: 5,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: false,
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            colors:
-                gradientColors.map((color) => color.withOpacity(0.3)).toList(),
-          ),
-        ),
-      ],
     );
   }
 }
@@ -233,4 +131,59 @@ class ProgressWeightText extends StatelessWidget {
       ),
     );
   }
+}
+
+class SimpleTimeSeriesChart extends StatelessWidget {
+  //final List<charts.Series> seriesList;
+  final bool animate;
+  final List<QueryDocumentSnapshot<ProgressGalleryCard>> seriesList;
+  const SimpleTimeSeriesChart({
+    required this.seriesList,
+    required this.animate,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return charts.TimeSeriesChart(
+      _createSampleData(),
+      animate: animate,
+
+      // Optionally pass in a [DateTimeFactory] used by the chart. The factory
+      // should create the same type of [DateTime] as the data providvb`r````````````````````````````````````````````````````````````````````````````       cAGJJJ      M,.ed. If none
+
+      // specified, the default creates local date time.
+
+      dateTimeFactory: const charts.LocalDateTimeFactory(),
+    );
+  }
+
+  /// Create one series with sample hard coded data.
+  List<charts.Series<TimeSeries, DateTime>> _createSampleData() {
+    final chartData = seriesList.map((e) {
+      final data = e.data();
+      final int weight = int.parse(data.weight!);
+      return TimeSeries(data.date, weight);
+    }).toList();
+
+    return [
+      charts.Series<TimeSeries, DateTime>(
+        id: 'Weight',
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (TimeSeries sales, _) => sales.time,
+        measureFn: (TimeSeries sales, _) => sales.weight,
+        data: chartData.sublist(0, 6),
+      )
+    ];
+  }
+}
+
+class TimeSeries {
+  final DateTime time;
+  final int weight;
+
+  TimeSeries(
+    this.time,
+    this.weight,
+  );
 }

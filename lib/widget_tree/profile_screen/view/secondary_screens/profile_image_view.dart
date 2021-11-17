@@ -23,19 +23,20 @@ class ProfileImageView extends StatelessWidget {
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
-        child: Hero(
-          tag: heroTag ?? "profile_gallery_avatar",
-          child: PhotoView(
-            imageProvider: imageProvider,
-            loadingBuilder: (context, event) => Center(
-              child: SizedBox(
-                width: 100.0,
-                height: 100.0,
-                child: CircularProgressIndicator.adaptive(
-                  value: event == null
-                      ? 0
-                      : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
-                ),
+        child: PhotoView(
+          heroAttributes: PhotoViewHeroAttributes(
+            transitionOnUserGestures: true,
+            tag: heroTag ?? "profile_gallery_avatar",
+          ),
+          imageProvider: imageProvider,
+          loadingBuilder: (context, event) => Center(
+            child: SizedBox(
+              width: 100.0,
+              height: 100.0,
+              child: CircularProgressIndicator.adaptive(
+                value: event == null
+                    ? 0
+                    : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
               ),
             ),
           ),

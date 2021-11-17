@@ -30,8 +30,9 @@ class GalleryImageCardContainer extends StatelessWidget {
                 builder: (context) => ProfileImageView(
                   heroTag: galleryList[index].imageUrl,
                   title: "Progress Photo",
-                  imageProvider:
-                      CachedNetworkImageProvider(galleryList[index].imageUrl),
+                  imageProvider: CachedNetworkImageProvider(
+                    galleryList[index].imageUrl,
+                  ),
                 ),
               ),
             );
@@ -166,8 +167,7 @@ class GalleryImageCard extends StatelessWidget {
                       ],
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: kSpacing ),
+                      padding: const EdgeInsets.symmetric(vertical: kSpacing),
                       child: Text(
                         date,
                         style: platformThemeData(
