@@ -63,9 +63,12 @@ class PlatformPicker {
     } else {
       await showModalBottomSheet(
         context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+        enableDrag: true,
+        isDismissible: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         ),
+        isScrollControlled: true,
         builder: (context) => SizedBox(
           height: 400,
           child: createMaterialPicker(

@@ -35,6 +35,16 @@ void cupertinoActionSheet({
 }) {
   showPlatformModalSheet<void>(
     context: context,
+    material: MaterialModalSheetData(
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(16),
+        ),
+      ),
+    ),
     builder: (BuildContext context) => PlatformWidget(
       material: (_, __) => _buildMaterialBottomSheet(context, actionSheetData),
       cupertino: (_, __) =>
@@ -71,9 +81,8 @@ Widget _buildMaterialBottomSheet(
         ),
       ListTile(
         leading: const Icon(Icons.stop_rounded),
-        title: Text(
+        title: const Text(
           'Cancel',
-          style: TextStyle(color: Colors.red.shade400),
         ),
         onTap: () {
           Navigator.pop(context);
@@ -93,7 +102,7 @@ Widget _buildCupertinoActionSheet(
         ? Text(actionSheetData.subtitleIos!)
         : null,
     cancelButton: CupertinoActionSheetAction(
-      isDestructiveAction: true,
+      // isDestructiveAction: true,
       child: const Text(
         'Cancel',
       ),

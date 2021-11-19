@@ -93,6 +93,7 @@ class ProfileHeader extends StatelessWidget {
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
+                              fullscreenDialog: true,
                               builder: (context) => ProfileImageView(
                                 imageProvider:
                                     NetworkImage(firebaseUser.avatar!),

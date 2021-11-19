@@ -27,6 +27,7 @@ class GalleryImageCardContainer extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
+                fullscreenDialog: true,
                 builder: (context) => ProfileImageView(
                   heroTag: galleryList[index].imageUrl,
                   title: "Progress Photo",

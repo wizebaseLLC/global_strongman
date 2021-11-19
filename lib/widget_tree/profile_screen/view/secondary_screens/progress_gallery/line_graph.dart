@@ -5,11 +5,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/ProgressGalleryCard.dart';
 
-const List<Color> gradientColors = [
-  Color(0xff23b6e6),
-  Color(0xff02d39a),
-];
-
 class ProgressLineChart extends StatelessWidget {
   const ProgressLineChart({
     required this.streamedGallery,
@@ -30,57 +25,53 @@ class ProgressLineChart extends StatelessWidget {
         ? int.parse(initialWeight) - int.parse(currentWeight)
         : int.parse(currentWeight) - int.parse(initialWeight);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: kSpacing * 2,
-      ),
-      child: Stack(
-        children: <Widget>[
-          AspectRatio(
-            aspectRatio: 1.50,
-            child: Container(
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(18),
-                  ),
-                  color: Color(0xff232d37)),
-              child: streamedGallery != null && streamedGallery!.isNotEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.only(
-                        right: 18.0,
-                        left: 12.0,
-                        top: 60,
-                        bottom: 12,
-                      ),
-                      child: SimpleTimeSeriesChart(
-                        animate: true,
-                        seriesList: streamedGallery!,
-                      ),
-                    )
-                  : null,
+    return Stack(
+      children: <Widget>[
+        AspectRatio(
+          aspectRatio: 2,
+          child: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(
+                Radius.circular(18),
+              ),
+              // color: Color(0xff232d37),
             ),
+            child: streamedGallery != null && streamedGallery!.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.only(
+                      right: 18.0,
+                      left: 12.0,
+                      top: 60,
+                      bottom: 12,
+                    ),
+                    child: SimpleTimeSeriesChart(
+                      animate: true,
+                      seriesList: streamedGallery!,
+                    ),
+                  )
+                : null,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ProgressWeightText(
-                title: "Current Weight",
-                secondaryTitle: "$currentWeight lbs",
-              ),
-              ProgressWeightText(
-                title: "Start Weight",
-                secondaryTitle: "$initialWeight lbs",
-              ),
-              ProgressWeightText(
-                title: "Progress",
-                secondaryTitle: direction == "n/a"
-                    ? "n/a"
-                    : "$direction${difference.toString()}",
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            ProgressWeightText(
+              title: "Current Weight",
+              secondaryTitle: "$currentWeight lbs",
+            ),
+            ProgressWeightText(
+              title: "Start Weight",
+              secondaryTitle: "$initialWeight lbs",
+            ),
+            ProgressWeightText(
+              title: "Progress",
+              secondaryTitle: direction == "n/a"
+                  ? "n/a"
+                  : "$direction${difference.toString()}",
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -160,7 +151,7 @@ class SimpleTimeSeriesChart extends StatelessWidget {
 
   /// Create one series with sample hard coded data.
   List<charts.Series<TimeSeries, DateTime>> _createSampleData() {
-    final chartData = seriesList.map((e) {
+    var chartData = seriesList.map((e) {
       final data = e.data();
       final int weight = int.parse(data.weight!);
       return TimeSeries(data.date, weight);
@@ -173,7 +164,7 @@ class SimpleTimeSeriesChart extends StatelessWidget {
         domainFn: (TimeSeries sales, _) => sales.time,
         measureFn: (TimeSeries sales, _) => sales.weight,
         data: chartData.sublist(0, 6),
-      )
+      ),
     ];
   }
 }

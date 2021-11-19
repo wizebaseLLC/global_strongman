@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
@@ -33,87 +32,125 @@ class ProgressGallery extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffoldIosSliverTitle(
       title: "My Progress",
-      body: StreamBuilder(
-        stream: _firebaseUserProgressGalleryStream(),
-        builder: (BuildContext context,
-            AsyncSnapshot<QuerySnapshot<ProgressGalleryCard>> snapshot) {
-          final List<QueryDocumentSnapshot<ProgressGalleryCard>>?
-              streamedGallery = snapshot.data?.docs;
-
-          streamedGallery?.sort(
-            (a, b) => b.data().date.compareTo(a.data().date),
-          );
-
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: kSpacing,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: Platform.isIOS ? 0 : kSpacing,
-                  ),
-                  child: ProgressLineChart(
-                    streamedGallery: streamedGallery,
-                    initialWeight: firebaseUser.weight ?? "0",
-                  ),
-                ),
-                const SizedBox(
-                  height: kSpacing,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ShareOrAddButton(
-                        icon: PlatformIcons(context).share,
-                        title: "Share",
-                        firebaseUser: firebaseUser,
-                      ),
-                      ShareOrAddButton(
-                        icon: PlatformIcons(context).add,
-                        title: "Add",
-                        firebaseUser: firebaseUser,
-                      ),
-                    ],
-                  ),
-                ),
-                streamedGallery != null && streamedGallery.isNotEmpty
-                    ? GalleryImageCardContainer(
-                        galleryList: streamedGallery.map((data) {
-                          final galleryData = data.data();
-                          return GalleryImageCard(
-                            imageUrl: galleryData.url,
-                            date: galleryData.date.toString().substring(0, 10),
-                            bmi: galleryData.bmi,
-                            bodyFat: galleryData.bodyFat,
-                            bust: galleryData.bust,
-                            hip: galleryData.hip,
-                            waist: galleryData.waist,
-                            weight: galleryData.weight,
-                            caption: galleryData.description,
-                          );
-                        }).toList(),
-                      )
-                    : const Padding(
-                        padding: EdgeInsets.only(top: kSpacing * 4),
-                        child: Text(
-                          "Press Add to upload your first progress photo!",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                          ),
-                        ),
-                      )
-              ],
+      body: _buildStreamBuilder(),
+      trailingActions: [
+        Center(
+          child: Text(
+            "Public",
+            style: platformThemeData(
+              context,
+              material: (data) => data.textTheme.caption,
+              cupertino: (data) => data.textTheme.textStyle
+                  .copyWith(fontSize: 14, color: Colors.grey),
             ),
-          );
-        },
-      ),
-      trailingActions: const [],
+          ),
+        ),
+        PublicSwitch(),
+      ],
+    );
+  }
+
+  StreamBuilder<QuerySnapshot<ProgressGalleryCard>> _buildStreamBuilder() {
+    return StreamBuilder(
+      stream: _firebaseUserProgressGalleryStream(),
+      builder: (BuildContext context,
+          AsyncSnapshot<QuerySnapshot<ProgressGalleryCard>> snapshot) {
+        final List<QueryDocumentSnapshot<ProgressGalleryCard>>?
+            streamedGallery = snapshot.data?.docs;
+
+        streamedGallery?.sort(
+          (a, b) => b.data().date.compareTo(a.data().date),
+        );
+
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: kSpacing,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Platform.isIOS ? 0 : kSpacing,
+                ),
+                child: ProgressLineChart(
+                  streamedGallery: streamedGallery,
+                  initialWeight: firebaseUser.weight ?? "0",
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ShareOrAddButton(
+                      icon: PlatformIcons(context).share,
+                      title: "Share",
+                      firebaseUser: firebaseUser,
+                    ),
+                    ShareOrAddButton(
+                      icon: PlatformIcons(context).add,
+                      title: "Add",
+                      firebaseUser: firebaseUser,
+                    ),
+                  ],
+                ),
+              ),
+              streamedGallery != null && streamedGallery.isNotEmpty
+                  ? GalleryImageCardContainer(
+                      galleryList: streamedGallery.map((data) {
+                        final galleryData = data.data();
+                        return GalleryImageCard(
+                          imageUrl: galleryData.url,
+                          date: galleryData.date.toString().substring(0, 10),
+                          bmi: galleryData.bmi,
+                          bodyFat: galleryData.bodyFat,
+                          bust: galleryData.bust,
+                          hip: galleryData.hip,
+                          waist: galleryData.waist,
+                          weight: galleryData.weight,
+                          caption: galleryData.description,
+                        );
+                      }).toList(),
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.only(top: kSpacing * 4),
+                      child: Text(
+                        "Press Add to upload your first progress photo!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
+                      ),
+                    )
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class PublicSwitch extends StatefulWidget {
+  const PublicSwitch({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<PublicSwitch> createState() => _PublicSwitchState();
+}
+
+class _PublicSwitchState extends State<PublicSwitch> {
+  bool isActive = false;
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: isActive,
+      onChanged: (value) {
+        setState(() {
+          isActive = value;
+        });
+      },
     );
   }
 }
