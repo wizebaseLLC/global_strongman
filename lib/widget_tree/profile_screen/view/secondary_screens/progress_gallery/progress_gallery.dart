@@ -66,7 +66,7 @@ class ProgressGallery extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(
-                height: kSpacing,
+                height: kSpacing * 2,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(
