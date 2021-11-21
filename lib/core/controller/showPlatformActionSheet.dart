@@ -29,7 +29,7 @@ class ActionSheetModel {
 }
 
 /// Displays an action sheet for both Ios and Android
-void cupertinoActionSheet({
+void showPlatformActionSheet({
   required BuildContext context,
   required PlatformActionSheet actionSheetData,
 }) {

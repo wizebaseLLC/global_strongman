@@ -139,12 +139,6 @@ class SimpleTimeSeriesChart extends StatelessWidget {
     return charts.TimeSeriesChart(
       _createSampleData(),
       animate: animate,
-
-      // Optionally pass in a [DateTimeFactory] used by the chart. The factory
-      // should create the same type of [DateTime] as the data providvb`r````````````````````````````````````````````````````````````````````````````       cAGJJJ      M,.ed. If none
-
-      // specified, the default creates local date time.
-
       dateTimeFactory: const charts.LocalDateTimeFactory(),
     );
   }
@@ -157,13 +151,16 @@ class SimpleTimeSeriesChart extends StatelessWidget {
       return TimeSeries(data.date, weight);
     }).toList();
 
+    final List<TimeSeries> chartDataLength =
+        chartData.sublist(0, chartData.length >= 6 ? 6 : chartData.length);
+
     return [
       charts.Series<TimeSeries, DateTime>(
         id: 'Weight',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
         domainFn: (TimeSeries sales, _) => sales.time,
         measureFn: (TimeSeries sales, _) => sales.weight,
-        data: chartData.sublist(0, 6),
+        data: chartDataLength,
       ),
     ];
   }

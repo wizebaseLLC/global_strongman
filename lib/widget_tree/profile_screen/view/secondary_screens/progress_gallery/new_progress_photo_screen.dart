@@ -126,7 +126,7 @@ class _ProgressPhotoScreenState extends State<ProgressPhotoScreen> {
           ),
         ),
         const Divider(
-          indent: kSpacing * 8,
+          indent: kSpacing * 9,
           color: Colors.grey,
         ),
         _buildListTile(
@@ -456,7 +456,7 @@ class _ProgressPhotoScreenState extends State<ProgressPhotoScreen> {
           ),
         ),
         const Divider(
-          indent: kSpacing * 8,
+          indent: kSpacing * 9,
           color: Colors.grey,
           height: 1,
         )

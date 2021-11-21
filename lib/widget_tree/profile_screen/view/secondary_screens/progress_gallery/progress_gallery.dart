@@ -10,6 +10,7 @@ import 'package:global_strongman/core/model/ProgressGalleryCard.dart';
 import 'package:global_strongman/core/view/platform_scaffold_ios_sliver_title.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/progress_gallery/gallery_image_card.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/progress_gallery/line_graph.dart';
+import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/progress_gallery/public_switch.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/progress_gallery/share_or_add_button.dart';
 
 class ProgressGallery extends StatelessWidget {
@@ -34,18 +35,26 @@ class ProgressGallery extends StatelessWidget {
       title: "My Progress",
       body: _buildStreamBuilder(),
       trailingActions: [
-        Center(
-          child: Text(
-            "Public",
-            style: platformThemeData(
-              context,
-              material: (data) => data.textTheme.caption,
-              cupertino: (data) => data.textTheme.textStyle
-                  .copyWith(fontSize: 14, color: Colors.grey),
+        Material(
+          color: Colors.transparent,
+          child: Center(
+            child: Text(
+              "Public",
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.caption,
+                cupertino: (data) => data.textTheme.textStyle.copyWith(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
             ),
           ),
         ),
-        PublicSwitch(),
+        Material(
+          color: Colors.transparent,
+          child: PublicSwitch(firebaseUser: firebaseUser),
+        ),
       ],
     );
   }
@@ -68,25 +77,21 @@ class ProgressGallery extends StatelessWidget {
               const SizedBox(
                 height: kSpacing * 2,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Platform.isIOS ? 0 : kSpacing,
+              if (streamedGallery != null && streamedGallery.isNotEmpty)
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Platform.isIOS ? 0 : kSpacing,
+                  ),
+                  child: ProgressLineChart(
+                    streamedGallery: streamedGallery,
+                    initialWeight: firebaseUser.weight ?? "0",
+                  ),
                 ),
-                child: ProgressLineChart(
-                  streamedGallery: streamedGallery,
-                  initialWeight: firebaseUser.weight ?? "0",
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    ShareOrAddButton(
-                      icon: PlatformIcons(context).share,
-                      title: "Share",
-                      firebaseUser: firebaseUser,
-                    ),
                     ShareOrAddButton(
                       icon: PlatformIcons(context).add,
                       title: "Add",
@@ -97,6 +102,7 @@ class ProgressGallery extends StatelessWidget {
               ),
               streamedGallery != null && streamedGallery.isNotEmpty
                   ? GalleryImageCardContainer(
+                      firebaseUser: firebaseUser,
                       galleryList: streamedGallery.map((data) {
                         final galleryData = data.data();
                         return GalleryImageCard(
@@ -126,30 +132,6 @@ class ProgressGallery extends StatelessWidget {
             ],
           ),
         );
-      },
-    );
-  }
-}
-
-class PublicSwitch extends StatefulWidget {
-  const PublicSwitch({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<PublicSwitch> createState() => _PublicSwitchState();
-}
-
-class _PublicSwitchState extends State<PublicSwitch> {
-  bool isActive = false;
-  @override
-  Widget build(BuildContext context) {
-    return Switch(
-      value: isActive,
-      onChanged: (value) {
-        setState(() {
-          isActive = value;
-        });
       },
     );
   }

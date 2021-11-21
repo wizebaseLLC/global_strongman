@@ -4,6 +4,7 @@ class ProgressGalleryCard {
   ProgressGalleryCard({
     required this.date,
     required this.url,
+    required this.file_name,
     this.weight,
     this.bust,
     this.bmi,
@@ -14,6 +15,7 @@ class ProgressGalleryCard {
   });
 
   final String url;
+  final String file_name;
   final String? weight;
   final String? bust;
   final String? bmi;
@@ -27,6 +29,7 @@ class ProgressGalleryCard {
       : this(
           date: (json['date'] as Timestamp).toDate(),
           url: json['url'] as String,
+          file_name: json['file_name'] as String,
           weight: json['weight'] as String,
           bust: json['bust'] as String?,
           waist: json['waist'] as String?,
@@ -40,6 +43,7 @@ class ProgressGalleryCard {
     return {
       'date': date,
       'url': url,
+      "file_name": file_name,
       'weight': weight,
       'bust': bust,
       'waist': waist,

@@ -43,7 +43,7 @@ class ShareOrAddButton extends StatelessWidget {
             color: Colors.yellow.shade600,
             size: 25,
           ),
-          onPressed: () => cupertinoActionSheet(
+          onPressed: () => showPlatformActionSheet(
             context: context,
             actionSheetData: PlatformActionSheet(
               title: "Add Progress Photo",
@@ -86,8 +86,8 @@ class ShareOrAddButton extends StatelessWidget {
       final ImagePicker _picker = ImagePicker();
       final XFile? image = await _picker.pickImage(
         source: imageSource,
+        maxWidth: 1200,
       );
-
       if (image?.path != null) {
         Navigator.push(
           context,

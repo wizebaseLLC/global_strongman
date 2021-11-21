@@ -40,7 +40,7 @@ class ProfileHeader extends StatelessWidget {
   }
 
   void _cupertinoActionSheet(BuildContext context) {
-    cupertinoActionSheet(
+    showPlatformActionSheet(
       context: context,
       actionSheetData: PlatformActionSheet(
         title: "Add Progress Photo",
@@ -92,7 +92,9 @@ class ProfileHeader extends StatelessWidget {
                         child: InkWell(
                           onTap: () => Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            platformPageRoute(
+                              context: context,
+                              iosTitle: "Profile Image",
                               fullscreenDialog: true,
                               builder: (context) => ProfileImageView(
                                 imageProvider:

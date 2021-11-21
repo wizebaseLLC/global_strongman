@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:global_strongman/widget_tree/home_screen/controller/tab_bar_screen.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/main.rs.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,26 +16,11 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedTabIndex = 0;
 
   // Screens for the bottom tab bars.
-  final List<Widget> _screens = [
-    const ProfileScreen(),
-    Container(),
-    Container(),
-    Container(),
-    Container(),
-    // const ProfileScreen(),
-    // const ProfileScreen(),
-    // const ProfileScreen(),
-    // const ProfileScreen(),
-  ];
-
-  // Display the Appbar or not.
-  // TODO: Make this a List<PlatformAppBar>
-  final List<bool> _showsScreenAppBar = [
-    ProfileScreen.usesAppbar,
-    ProfileScreen.usesAppbar,
-    ProfileScreen.usesAppbar,
-    ProfileScreen.usesAppbar,
-    ProfileScreen.usesAppbar,
+  final List<TabBarScreen> _screens = [
+    TabBarScreen(child: Container()),
+    TabBarScreen(child: Container()),
+    TabBarScreen(child: Container()),
+    TabBarScreen(child: const ProfileScreen()),
   ];
 
   @override
@@ -43,15 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: IndexedStack(
-          children: _screens,
+          children: _screens.map((e) => e.child).toList(),
           index: _selectedTabIndex,
         ),
       ),
-      appBar: _showsScreenAppBar[_selectedTabIndex] == true
-          ? PlatformAppBar(
-              title: const Text("hi"),
-            )
-          : null,
+      appBar: _screens.map((e) => e.appBar).toList()[_selectedTabIndex],
       bottomNavBar: PlatformNavBar(
         currentIndex: _selectedTabIndex,
         itemChanged: (index) => setState(
@@ -74,10 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(PlatformIcons(context).playCircle),
             label: "Watch",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(PlatformIcons(context).addCircled),
-            label: "Add",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(PlatformIcons(context).addCircled),
+          //   label: "Add",
+          // ),
           const BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.dumbbell),
             label: "Workouts",

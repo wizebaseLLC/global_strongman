@@ -1,63 +1,110 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/controller/firebase_user.dart';
+import 'package:global_strongman/core/controller/showPlatformActionSheet.dart';
+import 'package:global_strongman/core/model/ProgressGalleryCard.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/profile_image_view.dart';
 
 class GalleryImageCardContainer extends StatelessWidget {
   const GalleryImageCardContainer({
     Key? key,
+    required this.firebaseUser,
     required this.galleryList,
   }) : super(key: key);
 
+  final FirebaseUser firebaseUser;
   final List<GalleryImageCard> galleryList;
+
+  /// Delete document on long press.
+  Future<void> _deleteDocument({
+    required int index,
+    required BuildContext context,
+  }) async {
+    final Query<ProgressGalleryCard> document =
+        firebaseUser.getProgressGalleryCollectionReference().where(
+              "url",
+              isEqualTo: galleryList[index].imageUrl,
+            );
+
+    final docs = await document.get();
+
+    for (var doc in docs.docs) {
+      final fileName = doc.data().file_name;
+      await doc.reference.delete();
+      firebaseUser.removeProgressPhotoFromStorage(
+          fileName: fileName, context: context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
+      primary: false,
       itemCount: galleryList.length,
       padding: EdgeInsets.zero,
-      physics: const ScrollPhysics(),
-      itemBuilder: (context, index) => PlatformWidget(
-        cupertino: (context, _) => CupertinoButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                fullscreenDialog: true,
-                builder: (context) => ProfileImageView(
-                  heroTag: galleryList[index].imageUrl,
-                  title: "Progress Photo",
-                  imageProvider: CachedNetworkImageProvider(
-                    galleryList[index].imageUrl,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) => GestureDetector(
+        onLongPress: () async {
+          final actionSheetData =
+              PlatformActionSheet(title: "Progress Photo", model: [
+            ActionSheetModel(
+              title: 'Delete',
+              iconMaterial: const Icon(Icons.delete),
+              onTap: () => _deleteDocument(index: index, context: context),
+              textStyle: const TextStyle(color: Colors.redAccent),
+            ),
+          ]);
+
+          showPlatformActionSheet(
+            context: context,
+            actionSheetData: actionSheetData,
+          );
+        },
+        child: PlatformWidget(
+          cupertino: (context, _) => CupertinoButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  fullscreenDialog: true,
+                  builder: (context) => ProfileImageView(
+                    heroTag: galleryList[index].imageUrl,
+                    title: "Progress Photo",
+                    imageProvider: NetworkImage(
+                      galleryList[index].imageUrl,
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
-          padding: EdgeInsets.zero,
-          child: galleryList[index],
-        ),
-        material: (context, _) => InkWell(
-          borderRadius: BorderRadius.circular(16),
-          splashColor: kPrimaryColor,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProfileImageView(
-                  heroTag: galleryList[index].imageUrl,
-                  title: "Progress Photo",
-                  imageProvider:
-                      CachedNetworkImageProvider(galleryList[index].imageUrl),
+              );
+            },
+            padding: EdgeInsets.zero,
+            child: galleryList[index],
+          ),
+          material: (context, _) => InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileImageView(
+                    heroTag: galleryList[index].imageUrl,
+                    title: "Progress Photo",
+                    imageProvider: CachedNetworkImageProvider(
+                      galleryList[index].imageUrl,
+                    ),
+                  ),
                 ),
-              ),
-            );
-          },
-          child: galleryList[index],
+              );
+            },
+            child: galleryList[index],
+          ),
         ),
       ),
     );
@@ -113,9 +160,11 @@ class GalleryImageCard extends StatelessWidget {
                   tag: imageUrl,
                   child: CachedNetworkImage(
                     imageUrl: imageUrl,
-                    fit: BoxFit.fill,
-                    memCacheHeight: 300,
+                    fit: BoxFit.cover,
+                    memCacheWidth: 340,
                     width: MediaQuery.of(context).size.width * .3,
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 ),
               ),

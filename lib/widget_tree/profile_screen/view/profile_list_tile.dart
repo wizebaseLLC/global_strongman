@@ -38,7 +38,7 @@ class ProfileListTile extends StatelessWidget {
           onTap: onTap,
         ),
         const Divider(
-          indent: kSpacing * 8,
+          indent: kSpacing * 9,
           color: Colors.grey,
           height: 2,
         )

@@ -8,13 +8,15 @@ class ProfileImageView extends StatelessWidget {
     required this.imageProvider,
     this.heroTag,
     this.title,
+    this.enableRotation,
     Key? key,
   }) : super(key: key);
 
   final String? heroTag;
   final String? title;
-
   final ImageProvider imageProvider;
+  final bool? enableRotation;
+
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
@@ -24,6 +26,7 @@ class ProfileImageView extends StatelessWidget {
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: PhotoView(
+          enableRotation: enableRotation ?? false,
           heroAttributes: PhotoViewHeroAttributes(
             transitionOnUserGestures: true,
             tag: heroTag ?? "profile_gallery_avatar",

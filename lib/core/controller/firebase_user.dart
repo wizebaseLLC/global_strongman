@@ -18,6 +18,7 @@ class FirebaseUser {
     this.height,
     this.weight,
     this.goals,
+    this.is_gallery_public,
     this.injuries,
     required this.email,
   });
@@ -31,6 +32,7 @@ class FirebaseUser {
   final String? gender;
   final String? height;
   final String? weight;
+  final bool? is_gallery_public;
   final List<dynamic>? goals;
   final List<dynamic>? injuries;
 
@@ -45,6 +47,7 @@ class FirebaseUser {
           gender: json['gender'] as String?,
           height: json['height'] as String?,
           weight: json['weight'] as String?,
+          is_gallery_public: json['is_gallery_public'] as bool?,
           goals: json['goals'] as List<dynamic>?,
           injuries: json['injuries'] as List<dynamic>?,
         );
@@ -61,6 +64,7 @@ class FirebaseUser {
       'weight': weight,
       'goals': goals,
       'injuries': injuries,
+      "is_gallery_public": is_gallery_public,
     };
   }
 
@@ -144,11 +148,12 @@ class FirebaseUser {
     String? description,
   }) async {
     try {
+      final imageName = "/${DateTime.now().toString()}";
       final Reference ref = FirebaseStorage.instance
           .ref("Users")
           .child(email)
           .child("progress_photos")
-          .child("/${DateTime.now().toString()}");
+          .child(imageName);
 
       TaskSnapshot uploadTask = await ref.putFile(file);
       final url = await uploadTask.ref.getDownloadURL();
@@ -162,7 +167,26 @@ class FirebaseUser {
         "hip": hip,
         "bodyFat": bodyFat,
         "description": description,
+        "file_name": imageName
       });
+    } catch (e) {
+      SignInController().showDialog(context, "Failed to upload image: $e");
+    }
+  }
+
+  /// Removes a progress Photo to storage
+  Future<void> removeProgressPhotoFromStorage({
+    required String fileName,
+    required BuildContext context,
+  }) async {
+    try {
+      final Reference ref = FirebaseStorage.instance
+          .ref("Users")
+          .child(email)
+          .child("progress_photos")
+          .child(fileName);
+
+      ref.delete();
     } catch (e) {
       SignInController().showDialog(context, "Failed to upload image: $e");
     }

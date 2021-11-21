@@ -105,7 +105,8 @@ class ProfileBody extends StatelessWidget {
           ),
           onTap: () => Navigator.push(
             context,
-            MaterialPageRoute(
+            platformPageRoute(
+              context: context,
               builder: (context) => ProgressGallery(
                 firebaseUser: firebaseUser,
               ),
@@ -147,7 +148,8 @@ class ProfileBody extends StatelessWidget {
           ),
           onTap: () => Navigator.push(
             context,
-            MaterialPageRoute(
+            platformPageRoute(
+              context: context,
               builder: (context) => EditProfileScreen(
                 firebaseUser: firebaseUser,
               ),
