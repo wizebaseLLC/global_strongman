@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:global_strongman/widget_tree/home_screen/view/main.dart';
+import 'package:global_strongman/widget_tree/bottom_navigator/view/main.dart';
 import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_controller.dart';
 import 'package:global_strongman/widget_tree/onboarding_screen/model/list_page_data.dart';
 import 'package:global_strongman/widget_tree/onboarding_screen/view/create_page.dart';
@@ -69,8 +69,10 @@ class _OnboardFormState extends State<OnboardForm> {
             setState(() {
               saving = false;
             });
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()));
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const BottomNavigator()));
           });
         } else {
           showPlatformDialog(

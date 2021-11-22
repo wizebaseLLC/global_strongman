@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
-import 'package:global_strongman/widget_tree/home_screen/view/main.dart';
+import 'package:global_strongman/widget_tree/bottom_navigator/view/main.dart';
 import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_controller.dart';
 import 'package:global_strongman/widget_tree/login_screen/view/header_image_and_logo.dart';
 import 'package:global_strongman/widget_tree/login_screen/view/signup_page.dart';
@@ -40,7 +40,8 @@ class _LoginPageState extends State<LoginPage> {
     ButtonType buttonType,
     BuildContext context,
   ) {
-    SignInController().handleSocialLogin(buttonType: buttonType, context: context);
+    SignInController()
+        .handleSocialLogin(buttonType: buttonType, context: context);
   }
 
   @override
@@ -51,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const HomeScreen(),
+                  builder: (context) => const BottomNavigator(),
                 ),
               ),
             }
@@ -192,7 +193,8 @@ class _LoginPageState extends State<LoginPage> {
       style: platformThemeData(
         context,
         material: (data) => data.textTheme.caption?.copyWith(fontSize: 14),
-        cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
+        cupertino: (data) =>
+            data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
       ),
     );
   }
@@ -226,8 +228,10 @@ class _LoginPageState extends State<LoginPage> {
             text: 'New to Global Strongman? ',
             style: platformThemeData(
               context,
-              material: (data) => data.textTheme.caption?.copyWith(fontSize: 14),
-              cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
+              material: (data) =>
+                  data.textTheme.caption?.copyWith(fontSize: 14),
+              cupertino: (data) =>
+                  data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
             ),
           ),
           TextSpan(
@@ -254,7 +258,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildSignInButton({required ButtonType button, required Function() onPress}) {
+  Widget _buildSignInButton(
+      {required ButtonType button, required Function() onPress}) {
     return InkWell(
       onTap: onPress,
       child: SignInButton.mini(

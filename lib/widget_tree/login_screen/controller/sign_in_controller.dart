@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
-import 'package:global_strongman/widget_tree/home_screen/view/main.dart';
+import 'package:global_strongman/widget_tree/bottom_navigator/view/main.dart';
 import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_with_apple.dart';
 import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_with_facebook.dart';
 import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_with_google.dart';
@@ -39,8 +39,10 @@ class SignInController {
             await signInWithGoogle().catchError((e) => print(e));
             final firebaseUserExists = await getSignedInUserFromFireStore();
             if (firebaseUserExists) {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const BottomNavigator()));
             } else {
               Navigator.pushReplacement(
                   context,
@@ -62,8 +64,10 @@ class SignInController {
             await signInWithFacebook().catchError((e) => print(e));
             final firebaseUserExists = await getSignedInUserFromFireStore();
             if (firebaseUserExists) {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const BottomNavigator()));
             } else {
               Navigator.pushReplacement(
                   context,
@@ -85,8 +89,10 @@ class SignInController {
             await signInWithApple().catchError((e) => print(e));
             final firebaseUserExists = await getSignedInUserFromFireStore();
             if (firebaseUserExists) {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const BottomNavigator()));
             } else {
               Navigator.pushReplacement(
                   context,
@@ -221,7 +227,7 @@ class SignInController {
 
       if (userCredential.user != null) {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+            MaterialPageRoute(builder: (context) => const BottomNavigator()));
 
         if (!userCredential.user!.emailVerified) {
           await userCredential.user?.sendEmailVerification();
