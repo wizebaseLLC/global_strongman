@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
-import 'package:global_strongman/core/controller/firebase_user.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_badge.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_header.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_list.dart';

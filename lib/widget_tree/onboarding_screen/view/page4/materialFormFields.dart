@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:global_strongman/constants.dart';
-import 'package:global_strongman/core/controller/firebase_user.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/widget_tree/onboarding_screen/model/multi_select_string_chip.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 

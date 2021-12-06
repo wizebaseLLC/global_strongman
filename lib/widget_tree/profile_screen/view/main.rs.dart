@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:global_strongman/core/controller/firebase_user.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profileBody.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -21,14 +21,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Stream<DocumentSnapshot<FirebaseUser>> _firebaseUserStream() {
     final User authenticatedUser = FirebaseUser.getSignedInUserFromFireStore()!;
-    return FirebaseUser(email: authenticatedUser.email!).getDocumentReference().snapshots();
+    return FirebaseUser(email: authenticatedUser.email!)
+        .getDocumentReference()
+        .snapshots();
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: _firebaseUserStream(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot<FirebaseUser>> snapshot) {
+      builder: (BuildContext context,
+          AsyncSnapshot<DocumentSnapshot<FirebaseUser>> snapshot) {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
         }

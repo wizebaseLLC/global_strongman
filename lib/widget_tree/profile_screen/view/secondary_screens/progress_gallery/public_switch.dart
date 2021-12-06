@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
-import 'package:global_strongman/core/controller/firebase_user.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 
 class PublicSwitch extends StatefulWidget {
   const PublicSwitch({

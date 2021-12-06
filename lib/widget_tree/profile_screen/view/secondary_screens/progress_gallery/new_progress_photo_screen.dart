@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
-import 'package:global_strongman/core/controller/firebase_user.dart';
 import 'package:global_strongman/core/controller/platformPicker.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/view/platform_scaffold_ios_sliver_title.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/profile_image_view.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -78,6 +78,7 @@ class _ProgressPhotoScreenState extends State<ProgressPhotoScreen> {
                         widget.file,
                         height: 200,
                         fit: BoxFit.contain,
+                        cacheWidth: 450,
                       ),
                     ),
                   ),

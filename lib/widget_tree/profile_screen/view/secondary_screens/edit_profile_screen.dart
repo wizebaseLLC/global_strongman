@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
-import 'package:global_strongman/core/controller/firebase_user.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/view/platform_scaffold_ios_sliver_title.dart';
 import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_controller.dart';
 import 'package:global_strongman/widget_tree/onboarding_screen/view/page2/main.dart';
