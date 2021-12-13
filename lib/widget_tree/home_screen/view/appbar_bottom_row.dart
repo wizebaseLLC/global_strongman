@@ -51,9 +51,7 @@ class AppBarBottomRow extends StatelessWidget {
           PlatformTextButton(
             onPressed: () {},
             padding: const EdgeInsets.symmetric(
-              horizontal: kSpacing * 2,
-              vertical: 0,
-            ),
+                horizontal: kSpacing * 2, vertical: 0,),
             child: Text(
               "Get Started",
               style: TextStyle(
