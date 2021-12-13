@@ -26,9 +26,9 @@ class SliverImageAppBar extends StatelessWidget {
       expandedHeight: 300,
       stretch: true,
       pinned: true,
-      bottom: const PreferredSize(
-        preferredSize: Size.fromHeight(48.0),
-        child: AppBarBottomRow(),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(48.0),
+        child: AppBarBottomRow(program: program),
       ),
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: const [

@@ -77,7 +77,7 @@ class GalleryImageCardContainer extends StatelessWidget {
                   builder: (context) => ProfileImageView(
                     heroTag: galleryList[index].imageUrl,
                     title: "Progress Photo",
-                    imageProvider: NetworkImage(
+                    imageProvider: CachedNetworkImageProvider(
                       galleryList[index].imageUrl,
                     ),
                   ),

@@ -13,7 +13,7 @@ class FirebaseProgramRating {
           rating: (json['rating']) as num?,
           review: json['review'] as String?,
           uid: json['uid'] as String?,
-          created_on: (json['created_on'] as Timestamp).toDate(),
+          created_on: (json['created_on'] as Timestamp?)?.toDate(),
         );
 
   Map<String, Object?> toJson() {

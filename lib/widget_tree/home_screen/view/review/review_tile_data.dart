@@ -111,6 +111,7 @@ class ReviewTileData extends StatelessWidget {
                           program: program,
                           currentReview: review.review,
                           currentRating: review.rating,
+                          reviewId: reviewId,
                         ),
                       ).showAsBottomSheet(),
                       icon: Icon(
@@ -136,15 +137,12 @@ class ReviewTileData extends StatelessWidget {
                                 onPressed: () => Navigator.pop(context),
                               ),
                               PlatformDialogAction(
-                                child: const Text(
-                                  "Delete",
-                                ),
-                                onPressed: () {
-                                  review.removeRating(
-                                      docId: reviewId!, program: program.id);
-                                  Navigator.pop(context);
-                                },
-                              ),
+                                  child: const Text(
+                                    "Delete",
+                                  ),
+                                  onPressed: () => _removeRating(
+                                        context: context,
+                                      )),
                             ],
                           ),
                         );
@@ -164,6 +162,45 @@ class ReviewTileData extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _removeRating({
+    required BuildContext context,
+  }) async {
+    review.removeRating(docId: reviewId!, program: program.id);
+
+    final DocumentReference<FirebaseProgram> documentReference =
+        FirebaseProgram().getDocumentReferenceByString(program.id);
+
+    FirebaseFirestore.instance.runTransaction(
+      (transaction) async {
+        DocumentSnapshot<FirebaseProgram> snapshot =
+            await transaction.get(documentReference);
+
+        if (!snapshot.exists || review.rating == null) {
+          return;
+        }
+
+        // Update the count based on the current count
+        // Note: this could be done without a transaction
+        // by updating the population using FieldValue.increment()
+        num myRating = review.rating!;
+        int oldRatingCount = snapshot.data()?.rating_count ?? 0;
+        int newRatingCount = oldRatingCount - 1;
+        num oldAverageRating = snapshot.data()?.average_rating ?? 0;
+
+        // Creating a transaction to increment the count and average of the review.
+        var newRatingAverage =
+            ((oldAverageRating * oldRatingCount) - myRating) / newRatingCount;
+
+        // Perform an update on the document
+        transaction.update(documentReference, {
+          'rating_count': newRatingCount,
+          'average_rating': newRatingAverage
+        });
+      },
+    );
+    Navigator.pop(context);
   }
 }
 

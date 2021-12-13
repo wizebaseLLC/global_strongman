@@ -14,11 +14,13 @@ class ReviewBottomSheetWidget extends StatefulWidget {
     Key? key,
     this.currentReview,
     this.currentRating,
+    this.reviewId,
   }) : super(key: key);
 
   final QueryDocumentSnapshot<FirebaseProgram> program;
   final num? currentRating;
   final String? currentReview;
+  final String? reviewId;
 
   @override
   State<ReviewBottomSheetWidget> createState() =>
@@ -43,12 +45,91 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
 
   Future<void> onSubmit() async {
     try {
-      widget.program.reference.collection("reviews").add(FirebaseProgramRating(
-            uid: FirebaseAuth.instance.currentUser!.email,
-            review: _controller.text,
-            rating: _rating,
-            created_on: DateTime.now(),
-          ).toJson());
+      widget.program.reference.collection("reviews").add(
+            FirebaseProgramRating(
+              uid: FirebaseAuth.instance.currentUser!.email,
+              review: _controller.text,
+              rating: _rating,
+              created_on: DateTime.now(),
+            ).toJson(),
+          );
+
+      final DocumentReference<FirebaseProgram> documentReference =
+          FirebaseProgram().getDocumentReferenceByString(widget.program.id);
+
+      FirebaseFirestore.instance.runTransaction(
+        (transaction) async {
+          DocumentSnapshot<FirebaseProgram> snapshot =
+              await transaction.get(documentReference);
+
+          if (!snapshot.exists) {
+            return;
+          }
+
+          // Update the count based on the current count
+          // Note: this could be done without a transaction
+          // by updating the population using FieldValue.increment()
+
+          int oldRatingCount = snapshot.data()?.rating_count ?? 0;
+          int newRatingCount = oldRatingCount + 1;
+          num oldAverageRating = snapshot.data()?.average_rating ?? 0;
+
+          // Creating a transaction to increment the count and average of the review.
+          var newRatingAverage = oldRatingCount == 0
+              ? _rating
+              : ((oldAverageRating * oldRatingCount) + _rating) /
+                  newRatingCount;
+
+          // Perform an update on the document
+          transaction.update(documentReference, {
+            'rating_count': newRatingCount,
+            'average_rating': newRatingAverage
+          });
+        },
+      );
+    } catch (err) {
+      print(err.toString());
+    }
+  }
+
+  Future<void> onEditSubmit() async {
+    try {
+      widget.program.reference
+          .collection("reviews")
+          .doc(widget.reviewId!)
+          .update({
+        "review": _controller.text,
+        "rating": _rating,
+      });
+
+      final DocumentReference<FirebaseProgram> documentReference =
+          FirebaseProgram().getDocumentReferenceByString(widget.program.id);
+
+      FirebaseFirestore.instance.runTransaction(
+        (transaction) async {
+          DocumentSnapshot<FirebaseProgram> snapshot =
+              await transaction.get(documentReference);
+
+          if (!snapshot.exists) {
+            return;
+          }
+
+          // Delete all of my previous rating
+          num myOldRating = widget.currentRating!;
+          int oldRatingCount = snapshot.data()?.rating_count ?? 0;
+          num oldAverageRating = snapshot.data()?.average_rating ?? 0;
+
+          // Creating a transaction to increment the count and average of the review.
+
+          var newRatingAverage =
+              (((oldAverageRating * oldRatingCount) - myOldRating) + _rating) /
+                  oldRatingCount;
+
+          // Perform an update on the document
+          transaction
+              .update(documentReference, {'average_rating': newRatingAverage});
+        },
+      );
     } catch (err) {
       print(err.toString());
     }
@@ -64,6 +145,7 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
     super.initState();
   }
 
+  bool get _shouldEditReview => widget.currentReview != null;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -77,9 +159,7 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  widget.currentReview == null
-                      ? "Create review"
-                      : "Edit review",
+                  _shouldEditReview ? "Create review" : "Edit review",
                   style: platformThemeData(
                     context,
                     material: (data) =>
@@ -178,7 +258,9 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
                         color: kPrimaryColor,
                       ),
                       onPressed: () async {
-                        await onSubmit();
+                        _shouldEditReview
+                            ? await onEditSubmit()
+                            : await onSubmit();
                         Navigator.pop(context);
                       },
                       child: Text(

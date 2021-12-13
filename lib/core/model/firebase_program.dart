@@ -17,6 +17,8 @@ class FirebaseProgram {
     this.workout_count,
     this.thumbnail_url,
     this.warmup,
+    this.average_rating,
+    this.rating_count,
   });
 
   final DateTime? created_on;
@@ -29,6 +31,8 @@ class FirebaseProgram {
   final String? progression;
   final String? thumbnail_url;
   final String? warmup;
+  final num? average_rating;
+  final int? rating_count;
 
   FirebaseProgram.fromJson(Map<String, Object?> json)
       : this(
@@ -42,6 +46,8 @@ class FirebaseProgram {
           progression: json['progression'] as String?,
           thumbnail_url: json['thumbnail_url'] as String?,
           warmup: json['warmup'] as String?,
+          average_rating: json['average_rating'] as num?,
+          rating_count: json['rating_count'] as int?,
         );
 
   Map<String, Object?> toJson() {
@@ -56,6 +62,8 @@ class FirebaseProgram {
       'progression': progression,
       'thumbnail_url': thumbnail_url,
       'warmup': warmup,
+      'average_rating': average_rating,
+      'rating_count': rating_count,
     };
   }
 
@@ -64,6 +72,19 @@ class FirebaseProgram {
     return FirebaseFirestore.instance
         .collection('programs')
         .doc(program.toString())
+        .withConverter<FirebaseProgram>(
+          fromFirestore: (snapshot, _) =>
+              FirebaseProgram.fromJson(snapshot.data()!),
+          toFirestore: (data, _) => data.toJson(),
+        );
+  }
+
+  /// Get a reference to the single program.
+  DocumentReference<FirebaseProgram> getDocumentReferenceByString(
+      String program) {
+    return FirebaseFirestore.instance
+        .collection('programs')
+        .doc(program)
         .withConverter<FirebaseProgram>(
           fromFirestore: (snapshot, _) =>
               FirebaseProgram.fromJson(snapshot.data()!),

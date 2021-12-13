@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -97,8 +98,9 @@ class ProfileHeader extends StatelessWidget {
                               iosTitle: "Profile Image",
                               fullscreenDialog: true,
                               builder: (context) => ProfileImageView(
-                                imageProvider:
-                                    NetworkImage(firebaseUser.avatar!),
+                                imageProvider: CachedNetworkImageProvider(
+                                  firebaseUser.avatar!,
+                                ),
                               ),
                             ),
                           ),

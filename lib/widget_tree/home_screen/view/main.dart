@@ -11,13 +11,13 @@ import 'package:global_strongman/widget_tree/home_screen/view/section_header.dar
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-  Future<QuerySnapshot<FirebaseProgram>> _getPrograms() =>
-      FirebaseProgram().getCollectionReference().get();
+  Stream<QuerySnapshot<FirebaseProgram>> _getPrograms() =>
+      FirebaseProgram().getCollectionReference().snapshots();
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<QuerySnapshot<FirebaseProgram>>(
-        future: _getPrograms(),
+    return StreamBuilder<QuerySnapshot<FirebaseProgram>>(
+        stream: _getPrograms(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Text(

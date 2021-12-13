@@ -1,15 +1,22 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/view/premium_chip.dart';
 
 class AppBarBottomRow extends StatelessWidget {
   const AppBarBottomRow({
+    required this.program,
     Key? key,
   }) : super(key: key);
+  final QueryDocumentSnapshot<FirebaseProgram> program;
+
+  FirebaseProgram get programData => program.data();
+  String get averageRating => programData.average_rating.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +44,7 @@ class AppBarBottomRow extends StatelessWidget {
             width: kSpacing / 2,
           ),
           Text(
-            "4.8 • 5000 reviews",
+            "${averageRating.length <= 3 ? averageRating : averageRating.substring(0, 3)} • ${programData.rating_count.toString()} reviews",
             style: platformThemeData(
               context,
               material: (data) => data.textTheme.caption,
@@ -51,12 +58,14 @@ class AppBarBottomRow extends StatelessWidget {
           PlatformTextButton(
             onPressed: () {},
             padding: const EdgeInsets.symmetric(
-                horizontal: kSpacing * 2, vertical: 0,),
+              horizontal: kSpacing * 2,
+              vertical: 0,
+            ),
             child: Text(
               "Get Started",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
+                fontSize: 18,
                 color: Platform.isIOS
                     ? CupertinoColors.activeBlue
                     : Colors.blueAccent,
