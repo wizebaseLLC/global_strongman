@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/view/premium_chip.dart';
+import 'package:global_strongman/widget_tree/home_screen/view/overview/overview_tab.dart';
 
 class AppBarBottomRow extends StatelessWidget {
   const AppBarBottomRow({
@@ -56,7 +58,12 @@ class AppBarBottomRow extends StatelessWidget {
             child: Container(),
           ),
           PlatformTextButton(
-            onPressed: () {},
+            onPressed: () => OverviewTab.handleGetStarted(
+              programId: program.id,
+              userId: FirebaseAuth.instance.currentUser!.email!,
+              context: context,
+              program: program,
+            ),
             padding: const EdgeInsets.symmetric(
               horizontal: kSpacing * 2,
               vertical: 0,

@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/exclusive_workout_programs.dart';
-import 'package:global_strongman/widget_tree/home_screen/view/platform_sliver_appbar_with_search.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/section_header.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -16,49 +15,44 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot<FirebaseProgram>>(
-        stream: _getPrograms(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Text(
-              "Error",
-              style: TextStyle(color: Colors.red),
-            );
-          }
-          if (snapshot.hasData) {
-            final bool snapshotHasData = snapshot.data?.docs != null;
-            return GestureDetector(
-              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-              child: NestedScrollView(
-                headerSliverBuilder: (context, isInnerBoxScrolled) =>
-                    [const PlatformSliverAppBarWithSearch()],
-                body: SingleChildScrollView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      _buildFilterIconRow(context),
-                      const SizedBox(height: kSpacing * 3),
-                      if (snapshotHasData)
-                        const SectionHeader(text: "Exclusive workout programs"),
-                      const SizedBox(height: kSpacing * 2),
-                      ExclusiveWorkoutPrograms(docs: snapshot.data!.docs),
-                      // TODO: Update this to be a 'Continue' section.
-                      const SizedBox(height: kSpacing * 3),
-                      // if (snapshotHasData)
-                      //   const SectionHeader(
-                      //     text: "Continue where you left off",
-                      //   ),
-                      // const SizedBox(height: kSpacing * 2),
-                      // ExclusiveWorkoutPrograms(docs: snapshot.data!.docs),
-                    ],
-                  ),
+    return SafeArea(
+      child: StreamBuilder<QuerySnapshot<FirebaseProgram>>(
+          stream: _getPrograms(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Text(
+                "Error",
+                style: TextStyle(color: Colors.red),
+              );
+            }
+            if (snapshot.hasData) {
+              final bool snapshotHasData = snapshot.data?.docs != null;
+              return SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    _buildFilterIconRow(context),
+                    const SizedBox(height: kSpacing * 3),
+                    if (snapshotHasData)
+                      const SectionHeader(text: "Exclusive workout programs"),
+                    const SizedBox(height: kSpacing * 2),
+                    ExclusiveWorkoutPrograms(docs: snapshot.data!.docs),
+                    // TODO: Update this to be a 'Continue' section.
+                    const SizedBox(height: kSpacing * 3),
+                    // if (snapshotHasData)
+                    //   const SectionHeader(
+                    //     text: "Continue where you left off",
+                    //   ),
+                    // const SizedBox(height: kSpacing * 2),
+                    // ExclusiveWorkoutPrograms(docs: snapshot.data!.docs),
+                  ],
                 ),
-              ),
-            );
-          } else {
-            return const CircularProgressIndicator.adaptive();
-          }
-        });
+              );
+            } else {
+              return const CircularProgressIndicator.adaptive();
+            }
+          }),
+    );
   }
 
   Widget _buildFilterIconRow(BuildContext context) {

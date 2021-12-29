@@ -63,7 +63,9 @@ class _OnboardFormState extends State<OnboardForm> {
         });
 
         if (formKey.currentState?.saveAndValidate() == true) {
-          final Map<String, dynamic> formValues = formKey.currentState!.value;
+          Map<String, dynamic> formValues = formKey.currentState!.value;
+          formValues['age'] =
+              int.tryParse(formValues["age"]) ?? formValues["age"];
           //  print(formValues);
           SignInController().addUser(context, formValues).then((value) {
             setState(() {

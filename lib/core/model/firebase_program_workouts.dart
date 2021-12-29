@@ -93,4 +93,19 @@ class FirebaseProgramWorkouts {
           toFirestore: (data, _) => data.toJson(),
         );
   }
+
+  CollectionReference<FirebaseProgramWorkouts> getCollectionReferenceByString({
+    required String program,
+    required String day,
+  }) {
+    return FirebaseFirestore.instance
+        .collection('programs')
+        .doc(program)
+        .collection(day)
+        .withConverter<FirebaseProgramWorkouts>(
+          fromFirestore: (snapshot, _) =>
+              FirebaseProgramWorkouts.fromJson(snapshot.data()!),
+          toFirestore: (data, _) => data.toJson(),
+        );
+  }
 }

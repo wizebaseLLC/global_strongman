@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/widget_tree/bottom_navigator/controller/tab_bar_screen.dart';
@@ -9,18 +7,16 @@ import 'package:global_strongman/widget_tree/profile_screen/view/main.rs.dart';
 final List<TabBarScreen> screens = [
   TabBarScreen(
       child: const HomeScreen(),
-      appBar: Platform.isIOS
-          ? null
-          : PlatformAppBar(
-              title: const Text('Global Strongman'),
-              leading: CircleAvatar(
-                backgroundColor: Colors.transparent,
-                child: Image.asset(
-                  "assets/images/global_strongman_logo.png",
-                  cacheWidth: 154,
-                ),
-              ),
-            )),
+      appBar: PlatformAppBar(
+        title: const Text('Global Strongman'),
+        leading: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          child: Image.asset(
+            "assets/images/global_strongman_logo.png",
+            cacheWidth: 154,
+          ),
+        ),
+      )),
   TabBarScreen(child: Container()),
   TabBarScreen(child: Container()),
   TabBarScreen(child: const ProfileScreen()),

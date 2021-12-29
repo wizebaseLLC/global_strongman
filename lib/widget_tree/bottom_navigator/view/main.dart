@@ -14,6 +14,7 @@ class BottomNavigator extends StatefulWidget {
 class _BottomNavigatorState extends State<BottomNavigator> {
   int _selectedTabIndex = 0;
 
+  get appBar => screens.map((e) => e.appBar).toList()[_selectedTabIndex];
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
@@ -24,7 +25,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           index: _selectedTabIndex,
         ),
       ),
-      appBar: screens.map((e) => e.appBar).toList()[_selectedTabIndex],
+      appBar: appBar,
       bottomNavBar: PlatformNavBar(
         currentIndex: _selectedTabIndex,
         itemChanged: (index) => setState(
