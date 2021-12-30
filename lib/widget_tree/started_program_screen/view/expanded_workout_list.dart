@@ -1,14 +1,24 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/view_workout_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ExpandedWorkoutList extends StatelessWidget {
-  const ExpandedWorkoutList({required this.workoutTile, Key? key})
-      : super(key: key);
+class ExpandedWorkoutList extends StatefulWidget {
+  const ExpandedWorkoutList({
+    required this.workoutTile,
+    required this.program_id,
+    required this.workout_id,
+    Key? key,
+  }) : super(key: key);
 
   final FirebaseProgramWorkouts workoutTile;
+  final String program_id;
+  final String workout_id;
 
   static String? getSubtitle({required FirebaseProgramWorkouts workoutTile}) {
     if (workoutTile.reps != null &&
@@ -25,10 +35,38 @@ class ExpandedWorkoutList extends StatelessWidget {
   }
 
   @override
+  State<ExpandedWorkoutList> createState() => _ExpandedWorkoutListState();
+}
+
+class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
+  bool _workoutComplete = false;
+
+  Future<void> _checkIfWorkoutWasCompleted() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? foundKey =
+        prefs.getString("${widget.program_id}_${widget.workout_id}");
+
+    if (foundKey != null) {
+      if (foundKey.substring(0, 10) ==
+          DateTime.now().toString().substring(0, 10)) {
+        setState(() {
+          _workoutComplete = true;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    _checkIfWorkoutWasCompleted();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        workoutTile.name!,
+        widget.workoutTile.name!,
         style: platformThemeData(
           context,
           material: (data) => data.textTheme.bodyText1?.copyWith(
@@ -41,30 +79,61 @@ class ExpandedWorkoutList extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        getSubtitle(workoutTile: workoutTile) ?? "",
+        ExpandedWorkoutList.getSubtitle(workoutTile: widget.workoutTile) ?? "",
         style: platformThemeData(
           context,
           material: (data) => data.textTheme.bodyText1?.copyWith(
             color: Colors.white70,
           ),
           cupertino: (data) => data.textTheme.textStyle.copyWith(
-            fontSize: 14,
+            fontSize: 12,
             color: CupertinoColors.systemGrey3,
           ),
         ),
       ),
-      trailing: Icon(
-        PlatformIcons(context).rightChevron,
-        color: Colors.white60,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (_workoutComplete)
+            Icon(
+              PlatformIcons(context).checkMark,
+              color: Platform.isIOS ? CupertinoColors.activeBlue : Colors.blue,
+              size: 16,
+            ),
+          if (_workoutComplete)
+            const SizedBox(
+              width: kSpacing,
+            ),
+          Icon(
+            PlatformIcons(context).rightChevron,
+            color: Colors.white60,
+          ),
+        ],
       ),
       dense: true,
-      onTap: () => Navigator.push(
-        context,
-        platformPageRoute(
-          context: context,
-          builder: (_) => ViewWorkoutScreen(workout: workoutTile),
-        ),
-      ),
+      onTap: () async {
+        final bool? didCompleteWorkout = await Navigator.push(
+          context,
+          platformPageRoute(
+            context: context,
+            builder: (_) => ViewWorkoutScreen(
+              workout: widget.workoutTile,
+              program_id: widget.program_id,
+              workout_id: widget.workout_id,
+            ),
+          ),
+        );
+        if (didCompleteWorkout != null && didCompleteWorkout == true) {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+          await prefs.setString("${widget.program_id}_${widget.workout_id}",
+              DateTime.now().toString());
+
+          setState(() {
+            _workoutComplete = true;
+          });
+        }
+      },
     );
   }
 }

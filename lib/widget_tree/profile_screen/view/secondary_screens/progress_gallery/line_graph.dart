@@ -125,15 +125,14 @@ class ProgressWeightText extends StatelessWidget {
 }
 
 class SimpleTimeSeriesChart extends StatelessWidget {
-  //final List<charts.Series> seriesList;
-  final bool animate;
-  final List<QueryDocumentSnapshot<ProgressGalleryCard>> seriesList;
   const SimpleTimeSeriesChart({
     required this.seriesList,
     required this.animate,
     Key? key,
   }) : super(key: key);
 
+  final bool animate;
+  final List<QueryDocumentSnapshot<ProgressGalleryCard>> seriesList;
   @override
   Widget build(BuildContext context) {
     return charts.TimeSeriesChart(
@@ -158,8 +157,8 @@ class SimpleTimeSeriesChart extends StatelessWidget {
       charts.Series<TimeSeries, DateTime>(
         id: 'Weight',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (TimeSeries sales, _) => sales.time,
-        measureFn: (TimeSeries sales, _) => sales.weight,
+        domainFn: (TimeSeries val, _) => val.time,
+        measureFn: (TimeSeries val, _) => val.weight,
         data: chartDataLength,
       ),
     ];

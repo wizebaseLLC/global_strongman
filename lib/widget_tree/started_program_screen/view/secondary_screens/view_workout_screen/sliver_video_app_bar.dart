@@ -17,7 +17,6 @@ class SliverVideoAppBar extends StatelessWidget {
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: const [
-          StretchMode.blurBackground,
           StretchMode.fadeTitle,
           StretchMode.zoomBackground,
         ],

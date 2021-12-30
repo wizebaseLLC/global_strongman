@@ -146,7 +146,8 @@ class _OverviewTabState extends State<OverviewTab> {
                 ),
                 child: const Text(
                   "Get Started",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

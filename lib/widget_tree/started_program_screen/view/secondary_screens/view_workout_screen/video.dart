@@ -33,6 +33,12 @@ class _WorkoutVideoState extends State<WorkoutVideo> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (_controller.value.isInitialized) {
       return GestureDetector(

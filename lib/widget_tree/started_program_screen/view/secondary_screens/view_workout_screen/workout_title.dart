@@ -29,11 +29,11 @@ class WorkoutTitle extends StatelessWidget {
           style: platformThemeData(
             context,
             material: (data) => data.textTheme.bodyText1?.copyWith(
-              fontSize: 16,
+              fontSize: 14,
               color: Colors.white70,
             ),
             cupertino: (data) => data.textTheme.textStyle.copyWith(
-              fontSize: 16,
+              fontSize: 14,
               color: CupertinoColors.systemGrey3,
             ),
           ),

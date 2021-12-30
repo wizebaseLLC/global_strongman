@@ -82,13 +82,15 @@ class DayContainer extends StatelessWidget {
                       ),
                     ),
                   ),
-                  children: [
-                    if (orderedDocs != null)
-                      ...orderedDocs
-                          .map((data) =>
-                              ExpandedWorkoutList(workoutTile: data.data()))
-                          .toList()
-                  ],
+                  children: orderedDocs
+                      .map(
+                        (data) => ExpandedWorkoutList(
+                          workoutTile: data.data(),
+                          program_id: program.id,
+                          workout_id: data.id,
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
             );
