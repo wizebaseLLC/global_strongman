@@ -15,20 +15,43 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
     required this.docs,
     this.isContinue,
     Key? key,
+    required this.cardio,
+    required this.strength,
+    required this.endurance,
+    required this.strongman,
   }) : super(key: key);
 
   final List<QueryDocumentSnapshot<FirebaseProgram>> docs;
   final bool? isContinue;
+  final bool cardio;
+  final bool strength;
+  final bool endurance;
+  final bool strongman;
 
+  List<String?> get filters => [
+        if (cardio) "cardio",
+        if (strength) "strength",
+        if (endurance) "endurance",
+        if (strongman) "strongman",
+      ];
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: docs
-            .map((program) => _card(
-                  program: program,
-                  context: context,
+            .map((program) => AnimatedOpacity(
+                  duration: const Duration(milliseconds: 300),
+                  opacity: program
+                          .data()
+                          .categories!
+                          .any((element) => filters.contains(element))
+                      ? 1
+                      : .2,
+                  child: _card(
+                    program: program,
+                    context: context,
+                  ),
                 ))
             .toList(),
       ),
