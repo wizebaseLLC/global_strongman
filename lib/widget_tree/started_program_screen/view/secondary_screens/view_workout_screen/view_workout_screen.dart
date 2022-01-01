@@ -65,6 +65,15 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
       _notesController.text,
     );
 
+    prefs.setString(
+      "${widget.program_id}_${widget.workout_id}_previousWeight",
+      lbs > 0
+          ? ",  current: ${lbs.toStringAsFixed(1)} lbs (${kgs.toStringAsFixed(1)} kgs)"
+          : seconds > 0
+              ? ",  current: $seconds seconds"
+              : "",
+    );
+
     FirebaseUserWorkoutComplete(
       created_on: DateTime.now(),
       seconds: seconds,

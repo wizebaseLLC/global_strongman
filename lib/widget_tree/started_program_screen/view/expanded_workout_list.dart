@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -40,9 +42,11 @@ class ExpandedWorkoutList extends StatefulWidget {
 
 class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
   bool _workoutComplete = false;
+  String previousSession = "";
 
-  Future<void> _checkIfWorkoutWasCompleted() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> _checkIfWorkoutWasCompleted({
+    required SharedPreferences prefs,
+  }) async {
     final String? foundKey =
         prefs.getString("${widget.program_id}_${widget.workout_id}");
 
@@ -56,9 +60,26 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
     }
   }
 
+  Future<void> _getPreviousSessionAttempt({
+    required SharedPreferences prefs,
+  }) async {
+    final String? foundKey = prefs
+        .getString("${widget.program_id}_${widget.workout_id}_previousWeight");
+
+    if (foundKey != null) {
+      setState(() {
+        previousSession = foundKey;
+      });
+    }
+  }
+
   @override
   void initState() {
-    _checkIfWorkoutWasCompleted();
+    SharedPreferences.getInstance().then((prefs) {
+      _checkIfWorkoutWasCompleted(prefs: prefs);
+      _getPreviousSessionAttempt(prefs: prefs);
+    });
+
     super.initState();
   }
 
@@ -70,16 +91,16 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
         style: platformThemeData(
           context,
           material: (data) => data.textTheme.bodyText1?.copyWith(
-            color: Colors.white70,
+            color: Colors.white,
           ),
           cupertino: (data) => data.textTheme.textStyle.copyWith(
             fontSize: 14,
-            color: CupertinoColors.systemGrey3,
+            color: CupertinoColors.white,
           ),
         ),
       ),
       subtitle: Text(
-        ExpandedWorkoutList.getSubtitle(workoutTile: widget.workoutTile) ?? "",
+        "${ExpandedWorkoutList.getSubtitle(workoutTile: widget.workoutTile)} $previousSession",
         style: platformThemeData(
           context,
           material: (data) => data.textTheme.bodyText1?.copyWith(
@@ -129,8 +150,12 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
           await prefs.setString("${widget.program_id}_${widget.workout_id}",
               DateTime.now().toString());
 
+          final String? foundKey = prefs.getString(
+              "${widget.program_id}_${widget.workout_id}_previousWeight");
+
           setState(() {
             _workoutComplete = true;
+            previousSession = foundKey ?? "";
           });
         }
       },

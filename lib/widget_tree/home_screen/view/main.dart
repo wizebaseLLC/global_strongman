@@ -59,49 +59,49 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
                   if (snapshot.hasData) {
-                    final bool snapshotHasData = snapshot.data?.docs != null;
-                    return SingleChildScrollView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildFilterIconRow(context),
-                          const SizedBox(height: kSpacing * 3),
-                          if (snapshotHasData)
+                    return SafeArea(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildFilterIconRow(context),
+                            const SizedBox(height: kSpacing * 3),
+                            if (ongoingPrograms != null &&
+                                ongoingPrograms.isNotEmpty)
+                              const SectionHeader(
+                                text: "Continue where you left off",
+                              ),
+                            if (ongoingPrograms != null &&
+                                ongoingPrograms.isNotEmpty)
+                              const SizedBox(height: kSpacing * 2),
+                            if (ongoingPrograms != null &&
+                                ongoingPrograms.isNotEmpty)
+                              ExclusiveWorkoutPrograms(
+                                docs: snapshot.data!.docs
+                                    .where((doc) =>
+                                        ongoingPrograms.contains(doc.id))
+                                    .toList(),
+                                isContinue: true,
+                                cardio: cardio,
+                                strength: strength,
+                                endurance: endurance,
+                                strongman: strongman,
+                              ),
+                            const SizedBox(height: kSpacing * 3),
                             const SectionHeader(
                               text: "Exclusive workout programs",
                             ),
-                          const SizedBox(height: kSpacing * 2),
-                          ExclusiveWorkoutPrograms(
-                            docs: snapshot.data!.docs,
-                            cardio: cardio,
-                            strength: strength,
-                            endurance: endurance,
-                            strongman: strongman,
-                          ),
-                          const SizedBox(height: kSpacing * 3),
-                          if (ongoingPrograms != null &&
-                              ongoingPrograms.isNotEmpty)
-                            const SectionHeader(
-                              text: "Continue where you left off",
-                            ),
-                          if (ongoingPrograms != null &&
-                              ongoingPrograms.isNotEmpty)
                             const SizedBox(height: kSpacing * 2),
-                          if (ongoingPrograms != null &&
-                              ongoingPrograms.isNotEmpty)
                             ExclusiveWorkoutPrograms(
-                              docs: snapshot.data!.docs
-                                  .where(
-                                      (doc) => ongoingPrograms.contains(doc.id))
-                                  .toList(),
-                              isContinue: true,
+                              docs: snapshot.data!.docs,
                               cardio: cardio,
                               strength: strength,
                               endurance: endurance,
                               strongman: strongman,
                             ),
-                        ],
+                            const SizedBox(height: kSpacing * 3),
+                          ],
+                        ),
                       ),
                     );
                   } else {
