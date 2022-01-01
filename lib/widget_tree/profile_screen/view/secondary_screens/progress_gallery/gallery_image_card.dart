@@ -153,6 +153,7 @@ class GalleryImageCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(kSpacing),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(16),
@@ -171,6 +172,7 @@ class GalleryImageCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -235,18 +237,21 @@ class GalleryImageCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
-                      caption ?? "",
-                      style: platformThemeData(
-                        context,
-                        material: (data) => data.textTheme.bodyText1?.copyWith(
-                          fontSize: 14,
-                        ),
-                        cupertino: (data) => data.textTheme.textStyle.copyWith(
-                          fontSize: 16,
+                    if (caption != null)
+                      Text(
+                        caption!,
+                        style: platformThemeData(
+                          context,
+                          material: (data) =>
+                              data.textTheme.bodyText1?.copyWith(
+                            fontSize: 14,
+                          ),
+                          cupertino: (data) =>
+                              data.textTheme.textStyle.copyWith(
+                            fontSize: 16,
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
