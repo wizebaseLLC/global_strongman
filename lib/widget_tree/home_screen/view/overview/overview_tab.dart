@@ -37,7 +37,16 @@ class OverviewTab extends StatefulWidget {
 
     if (existingProgram.docs.isEmpty) {
       await startedProgram.createStartedPrograms(
-          programId: programId, userId: userId);
+        programId: programId,
+        userId: userId,
+      );
+    } else {
+      startedProgram.toggleProgramActiveState(
+        state: true,
+        programId: programId,
+        userId: userId,
+        docId: existingProgram.docs.first.id,
+      );
     }
 
     Navigator.push(
@@ -147,7 +156,9 @@ class _OverviewTabState extends State<OverviewTab> {
                 child: const Text(
                   "Get Started",
                   style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

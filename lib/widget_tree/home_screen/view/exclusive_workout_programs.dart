@@ -8,14 +8,17 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/screens/program.dart';
+import 'package:global_strongman/widget_tree/started_program_screen/view/main.dart';
 
 class ExclusiveWorkoutPrograms extends StatelessWidget {
   const ExclusiveWorkoutPrograms({
     required this.docs,
+    this.isContinue,
     Key? key,
   }) : super(key: key);
 
   final List<QueryDocumentSnapshot<FirebaseProgram>> docs;
+  final bool? isContinue;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,9 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
         context,
         platformPageRoute(
           context: context,
-          builder: (_) => ProgramScreen(program: program, heroId: heroId),
+          builder: (_) => isContinue == true
+              ? StartedProgramScreen(program: program)
+              : ProgramScreen(program: program, heroId: heroId),
         ),
       );
 
@@ -53,7 +58,7 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: kSpacing),
       child: PlatformWidgetBuilder(
         cupertino: (_, child, __) => Hero(
-          tag: program.id,
+          tag: isContinue == true ? "${program.id}_continue" : program.id,
           child: CupertinoButton(
             padding: EdgeInsets.zero,
             child: child!,
@@ -61,7 +66,7 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
           ),
         ),
         material: (_, child, __) => Hero(
-          tag: program.id,
+          tag: isContinue == true ? "${program.id}_continue" : program.id,
           child: Card(
             elevation: 4,
             margin: EdgeInsets.zero,

@@ -17,8 +17,7 @@ class ProgressLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentWeight =
-        streamedGallery?.first?.data().weight ?? initialWeight;
+    final currentWeight = streamedGallery?.first.data().weight ?? initialWeight;
     final direction =
         int.parse(initialWeight) > int.parse(currentWeight) ? "-" : "+";
     final difference = direction == "-"
@@ -34,7 +33,6 @@ class ProgressLineChart extends StatelessWidget {
               borderRadius: BorderRadius.all(
                 Radius.circular(18),
               ),
-              // color: Color(0xff232d37),
             ),
             child: streamedGallery != null && streamedGallery!.isNotEmpty
                 ? Padding(

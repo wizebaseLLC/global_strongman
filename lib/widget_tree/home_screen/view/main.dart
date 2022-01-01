@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
+import 'package:global_strongman/core/model/firebase_user_started_program.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/exclusive_workout_programs.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/section_header.dart';
 
@@ -13,46 +15,77 @@ class HomeScreen extends StatelessWidget {
   Stream<QuerySnapshot<FirebaseProgram>> _getPrograms() =>
       FirebaseProgram().getCollectionReference().snapshots();
 
+  Stream<QuerySnapshot<FirebaseUserStartedProgram>> _getOngoingPrograms() =>
+      FirebaseUserStartedProgram()
+          .getCollectionReference(
+            userId: FirebaseAuth.instance.currentUser!.email!,
+          )
+          .snapshots();
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: StreamBuilder<QuerySnapshot<FirebaseProgram>>(
-          stream: _getPrograms(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text(
-                "Error",
-                style: TextStyle(color: Colors.red),
-              );
-            }
-            if (snapshot.hasData) {
-              final bool snapshotHasData = snapshot.data?.docs != null;
-              return SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    _buildFilterIconRow(context),
-                    const SizedBox(height: kSpacing * 3),
-                    if (snapshotHasData)
-                      const SectionHeader(text: "Exclusive workout programs"),
-                    const SizedBox(height: kSpacing * 2),
-                    ExclusiveWorkoutPrograms(docs: snapshot.data!.docs),
-                    // TODO: Update this to be a 'Continue' section.
-                    const SizedBox(height: kSpacing * 3),
-                    // if (snapshotHasData)
-                    //   const SectionHeader(
-                    //     text: "Continue where you left off",
-                    //   ),
-                    // const SizedBox(height: kSpacing * 2),
-                    // ExclusiveWorkoutPrograms(docs: snapshot.data!.docs),
-                  ],
-                ),
-              );
-            } else {
-              return const CircularProgressIndicator.adaptive();
-            }
-          }),
-    );
+    return StreamBuilder<QuerySnapshot<FirebaseUserStartedProgram>>(
+        stream: _getOngoingPrograms(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const CircularProgressIndicator.adaptive();
+          }
+          final List<String?>? ongoingPrograms = snapshot.data?.docs
+              .map((e) =>
+                  e.data().is_active == true ? e.data().program_id : null)
+              .toList();
+          return SafeArea(
+            child: StreamBuilder<QuerySnapshot<FirebaseProgram>>(
+                stream: _getPrograms(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text(
+                      "Error",
+                      style: TextStyle(color: Colors.red),
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    final bool snapshotHasData = snapshot.data?.docs != null;
+                    return SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildFilterIconRow(context),
+                          const SizedBox(height: kSpacing * 3),
+                          if (snapshotHasData)
+                            const SectionHeader(
+                              text: "Exclusive workout programs",
+                            ),
+                          const SizedBox(height: kSpacing * 2),
+                          ExclusiveWorkoutPrograms(docs: snapshot.data!.docs),
+                          const SizedBox(height: kSpacing * 3),
+                          if (ongoingPrograms != null &&
+                              ongoingPrograms.isNotEmpty)
+                            const SectionHeader(
+                              text: "Continue where you left off",
+                            ),
+                          if (ongoingPrograms != null &&
+                              ongoingPrograms.isNotEmpty)
+                            const SizedBox(height: kSpacing * 2),
+                          if (ongoingPrograms != null &&
+                              ongoingPrograms.isNotEmpty)
+                            ExclusiveWorkoutPrograms(
+                              docs: snapshot.data!.docs
+                                  .where(
+                                      (doc) => ongoingPrograms.contains(doc.id))
+                                  .toList(),
+                              isContinue: true,
+                            ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return const CircularProgressIndicator.adaptive();
+                  }
+                }),
+          );
+        });
   }
 
   Widget _buildFilterIconRow(BuildContext context) {

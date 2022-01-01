@@ -49,12 +49,16 @@ class ProgressionLineChart extends StatelessWidget {
 
   /// Create one series with sample hard coded data.
   List<charts.Series<TimeSeries, DateTime>> _createSampleData() {
-    var chartData = seriesList.map((e) {
-      final data = e.data();
-      final num value =
-          data.seconds! > 0 ? data.seconds! : data.working_weight_lbs!;
-      return TimeSeries(data.created_on!, value.toInt());
-    }).toList();
+    var chartData = seriesList
+        .map((e) {
+          final data = e.data();
+          final num value =
+              data.seconds! > 0 ? data.seconds! : data.working_weight_lbs!;
+          return TimeSeries(data.created_on!, value.toInt());
+        })
+        .toList()
+        .where((element) => element.value > 0)
+        .toList();
 
     return [
       charts.Series<TimeSeries, DateTime>(
@@ -100,7 +104,7 @@ class CustomCircleSymbolRenderer extends charts.CircleSymbolRenderer {
     textStyle.fontSize = 15;
     canvas.drawText(
         charts_text.TextElement(
-          "$value",
+          value,
           style: textStyle,
         ),
         (bounds.left).round(),
