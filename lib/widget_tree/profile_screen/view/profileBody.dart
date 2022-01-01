@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
+import 'package:global_strongman/widget_tree/login_screen/view/main.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_badge.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_header.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_list.dart';
@@ -48,6 +50,53 @@ class ProfileBody extends StatelessWidget {
               height: kSpacing * 2,
             ),
             _buildCommunityProfileList(),
+            const SizedBox(
+              height: kSpacing * 4,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+              child: SizedBox(
+                width: double.infinity,
+                child: PlatformElevatedButton(
+                  cupertino: (_, __) => CupertinoElevatedButtonData(
+                    originalStyle: true,
+                    color: kSecondaryColor,
+                  ),
+                  material: (_, __) => MaterialElevatedButtonData(
+                    style: ElevatedButton.styleFrom(primary: kSecondaryColor),
+                  ),
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.pushReplacement(
+                      context,
+                      platformPageRoute(
+                        context: context,
+                        builder: (_) => const LoginPage(),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(
+                        Icons.flight_land,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: kSpacing,
+                      ),
+                      Text(
+                        "Sign out",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(
               height: kSpacing * 4,
             ),
