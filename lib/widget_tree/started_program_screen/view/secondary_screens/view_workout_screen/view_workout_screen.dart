@@ -208,6 +208,7 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                                       title: "Log today's session",
                                       subtitle: "",
                                     ),
+                                    const SizedBox(height: kSpacing),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: kSpacing,
@@ -261,6 +262,7 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                                       title: "Notes",
                                       subtitle: "",
                                     ),
+                                    const SizedBox(height: kSpacing),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: kSpacing,

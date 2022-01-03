@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
 import 'package:global_strongman/widget_tree/activity_screen/model/activity_interface.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/filter_icon.dart';
 

@@ -27,23 +27,25 @@ class WorkoutDescription extends StatelessWidget {
                   data.textTheme.navTitleTextStyle.copyWith(fontSize: 20),
             ),
           ),
-          const SizedBox(
-            height: kSpacing,
-          ),
-          Text(
-            subtitle,
-            style: platformThemeData(
-              context,
-              material: (data) => data.textTheme.bodyText1?.copyWith(
-                fontSize: 14,
-                color: Colors.white70,
-              ),
-              cupertino: (data) => data.textTheme.textStyle.copyWith(
-                fontSize: 14,
-                color: CupertinoColors.systemGrey3,
+          if (subtitle.length > 1)
+            const SizedBox(
+              height: kSpacing,
+            ),
+          if (subtitle.length > 1)
+            Text(
+              subtitle,
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.bodyText1?.copyWith(
+                  fontSize: 14,
+                  color: Colors.white70,
+                ),
+                cupertino: (data) => data.textTheme.textStyle.copyWith(
+                  fontSize: 14,
+                  color: CupertinoColors.systemGrey2,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

@@ -27,7 +27,7 @@ class CategoryStackContainer extends StatelessWidget {
               width: 25,
               child: Center(
                 child: Text(
-                  "$count",
+                  "${count > 99 ? '99+' : count}",
                   style: platformThemeData(
                     context,
                     material: (data) => data.textTheme.caption?.copyWith(
