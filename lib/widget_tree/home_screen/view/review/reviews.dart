@@ -24,19 +24,20 @@ class Reviews extends StatelessWidget {
       children: [
         ReviewButton(program: program),
         FirestoreListView<FirebaseProgramRating>(
-            query: _getReviews(),
-            padding: EdgeInsets.zero,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, snapshot) {
-              var snapshotData = snapshot.data();
+          query: _getReviews(),
+          padding: EdgeInsets.zero,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, snapshot) {
+            var snapshotData = snapshot.data();
 
-              return ReviewListTile(
-                program: program,
-                review: snapshotData,
-                reviewId: snapshot.id,
-              );
-            }),
+            return ReviewListTile(
+              program: program,
+              review: snapshotData,
+              reviewId: snapshot.id,
+            );
+          },
+        ),
       ],
     );
   }

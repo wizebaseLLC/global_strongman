@@ -11,9 +11,14 @@ import 'package:global_strongman/widget_tree/activity_screen/view/workout_set_co
 import 'package:global_strongman/widget_tree/activity_screen/view/workoutsCategories/workoutsCategories.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/description.dart';
 
-class ActivityScreen extends StatelessWidget {
+class ActivityScreen extends StatefulWidget {
   const ActivityScreen({Key? key}) : super(key: key);
 
+  @override
+  State<ActivityScreen> createState() => _ActivityScreenState();
+}
+
+class _ActivityScreenState extends State<ActivityScreen> {
   String get _user => FirebaseAuth.instance.currentUser!.email!;
 
   Future<ActivityInterface> _createWorkoutInterface() async {
@@ -73,39 +78,44 @@ class ActivityScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return SafeArea(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WorkoutSetsCard(
-                        activityInterface: snapshot.data!,
-                      ),
-                      const SizedBox(
-                        height: kSpacing * 4,
-                      ),
-                      const WorkoutDescription(
-                        title: "Categories",
-                        subtitle: "Workouts completed by category",
-                      ),
-                      WorkoutsCompletedByCategory(
-                        activityInterface: snapshot.data!,
-                      ),
-                      const SizedBox(
-                        height: kSpacing * 4,
-                      ),
-                      const WorkoutDescription(
-                        title: "Workout Calendar",
-                        subtitle: "",
-                      ),
-                      ActivityCalendar(
-                        activityInterface: snapshot.data!,
-                      ),
-                      const SizedBox(
-                        height: kSpacing * 8,
-                      ),
-                    ],
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  setState(() {});
+                },
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WorkoutSetsCard(
+                          activityInterface: snapshot.data!,
+                        ),
+                        const SizedBox(
+                          height: kSpacing * 4,
+                        ),
+                        const WorkoutDescription(
+                          title: "Categories",
+                          subtitle: "Workouts completed by category",
+                        ),
+                        WorkoutsCompletedByCategory(
+                          activityInterface: snapshot.data!,
+                        ),
+                        const SizedBox(
+                          height: kSpacing * 4,
+                        ),
+                        const WorkoutDescription(
+                          title: "Workout Calendar",
+                          subtitle: "",
+                        ),
+                        ActivityCalendar(
+                          activityInterface: snapshot.data!,
+                        ),
+                        const SizedBox(
+                          height: kSpacing * 4,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

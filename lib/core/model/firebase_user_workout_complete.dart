@@ -7,15 +7,21 @@ class FirebaseUserWorkoutComplete {
     this.created_on,
     this.program_id,
     this.workout_id,
+    this.day,
     this.working_weight_lbs,
     this.working_weight_kgs,
     this.seconds,
     this.categories,
+    this.weight_used_string,
+    this.notes,
   });
 
   final DateTime? created_on;
   final String? program_id;
   final String? workout_id;
+  final String? notes;
+  final String? weight_used_string;
+  final String? day;
   final num? working_weight_lbs;
   final num? working_weight_kgs;
   final num? seconds;
@@ -26,6 +32,9 @@ class FirebaseUserWorkoutComplete {
           created_on: (json['created_on'] as Timestamp).toDate(),
           program_id: json['program_id'] as String?,
           workout_id: json['workout_id'] as String?,
+          notes: json['notes'] as String?,
+          weight_used_string: json['weight_used_string'] as String?,
+          day: json['day'] as String?,
           working_weight_lbs: json['working_weight_lbs'] as num?,
           working_weight_kgs: json['working_weight_kgs'] as num?,
           seconds: json['seconds'] as num?,
@@ -41,6 +50,9 @@ class FirebaseUserWorkoutComplete {
       'working_weight_kgs': working_weight_kgs,
       'seconds': seconds,
       'categories': categories,
+      'day': day,
+      'weight_used_string': weight_used_string,
+      'notes': notes,
     };
   }
 

@@ -88,6 +88,7 @@ class DayContainer extends StatelessWidget {
                           workoutTile: data.data(),
                           program_id: program.id,
                           workout_id: data.id,
+                          programDay: programDay,
                         ),
                       )
                       .toList(),

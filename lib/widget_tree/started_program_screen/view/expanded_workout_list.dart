@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/view_workout_screen.dart';
@@ -18,14 +19,16 @@ class ExpandedWorkoutList extends StatefulWidget {
     required this.workoutTile,
     required this.program_id,
     required this.workout_id,
+    required this.programDay,
     Key? key,
   }) : super(key: key);
 
+  final DocumentReference<FirebaseProgram> programDay;
   final FirebaseProgramWorkouts workoutTile;
   final String program_id;
   final String workout_id;
 
-  static String? getSubtitle({required FirebaseProgramWorkouts workoutTile}) {
+  static String getSubtitle({required FirebaseProgramWorkouts workoutTile}) {
     if (workoutTile.reps != null &&
         workoutTile.sets != null &&
         workoutTile.percent != null) {
@@ -37,6 +40,7 @@ class ExpandedWorkoutList extends StatefulWidget {
     } else if (workoutTile.minutes != null) {
       return "${workoutTile.minutes} minutes";
     }
+    return "";
   }
 
   @override
@@ -167,6 +171,7 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
               workout: widget.workoutTile,
               program_id: widget.program_id,
               workout_id: widget.workout_id,
+              programDay: widget.programDay,
             ),
           ),
         );

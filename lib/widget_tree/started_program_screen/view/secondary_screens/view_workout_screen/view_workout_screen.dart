@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
@@ -24,9 +25,11 @@ class ViewWorkoutScreen extends StatefulWidget {
     required this.workout,
     required this.workout_id,
     required this.program_id,
+    required this.programDay,
     Key? key,
   }) : super(key: key);
 
+  final DocumentReference<FirebaseProgram> programDay;
   final FirebaseProgramWorkouts workout;
   final String program_id;
   final String workout_id;
@@ -89,13 +92,14 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
       _notesController.text,
     );
 
+    final String previousWeight = lbs > 0
+        ? ",  current: ${lbs.toStringAsFixed(1)} lbs (${kgs.toStringAsFixed(1)} kgs)"
+        : seconds > 0
+            ? ",  current: $seconds seconds"
+            : "";
     prefs.setString(
       "${widget.program_id}_${widget.workout_id}_previousWeight",
-      lbs > 0
-          ? ",  current: ${lbs.toStringAsFixed(1)} lbs (${kgs.toStringAsFixed(1)} kgs)"
-          : seconds > 0
-              ? ",  current: $seconds seconds"
-              : "",
+      previousWeight,
     );
 
     FirebaseUserWorkoutComplete(
@@ -106,6 +110,9 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
       working_weight_lbs: lbs,
       workout_id: widget.workout_id,
       categories: widget.workout.categories,
+      day: widget.programDay.id,
+      notes: _notesController.text,
+      weight_used_string: previousWeight.replaceAll(",  current: ", ""),
     ).addCompletedWorkout(
       user: _user,
     );

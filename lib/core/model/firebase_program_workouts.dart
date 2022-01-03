@@ -70,18 +70,23 @@ class FirebaseProgramWorkouts {
     };
   }
 
-  // /// Get a reference to the single program.
-  // DocumentReference<FirebaseProgramWorkouts> getDocumentReference(
-  //     Programs program) {
-  //   return FirebaseFirestore.instance
-  //       .collection('programs')
-  //       .doc(program.toString())
-  //       .withConverter<FirebaseProgramWorkouts>(
-  //         fromFirestore: (snapshot, _) =>
-  //             FirebaseProgramWorkouts.fromJson(snapshot.data()!),
-  //         toFirestore: (data, _) => data.toJson(),
-  //       );
-  // }
+  /// Get a reference to the single workout.
+  DocumentReference<FirebaseProgramWorkouts> getDocumentReference({
+    required String program,
+    required String day,
+    required String doc,
+  }) {
+    return FirebaseFirestore.instance
+        .collection('programs')
+        .doc(program)
+        .collection(day)
+        .doc(doc)
+        .withConverter<FirebaseProgramWorkouts>(
+          fromFirestore: (snapshot, _) =>
+              FirebaseProgramWorkouts.fromJson(snapshot.data()!),
+          toFirestore: (data, _) => data.toJson(),
+        );
+  }
 
   /// Get a reference to the entire collection.
   /// Don't forget to add a where clause.

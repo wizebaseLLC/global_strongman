@@ -25,7 +25,7 @@ class WorkoutTitle extends StatelessWidget {
           ),
         ),
         Text(
-          ExpandedWorkoutList.getSubtitle(workoutTile: workout)!,
+          ExpandedWorkoutList.getSubtitle(workoutTile: workout),
           style: platformThemeData(
             context,
             material: (data) => data.textTheme.bodyText1?.copyWith(
