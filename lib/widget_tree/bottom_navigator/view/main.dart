@@ -14,11 +14,13 @@ class BottomNavigator extends StatefulWidget {
 
 class _BottomNavigatorState extends State<BottomNavigator> {
   int _selectedTabIndex = 0;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   get appBar => screens.map((e) => e.appBar).toList()[_selectedTabIndex];
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
+      key: _scaffoldKey,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: IndexedStack(
