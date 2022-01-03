@@ -16,7 +16,8 @@ class ActivityCalendar extends StatelessWidget {
       firstDay: DateTime.utc(2010, 10, 16),
       lastDay: DateTime.now(),
       focusedDay: DateTime.now(),
-
+      onDaySelected: (selectedDay, focusedDay) =>
+          print("$selectedDay - $focusedDay"),
       // daysOfWeekStyle:
       //     const DaysOfWeekStyle(decoration: BoxDecoration(color: Colors.white)),
       calendarStyle: const CalendarStyle(
