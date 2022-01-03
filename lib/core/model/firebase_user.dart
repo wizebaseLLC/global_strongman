@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +22,8 @@ class FirebaseUser {
     this.goals,
     this.is_gallery_public,
     this.injuries,
+    this.completed_workouts,
+    this.active_days,
     required this.email,
   });
 
@@ -33,12 +37,16 @@ class FirebaseUser {
   final String? height;
   final String? weight;
   final bool? is_gallery_public;
+  final int? completed_workouts;
+  final int? active_days;
   final List<dynamic>? goals;
   final List<dynamic>? injuries;
 
   FirebaseUser.fromJson(Map<String, Object?> json)
       : this(
           age: json['age'] as int?,
+          completed_workouts: json['completed_workouts'] as int?,
+          active_days: json['active_days'] as int?,
           avatar: json['avatar'] as String?,
           email: json['email'] as String,
           experience: json['experience'] as String?,
@@ -65,6 +73,8 @@ class FirebaseUser {
       'goals': goals,
       'injuries': injuries,
       "is_gallery_public": is_gallery_public,
+      "completed_workouts": completed_workouts,
+      "active_days": active_days,
     };
   }
 
@@ -106,6 +116,9 @@ class FirebaseUser {
           toFirestore: (data, _) => data.toJson(),
         );
   }
+
+  /// Increments completed workout count
+  Future<void> incrementCompletedWorkouts() async {}
 
   /// Gets current logged in user.
   static User? getSignedInUserFromFireStore() {

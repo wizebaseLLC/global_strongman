@@ -10,6 +10,7 @@ import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_user_started_program.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/exclusive_workout_programs.dart';
+import 'package:global_strongman/widget_tree/home_screen/view/filter_icon.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/section_header.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool cardio = true;
   bool strength = true;
-  bool endurance = true;
+  bool rehab = true;
   bool strongman = true;
 
   Stream<QuerySnapshot<FirebaseProgram>> _getPrograms() => FirebaseProgram()
@@ -84,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 isContinue: true,
                                 cardio: cardio,
                                 strength: strength,
-                                endurance: endurance,
+                                rehab: rehab,
                                 strongman: strongman,
                               ),
                             const SizedBox(height: kSpacing * 3),
@@ -96,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               docs: snapshot.data!.docs,
                               cardio: cardio,
                               strength: strength,
-                              endurance: endurance,
+                              rehab: rehab,
                               strongman: strongman,
                             ),
                             const SizedBox(height: kSpacing * 3),
@@ -116,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Row(
       children: [
         Expanded(
-          child: _filterIcon(
+          child: FilterIcon(
             context: context,
             name: "Cardio",
             selected: cardio,
@@ -140,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Expanded(
-          child: _filterIcon(
+          child: FilterIcon(
             context: context,
             name: "Strength",
             selected: strength,
@@ -164,14 +165,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Expanded(
-          child: _filterIcon(
+          child: FilterIcon(
             context: context,
             backgroundColor: Colors.tealAccent.shade200.withOpacity(.3),
-            selected: endurance,
-            name: "Endurance",
+            selected: rehab,
+            name: "Rehab",
             icon: Icon(
               PlatformIcons(context).clockSolid,
-              color: endurance
+              color: rehab
                   ? Colors.tealAccent.shade700
                   : Platform.isIOS
                       ? CupertinoColors.systemGrey
@@ -181,14 +182,14 @@ class _HomeScreenState extends State<HomeScreen> {
             toggleState: () {
               setState(
                 () {
-                  endurance = !endurance;
+                  rehab = !rehab;
                 },
               );
             },
           ),
         ),
         Expanded(
-          child: _filterIcon(
+          child: FilterIcon(
             backgroundColor: Colors.blueAccent.shade200.withOpacity(.3),
             context: context,
             name: "Strongman",
@@ -211,60 +212,6 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ),
-      ],
-    );
-  }
-
-  Column _filterIcon({
-    required BuildContext context,
-    required Widget icon,
-    required Color backgroundColor,
-    required String name,
-    required void Function() toggleState,
-    required bool selected,
-  }) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: kSpacing * 2,
-            bottom: kSpacing,
-          ),
-          child: PlatformWidgetBuilder(
-            cupertino: (_, child, __) => CupertinoButton(
-              child: child!,
-              onPressed: toggleState,
-            ),
-            material: (_, child, __) => Ink(
-              height: 60,
-              width: 60,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(30),
-                splashColor: backgroundColor,
-                onTap: toggleState,
-                child: child,
-              ),
-            ),
-            child: CircleAvatar(
-              minRadius: 30,
-              backgroundColor: selected
-                  ? backgroundColor
-                  : Platform.isIOS
-                      ? CupertinoColors.darkBackgroundGray
-                      : Colors.grey.shade900,
-              child: icon,
-            ),
-          ),
-        ),
-        Text(
-          name,
-          style: platformThemeData(
-            context,
-            material: (data) => data.textTheme.bodyText1,
-            cupertino: (data) =>
-                data.textTheme.tabLabelTextStyle.copyWith(fontSize: 13),
-          ),
-        )
       ],
     );
   }

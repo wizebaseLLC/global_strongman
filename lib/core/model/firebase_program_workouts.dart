@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum ProgramDays {
@@ -19,6 +21,7 @@ class FirebaseProgramWorkouts {
     this.minutes,
     this.percent,
     this.weekly_increment,
+    this.categories,
   });
 
   final String? description;
@@ -32,6 +35,7 @@ class FirebaseProgramWorkouts {
   final int? minutes;
   final String? percent;
   final int? weekly_increment;
+  final List<dynamic>? categories;
 
   FirebaseProgramWorkouts.fromJson(Map<String, Object?> json)
       : this(
@@ -46,6 +50,7 @@ class FirebaseProgramWorkouts {
           minutes: json['minutes'] as int?,
           percent: json['percent'] as String?,
           weekly_increment: json['weekly_increment'] as int?,
+          categories: json['categories'] as List<dynamic>?,
         );
 
   Map<String, Object?> toJson() {
@@ -60,7 +65,8 @@ class FirebaseProgramWorkouts {
       'thumbnail': thumbnail,
       'minutes': minutes,
       'percent': percent,
-      'weekly_increment': weekly_increment
+      'weekly_increment': weekly_increment,
+      'categories': categories,
     };
   }
 

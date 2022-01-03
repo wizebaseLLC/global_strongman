@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/measurement_radio_buttons.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/description.dart';
@@ -40,6 +41,29 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
   late TextEditingController _notesController;
 
   String get _user => FirebaseAuth.instance.currentUser!.email!;
+
+  Future<void> _incrementUserCompletedWorkouts() async {
+    final DocumentReference<FirebaseUser> documentReference =
+        FirebaseUser(email: _user).getDocumentReference();
+
+    FirebaseFirestore.instance.runTransaction(
+      (transaction) async {
+        // Get the document
+        DocumentSnapshot<FirebaseUser> snapshot =
+            await transaction.get(documentReference);
+
+        if (snapshot.exists) {
+          int newCompletedWorkoutCount =
+              (snapshot.data()?.completed_workouts ?? 0) + 1;
+
+          // Perform an update on the document
+          transaction.update(documentReference, {
+            'completed_workouts': newCompletedWorkoutCount,
+          });
+        }
+      },
+    );
+  }
 
   Future<void> _handleSubmitWorkoutComplete(BuildContext context) async {
     num lbs = 0;
@@ -81,9 +105,12 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
       working_weight_kgs: kgs,
       working_weight_lbs: lbs,
       workout_id: widget.workout_id,
+      categories: widget.workout.categories,
     ).addCompletedWorkout(
       user: _user,
     );
+
+    _incrementUserCompletedWorkouts();
 
     Navigator.pop(context, true);
   }

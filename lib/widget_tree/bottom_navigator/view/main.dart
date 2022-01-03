@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -37,7 +38,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           fixedColor: Colors.blue,
         ),
         cupertino: (_, __) => CupertinoTabBarData(
-          activeColor: Colors.lightBlueAccent,
+          activeColor: CupertinoColors.activeBlue,
         ),
         items: [
           BottomNavigationBarItem(
@@ -53,8 +54,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           //   label: "Add",
           // ),
           const BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.dumbbell),
-            label: "Workouts",
+            icon: FaIcon(FontAwesomeIcons.chartLine),
+            label: "Activity",
           ),
           BottomNavigationBarItem(
             icon: Icon(PlatformIcons(context).person),

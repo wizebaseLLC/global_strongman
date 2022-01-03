@@ -17,7 +17,7 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
     Key? key,
     required this.cardio,
     required this.strength,
-    required this.endurance,
+    required this.rehab,
     required this.strongman,
   }) : super(key: key);
 
@@ -25,13 +25,13 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
   final bool? isContinue;
   final bool cardio;
   final bool strength;
-  final bool endurance;
+  final bool rehab;
   final bool strongman;
 
   List<String?> get filters => [
         if (cardio) "cardio",
         if (strength) "strength",
-        if (endurance) "endurance",
+        if (rehab) "rehab",
         if (strongman) "strongman",
       ];
   @override

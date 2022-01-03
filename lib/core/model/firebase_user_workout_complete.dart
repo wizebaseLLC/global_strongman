@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseUserWorkoutComplete {
@@ -8,6 +10,7 @@ class FirebaseUserWorkoutComplete {
     this.working_weight_lbs,
     this.working_weight_kgs,
     this.seconds,
+    this.categories,
   });
 
   final DateTime? created_on;
@@ -16,6 +19,7 @@ class FirebaseUserWorkoutComplete {
   final num? working_weight_lbs;
   final num? working_weight_kgs;
   final num? seconds;
+  final List<dynamic>? categories;
 
   FirebaseUserWorkoutComplete.fromJson(Map<String, Object?> json)
       : this(
@@ -25,6 +29,7 @@ class FirebaseUserWorkoutComplete {
           working_weight_lbs: json['working_weight_lbs'] as num?,
           working_weight_kgs: json['working_weight_kgs'] as num?,
           seconds: json['seconds'] as num?,
+          categories: json['categories'] as List<dynamic>?,
         );
 
   Map<String, Object?> toJson() {
@@ -35,6 +40,7 @@ class FirebaseUserWorkoutComplete {
       'working_weight_lbs': working_weight_lbs,
       'working_weight_kgs': working_weight_kgs,
       'seconds': seconds,
+      'categories': categories,
     };
   }
 

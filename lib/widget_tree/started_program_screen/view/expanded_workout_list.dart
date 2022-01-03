@@ -2,11 +2,14 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/view_workout_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -71,6 +74,29 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
         previousSession = foundKey;
       });
     }
+  }
+
+  Future<void> _incrementActiveDays() async {
+    final DocumentReference<FirebaseUser> documentReference =
+        FirebaseUser(email: FirebaseAuth.instance.currentUser!.email!)
+            .getDocumentReference();
+
+    FirebaseFirestore.instance.runTransaction(
+      (transaction) async {
+        // Get the document
+        DocumentSnapshot<FirebaseUser> snapshot =
+            await transaction.get(documentReference);
+
+        if (snapshot.exists) {
+          int newActiveDays = (snapshot.data()?.active_days ?? 0) + 1;
+
+          // Perform an update on the document
+          transaction.update(documentReference, {
+            'active_days': newActiveDays,
+          });
+        }
+      },
+    );
   }
 
   @override
@@ -147,11 +173,26 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
         if (didCompleteWorkout != null && didCompleteWorkout == true) {
           final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-          await prefs.setString("${widget.program_id}_${widget.workout_id}",
-              DateTime.now().toString());
+          await prefs.setString(
+            "${widget.program_id}_${widget.workout_id}",
+            DateTime.now().toString(),
+          );
 
           final String? foundKey = prefs.getString(
               "${widget.program_id}_${widget.workout_id}_previousWeight");
+
+          final DateTime now = DateTime.now();
+
+          final String? previousDate =
+              prefs.getString("${now.day}_${now.month}_${now.year}");
+          await prefs.setString(
+            "${now.day}_${now.month}_${now.year}",
+            "${now.day}_${now.month}_${now.year}",
+          );
+
+          if (previousDate == null) {
+            _incrementActiveDays();
+          }
 
           setState(() {
             _workoutComplete = true;
