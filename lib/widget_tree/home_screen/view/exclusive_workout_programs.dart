@@ -19,6 +19,7 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
     required this.strength,
     required this.rehab,
     required this.strongman,
+    this.shouldDisplayVertical,
   }) : super(key: key);
 
   final List<QueryDocumentSnapshot<FirebaseProgram>> docs;
@@ -27,6 +28,10 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
   final bool strength;
   final bool rehab;
   final bool strongman;
+  final bool? shouldDisplayVertical;
+
+  bool get _shouldScrollVertically =>
+      shouldDisplayVertical != null && shouldDisplayVertical == true;
 
   List<String?> get filters => [
         if (cardio) "cardio",
@@ -37,24 +42,39 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: docs
-            .map((program) => AnimatedOpacity(
-                  duration: const Duration(milliseconds: 300),
-                  opacity: program
-                          .data()
-                          .categories!
-                          .any((element) => filters.contains(element))
-                      ? 1
-                      : .2,
-                  child: _card(
-                    program: program,
-                    context: context,
-                  ),
-                ))
-            .toList(),
-      ),
+      scrollDirection:
+          _shouldScrollVertically ? Axis.vertical : Axis.horizontal,
+      child: _shouldScrollVertically
+          ? Column(
+              children: docs
+                  .map((program) => Padding(
+                        padding: const EdgeInsets.only(top: kSpacing * 2),
+                        child: _card(
+                          program: program,
+                          context: context,
+                          noHeroAnimation: true,
+                        ),
+                      ))
+                  .toList(),
+            )
+          : Row(
+              children: docs
+                  .map((program) => AnimatedOpacity(
+                        duration: const Duration(milliseconds: 300),
+                        opacity: program
+                                .data()
+                                .categories!
+                                .any((element) => filters.contains(element))
+                            ? 1
+                            : .2,
+                        child: _card(
+                          program: program,
+                          context: context,
+                          noHeroAnimation: false,
+                        ),
+                      ))
+                  .toList(),
+            ),
     );
   }
 
@@ -76,28 +96,45 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
   Widget _card({
     required QueryDocumentSnapshot<FirebaseProgram> program,
     required BuildContext context,
+    required bool noHeroAnimation,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kSpacing),
       child: PlatformWidgetBuilder(
-        cupertino: (_, child, __) => Hero(
-          tag: isContinue == true ? "${program.id}_continue" : program.id,
-          child: CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: child!,
-            onPressed: () => _navigateToProgram(context, program, program.id),
-          ),
-        ),
-        material: (_, child, __) => Hero(
-          tag: isContinue == true ? "${program.id}_continue" : program.id,
-          child: Card(
-            elevation: 4,
-            margin: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0)),
-            child: child,
-          ),
-        ),
+        cupertino: (_, child, __) => noHeroAnimation
+            ? CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: child!,
+                onPressed: () =>
+                    _navigateToProgram(context, program, program.id),
+              )
+            : Hero(
+                tag: isContinue == true ? "${program.id}_continue" : program.id,
+                child: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  child: child!,
+                  onPressed: () =>
+                      _navigateToProgram(context, program, program.id),
+                ),
+              ),
+        material: (_, child, __) => noHeroAnimation
+            ? Card(
+                elevation: 4,
+                margin: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0)),
+                child: child,
+              )
+            : Hero(
+                tag: isContinue == true ? "${program.id}_continue" : program.id,
+                child: Card(
+                  elevation: 4,
+                  margin: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0)),
+                  child: child,
+                ),
+              ),
         child: SizedBox(
           width: 303,
           height: 185,

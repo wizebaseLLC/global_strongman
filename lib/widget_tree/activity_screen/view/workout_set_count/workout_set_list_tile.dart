@@ -8,15 +8,17 @@ class WorkoutSetsListTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.icon,
+    this.onTap,
   }) : super(key: key);
 
   final String title;
   final String subtitle;
   final Widget icon;
-
+  final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: onTap != null ? onTap! : null,
       dense: true,
       visualDensity: VisualDensity.compact,
       title: Text(

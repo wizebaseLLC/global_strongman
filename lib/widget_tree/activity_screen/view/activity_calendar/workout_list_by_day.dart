@@ -51,6 +51,7 @@ class WorkoutListByDay extends StatelessWidget {
               doc: snapshotData.workout_id!,
               key: GlobalKey(),
               completedWorkout: snapshotData,
+              snapshot: snapshot,
             ),
           ],
         );

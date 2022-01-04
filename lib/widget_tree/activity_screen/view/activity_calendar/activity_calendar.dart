@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
 import 'package:global_strongman/widget_tree/activity_screen/model/activity_interface.dart';
+import 'package:global_strongman/widget_tree/activity_screen/model/event.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/activity_calendar/workout_list_by_day.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -131,12 +132,4 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
       ],
     );
   }
-}
-
-class Event {
-  Event({required this.title});
-  final String title;
-
-  @override
-  String toString() => title;
 }

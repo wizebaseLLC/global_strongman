@@ -22,7 +22,9 @@ class PlatformScaffoldIosSliverTitle extends StatelessWidget {
         body: NestedScrollView(
           headerSliverBuilder: (context, isInnerBoxScrolled) => [
             CupertinoSliverNavigationBar(
-              largeTitle: Text(title),
+              largeTitle: Text(
+                title,
+              ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: trailingActions,

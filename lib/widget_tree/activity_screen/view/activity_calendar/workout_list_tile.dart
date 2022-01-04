@@ -2,12 +2,17 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/controller/showPlatformActionSheet.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class WorkoutListTile extends StatelessWidget {
   const WorkoutListTile({
@@ -15,6 +20,8 @@ class WorkoutListTile extends StatelessWidget {
     required this.day,
     required this.doc,
     required this.completedWorkout,
+    required this.snapshot,
+    this.shouldShowDate,
     Key? key,
   }) : super(key: key);
 
@@ -22,10 +29,12 @@ class WorkoutListTile extends StatelessWidget {
   final String day;
   final String doc;
   final FirebaseUserWorkoutComplete completedWorkout;
+  final QueryDocumentSnapshot<FirebaseUserWorkoutComplete> snapshot;
+  final bool? shouldShowDate;
 
   String? get _notes => completedWorkout.notes;
   String? get _previousWeight => completedWorkout.weight_used_string;
-
+  String get _user => FirebaseAuth.instance.currentUser!.email!;
   Future<DocumentSnapshot<FirebaseProgramWorkouts>?> _getWorkoutData() async {
     try {
       return FirebaseProgramWorkouts()
@@ -40,6 +49,54 @@ class WorkoutListTile extends StatelessWidget {
     }
   }
 
+  void _showPlatformActionSheet(BuildContext context) {
+    HapticFeedback.lightImpact();
+    showPlatformActionSheet(
+      context: context,
+      actionSheetData: PlatformActionSheet(
+        title: "Remove this workout from activity?",
+        model: [
+          ActionSheetModel(
+            title: "Delete",
+            textStyle: TextStyle(
+              color: Platform.isIOS ? CupertinoColors.systemRed : Colors.red,
+            ),
+            onTap: () {
+              snapshot.reference.delete();
+              _decrementUserCompletedWorkouts();
+            },
+            iconMaterial: const Icon(
+              Icons.add_photo_alternate_rounded,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _decrementUserCompletedWorkouts() async {
+    final DocumentReference<FirebaseUser> documentReference =
+        FirebaseUser(email: _user).getDocumentReference();
+
+    FirebaseFirestore.instance.runTransaction(
+      (transaction) async {
+        // Get the document
+        DocumentSnapshot<FirebaseUser> snapshot =
+            await transaction.get(documentReference);
+
+        if (snapshot.exists) {
+          int newCompletedWorkoutCount =
+              (snapshot.data()?.completed_workouts ?? 0) - 1;
+
+          // Perform an update on the document
+          transaction.update(documentReference, {
+            'completed_workouts': newCompletedWorkoutCount,
+          });
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot<FirebaseProgramWorkouts>?>(
@@ -52,6 +109,7 @@ class WorkoutListTile extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: kSpacing),
               child: ListTile(
+                onLongPress: () => _showPlatformActionSheet(context),
                 dense: true,
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
@@ -64,13 +122,40 @@ class WorkoutListTile extends StatelessWidget {
                         const Icon(Icons.error),
                   ),
                 ),
-                title: Text(
-                  snapshotData.name!,
-                  style: platformThemeData(
-                    context,
-                    material: (data) => data.textTheme.subtitle1,
-                    cupertino: (data) => data.textTheme.textStyle,
-                  ),
+                title: Row(
+                  children: [
+                    Text(
+                      snapshotData.name!,
+                      style: platformThemeData(
+                        context,
+                        material: (data) => data.textTheme.subtitle1,
+                        cupertino: (data) => data.textTheme.textStyle,
+                      ),
+                    ),
+                    if (shouldShowDate == true &&
+                        completedWorkout.created_on != null)
+                      const SizedBox(
+                        width: kSpacing,
+                      ),
+                    if (shouldShowDate == true &&
+                        completedWorkout.created_on != null)
+                      Text(
+                        timeago.format(completedWorkout.created_on!),
+                        style: platformThemeData(
+                          context,
+                          material: (data) =>
+                              data.textTheme.bodyText2?.copyWith(
+                            color: Colors.white70,
+                            fontSize: 10,
+                          ),
+                          cupertino: (data) =>
+                              data.textTheme.textStyle.copyWith(
+                            fontSize: 10,
+                            color: CupertinoColors.systemGrey3,
+                          ),
+                        ),
+                      )
+                  ],
                 ),
                 subtitle: (_previousWeight == null && _notes == null)
                     ? null
@@ -96,11 +181,13 @@ class WorkoutListTile extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            if (_notes != null && _previousWeight != null)
+                            if (_notes != null &&
+                                _notes!.isNotEmpty &&
+                                _previousWeight != null)
                               const SizedBox(
                                 height: 4,
                               ),
-                            if (_notes != null)
+                            if (_notes != null && _notes!.isNotEmpty)
                               Text(
                                 _notes!,
                                 style: platformThemeData(
@@ -120,11 +207,14 @@ class WorkoutListTile extends StatelessWidget {
                             const SizedBox(
                               height: kSpacing,
                             ),
-                            Divider(
-                              color: Platform.isIOS
-                                  ? CupertinoColors.systemGrey
-                                  : Colors.white30,
-                            ),
+                            if ((_notes != null && _notes!.isNotEmpty) ||
+                                _previousWeight != null &&
+                                    _previousWeight!.isNotEmpty)
+                              Divider(
+                                color: Platform.isIOS
+                                    ? CupertinoColors.systemGrey
+                                    : Colors.white30,
+                              ),
                           ],
                         ),
                       ),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/model/firebase_user_started_program.dart';
@@ -80,6 +81,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
             return SafeArea(
               child: RefreshIndicator(
                 onRefresh: () async {
+                  HapticFeedback.mediumImpact();
                   setState(() {});
                 },
                 child: SingleChildScrollView(

@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/view/card.dart';
 import 'package:global_strongman/widget_tree/activity_screen/model/activity_interface.dart';
+import 'package:global_strongman/widget_tree/activity_screen/view/programs_completed/programs_completed_screen.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/workout_set_count/workout_set_count_avatar.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/workout_set_count/workout_set_list_tile.dart';
 
@@ -58,6 +59,15 @@ class WorkoutSetsCard extends StatelessWidget {
                     ),
                     title: "${activityInterface.programsComplete}",
                     subtitle: "Programs completed",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        platformPageRoute(
+                          context: context,
+                          builder: (_) => const ProgramsCompletedScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

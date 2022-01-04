@@ -41,7 +41,8 @@ class ViewWorkoutScreen extends StatefulWidget {
 class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
   Measurement? measurement = Measurement.lbs;
   final TextEditingController _controller = TextEditingController();
-  late TextEditingController _notesController;
+  final TextEditingController _notesController = TextEditingController();
+  String? foundKey;
 
   String get _user => FirebaseAuth.instance.currentUser!.email!;
 
@@ -138,10 +139,8 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
   @override
   void initState() {
     SharedPreferences.getInstance().then((prefs) {
-      final String? foundKey =
+      foundKey =
           prefs.getString("${widget.program_id}_${widget.workout_id}_notes");
-
-      _notesController = TextEditingController(text: foundKey);
     });
 
     super.initState();
@@ -270,12 +269,41 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                                       subtitle: "",
                                     ),
                                     const SizedBox(height: kSpacing),
+                                    if (foundKey != null)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: kSpacing,
+                                        ),
+                                        child: Text(
+                                          foundKey!,
+                                          style: platformThemeData(
+                                            context,
+                                            material: (data) => data
+                                                .textTheme.headline6
+                                                ?.copyWith(
+                                              fontSize: 14,
+                                              color: Colors.white30,
+                                            ),
+                                            cupertino: (data) => data
+                                                .textTheme.navTitleTextStyle
+                                                .copyWith(
+                                              fontSize: 14,
+                                              color: CupertinoColors.systemGrey,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    if (foundKey != null)
+                                      const SizedBox(
+                                        height: kSpacing * 2,
+                                      ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: kSpacing,
                                       ),
                                       child: PlatformTextField(
-                                        hintText: "Training notes",
+                                        hintText:
+                                            "What did I learn this session",
                                         minLines: 2,
                                         maxLines: 10,
                                         controller: _notesController,
