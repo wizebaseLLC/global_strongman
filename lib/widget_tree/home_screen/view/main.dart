@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
             selected: rehab,
             name: "Rehab",
             icon: SvgPicture.asset(
-              "assets/images/cycling.svg",
+              "assets/images/pulse 2.svg",
               color: rehab
                   ? Colors.tealAccent.shade700
                   : Platform.isIOS

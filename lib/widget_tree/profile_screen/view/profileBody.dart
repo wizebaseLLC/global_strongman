@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
@@ -283,8 +284,8 @@ class ProfileBody extends StatelessWidget {
           onPressed: null,
         ),
         ProfileBadge(
-          icon: const FaIcon(
-            FontAwesomeIcons.solidStar,
+          icon: SvgPicture.asset(
+            "assets/images/muscle.svg",
             color: Colors.white,
           ),
           color: Colors.yellow.shade700,

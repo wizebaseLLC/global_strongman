@@ -30,9 +30,10 @@ class WorkoutSetsCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-                child: WorkoutSetCountAvatar(
-              activityInterface: activityInterface,
-            )),
+              child: WorkoutSetCountAvatar(
+                activityInterface: activityInterface,
+              ),
+            ),
             Expanded(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

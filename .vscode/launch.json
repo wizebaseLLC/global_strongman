@@ -16,6 +16,12 @@
       "deviceId": "8063EBCF-198F-4517-AB86-3E7EC22EAF64"
     },
     {
+      "name": "servons iphone",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008101-001409423689001E"
+    },
+    {
       "name": "android nexus",
       "request": "launch",
       "type": "dart",
@@ -33,6 +39,10 @@
     {
       "name": "Android and Ios emulators",
       "configurations": ["iphone 13", "android nexus"]
+    },
+    {
+      "name": "Android and Servons iphone",
+      "configurations": ["servons iphone", "android nexus"]
     }
   ]
 }

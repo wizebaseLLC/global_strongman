@@ -19,7 +19,7 @@ class BadgesController {
   );
 
   static Badge completeWorkouts({required int value}) => Badge(
-        title: "Complete $value workouts",
+        title: "Complete $value ${value == 1 ? 'workout' : 'workouts'}",
         value: value,
         badgeValueType: BadgeValueType.increment,
         badgeImage: "assets/images/kettlebellBadge.png",
@@ -48,7 +48,7 @@ class BadgesController {
       );
 
   static Badge activeDays({required int value}) => Badge(
-        title: "$value active days",
+        title: "$value active ${value == 1 ? 'day' : 'days'}",
         value: value,
         badgeValueType: BadgeValueType.increment,
         badgeImage: "assets/images/kettlebellBadge.png",

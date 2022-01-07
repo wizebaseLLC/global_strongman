@@ -112,7 +112,7 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
             selected: true,
             name: "Rehab",
             icon: SvgPicture.asset(
-              "assets/images/cycling.svg",
+              "assets/images/pulse 2.svg",
               color: Colors.tealAccent.shade700,
             ),
             toggleState: () => _onCategoryPress(

@@ -37,9 +37,11 @@ class ProgressCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       elevation: 2,
-      color: platformThemeData(context,
-          material: (data) => data.backgroundColor,
-          cupertino: (data) => data.barBackgroundColor),
+      color: platformThemeData(
+        context,
+        material: (data) => data.cardColor,
+        cupertino: (data) => data.barBackgroundColor,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
