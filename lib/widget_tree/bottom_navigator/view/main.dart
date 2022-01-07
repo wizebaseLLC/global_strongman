@@ -16,7 +16,10 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   int _selectedTabIndex = 0;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  get appBar => screens.map((e) => e.appBar).toList()[_selectedTabIndex];
+  PlatformAppBar? get appBar =>
+      screens.map((e) => e.appBar).toList()[_selectedTabIndex];
+
+  List<Widget> get childScreens => screens.map((e) => e.child).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +28,16 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: IndexedStack(
-          children: screens.map((e) => e.child).toList(),
+          children: childScreens,
           index: _selectedTabIndex,
         ),
       ),
       appBar: appBar,
       bottomNavBar: PlatformNavBar(
         currentIndex: _selectedTabIndex,
-        itemChanged: (index) => setState(
-          () {
-            _selectedTabIndex = index;
-          },
-        ),
+        itemChanged: (index) => setState(() {
+          _selectedTabIndex = index;
+        }),
         material: (_, __) => MaterialNavBarData(
           fixedColor: Colors.blue,
         ),
@@ -48,10 +49,10 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             icon: Icon(PlatformIcons(context).home),
             label: "Home",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(PlatformIcons(context).playCircle),
-            label: "Watch",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(PlatformIcons(context).playCircle),
+          //   label: "Watch",
+          // ),
           // BottomNavigationBarItem(
           //   icon: Icon(PlatformIcons(context).addCircled),
           //   label: "Add",

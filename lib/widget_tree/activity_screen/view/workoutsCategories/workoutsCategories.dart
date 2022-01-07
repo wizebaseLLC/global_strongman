@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
 import 'package:global_strongman/widget_tree/activity_screen/model/activity_interface.dart';
@@ -74,10 +75,9 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
             name: "Cardio",
             selected: true,
             backgroundColor: Colors.redAccent.shade200.withOpacity(.3),
-            icon: Icon(
-              PlatformIcons(context).heartSolid,
+            icon: SvgPicture.asset(
+              "assets/images/pulse.svg",
               color: Colors.red.shade700,
-              size: 25,
             ),
             toggleState: () => _onCategoryPress(
               title: "Cardio",
@@ -94,10 +94,9 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
             name: "Strength",
             selected: true,
             backgroundColor: Colors.purpleAccent.shade200.withOpacity(.3),
-            icon: FaIcon(
-              FontAwesomeIcons.dumbbell,
+            icon: SvgPicture.asset(
+              "assets/images/muscle.svg",
               color: Colors.purpleAccent.shade700,
-              size: 25,
             ),
             toggleState: () => _onCategoryPress(
               category: "strength",
@@ -114,10 +113,9 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
             backgroundColor: Colors.tealAccent.shade200.withOpacity(.3),
             selected: true,
             name: "Rehab",
-            icon: Icon(
-              PlatformIcons(context).clockSolid,
+            icon: SvgPicture.asset(
+              "assets/images/fitness_ball.svg",
               color: Colors.tealAccent.shade700,
-              size: 25,
             ),
             toggleState: () => _onCategoryPress(
               category: "rehab",
@@ -134,10 +132,9 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
             context: context,
             name: "Strongman",
             selected: true,
-            icon: Icon(
-              PlatformIcons(context).heartSolid,
+            icon: SvgPicture.asset(
+              "assets/images/weightlifting.svg",
               color: Colors.blueAccent.shade700,
-              size: 25,
             ),
             toggleState: () => _onCategoryPress(
               category: "strongman",

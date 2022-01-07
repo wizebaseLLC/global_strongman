@@ -10,7 +10,8 @@ final List<TabBarScreen> screens = [
     child: const HomeScreen(),
     appBar: buildStandardAppbar(title: "Global Strongman"),
   ),
-  TabBarScreen(child: Container()),
+  //#TODO Add a Watch/Add content screen
+  // TabBarScreen(child: Container()),
   TabBarScreen(
     child: const ActivityScreen(),
     appBar: buildStandardAppbar(title: "Activity Report"),

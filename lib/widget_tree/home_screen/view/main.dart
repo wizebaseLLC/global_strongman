@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_user_started_program.dart';
@@ -122,14 +121,13 @@ class _HomeScreenState extends State<HomeScreen> {
             name: "Cardio",
             selected: cardio,
             backgroundColor: Colors.redAccent.shade200.withOpacity(.3),
-            icon: Icon(
-              PlatformIcons(context).heartSolid,
+            icon: SvgPicture.asset(
+              "assets/images/pulse.svg",
               color: cardio
                   ? Colors.red.shade700
                   : Platform.isIOS
                       ? CupertinoColors.systemGrey
                       : Colors.grey.shade500,
-              size: 25,
             ),
             toggleState: () {
               setState(
@@ -146,14 +144,13 @@ class _HomeScreenState extends State<HomeScreen> {
             name: "Strength",
             selected: strength,
             backgroundColor: Colors.purpleAccent.shade200.withOpacity(.3),
-            icon: FaIcon(
-              FontAwesomeIcons.dumbbell,
+            icon: SvgPicture.asset(
+              "assets/images/muscle.svg",
               color: strength
                   ? Colors.purpleAccent.shade700
                   : Platform.isIOS
                       ? CupertinoColors.systemGrey
                       : Colors.grey.shade500,
-              size: 25,
             ),
             toggleState: () {
               setState(
@@ -170,14 +167,13 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Colors.tealAccent.shade200.withOpacity(.3),
             selected: rehab,
             name: "Rehab",
-            icon: Icon(
-              PlatformIcons(context).clockSolid,
+            icon: SvgPicture.asset(
+              "assets/images/fitness_ball.svg",
               color: rehab
                   ? Colors.tealAccent.shade700
                   : Platform.isIOS
                       ? CupertinoColors.systemGrey
                       : Colors.grey.shade500,
-              size: 25,
             ),
             toggleState: () {
               setState(
@@ -194,14 +190,13 @@ class _HomeScreenState extends State<HomeScreen> {
             context: context,
             name: "Strongman",
             selected: strongman,
-            icon: Icon(
-              PlatformIcons(context).heartSolid,
+            icon: SvgPicture.asset(
+              "assets/images/weightlifting.svg",
               color: strongman
                   ? Colors.blueAccent.shade700
                   : Platform.isIOS
                       ? CupertinoColors.systemGrey
                       : Colors.grey.shade500,
-              size: 25,
             ),
             toggleState: () {
               setState(

@@ -72,10 +72,12 @@ class ProfileBody extends StatelessWidget {
                 height: kSpacing * 2,
               ),
               _buildFitnessProfileList(context),
-              const SizedBox(
-                height: kSpacing * 2,
-              ),
-              _buildCommunityProfileList(),
+              //#TODO add more fitness tiles
+
+              // const SizedBox(
+              //   height: kSpacing * 2,
+              // ),
+              // _buildCommunityProfileList(),
               const SizedBox(
                 height: kSpacing * 4,
               ),
@@ -189,24 +191,25 @@ class ProfileBody extends StatelessWidget {
             ),
           ),
         ),
-        ProfileListTile(
-          title: "Fitness Programs",
-          icon: const FaIcon(
-            FontAwesomeIcons.award,
-            color: Colors.blue,
-            size: 30,
-          ),
-          onTap: () {},
-        ),
-        ProfileListTile(
-          title: "Routines",
-          icon: FaIcon(
-            FontAwesomeIcons.dumbbell,
-            color: Colors.purple.shade300,
-            size: 30,
-          ),
-          onTap: () {},
-        ),
+        //#TODO add more fitness tiles
+        // ProfileListTile(
+        //   title: "Fitness Programs",
+        //   icon: const FaIcon(
+        //     FontAwesomeIcons.award,
+        //     color: Colors.blue,
+        //     size: 30,
+        //   ),
+        //   onTap: () {},
+        // ),
+        // ProfileListTile(
+        //   title: "Routines",
+        //   icon: FaIcon(
+        //     FontAwesomeIcons.dumbbell,
+        //     color: Colors.purple.shade300,
+        //     size: 30,
+        //   ),
+        //   onTap: () {},
+        // ),
       ],
     );
   }
@@ -232,24 +235,25 @@ class ProfileBody extends StatelessWidget {
             ),
           ),
         ),
-        ProfileListTile(
-          title: "Membership",
-          icon: FaIcon(
-            FontAwesomeIcons.fire,
-            color: Colors.orange.shade300,
-            size: 30,
-          ),
-          onTap: () {},
-        ),
-        ProfileListTile(
-          title: "Privacy",
-          icon: Icon(
-            PlatformIcons(context).eyeSlashSolid,
-            color: Colors.red.shade400,
-            size: 30,
-          ),
-          onTap: () {},
-        ),
+        //#TODO add a membership tile
+        // ProfileListTile(
+        //   title: "Membership",
+        //   icon: FaIcon(
+        //     FontAwesomeIcons.fire,
+        //     color: Colors.orange.shade300,
+        //     size: 30,
+        //   ),
+        //   onTap: () {},
+        // ),
+        // ProfileListTile(
+        //   title: "Privacy",
+        //   icon: Icon(
+        //     PlatformIcons(context).eyeSlashSolid,
+        //     color: Colors.red.shade400,
+        //     size: 30,
+        //   ),
+        //   onTap: () {},
+        // ),
       ],
     );
   }
