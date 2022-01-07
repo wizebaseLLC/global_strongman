@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/controller/badges_controller.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
@@ -119,8 +120,21 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
     );
 
     _incrementUserCompletedWorkouts();
+    _updatedCompletedCategorizedWorkout();
 
     Navigator.pop(context, true);
+  }
+
+  void _updatedCompletedCategorizedWorkout() {
+    if (widget.workout.categories != null &&
+        widget.workout.categories!.isNotEmpty) {
+      for (final category in widget.workout.categories!) {
+        BadgesController().updatedCompletedCategorizedWorkout(
+          updateType: BadgeUpdateType.increment,
+          category: category,
+        );
+      }
+    }
   }
 
   Future<QuerySnapshot<FirebaseUserWorkoutComplete>>

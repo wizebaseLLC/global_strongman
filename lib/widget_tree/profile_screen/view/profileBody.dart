@@ -1,9 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
+import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
+import 'package:global_strongman/core/providers/activity_interace_provider.dart';
+import 'package:global_strongman/core/providers/badge_current_values.dart';
+import 'package:global_strongman/widget_tree/activity_screen/model/activity_interface.dart';
+import 'package:global_strongman/widget_tree/activity_screen/view/filtered_workout_screen/filtered_workout_screen.dart';
+import 'package:global_strongman/widget_tree/badges_screen/main.dart';
 import 'package:global_strongman/widget_tree/login_screen/view/main.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_badge.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_header.dart';
@@ -12,6 +20,7 @@ import 'package:global_strongman/widget_tree/profile_screen/view/profile_list_ti
 import 'package:global_strongman/widget_tree/profile_screen/view/progress_card.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/edit_profile_screen.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/progress_gallery/progress_gallery.dart';
+import 'package:provider/provider.dart';
 
 class ProfileBody extends StatelessWidget {
   const ProfileBody({
@@ -20,87 +29,105 @@ class ProfileBody extends StatelessWidget {
   }) : super(key: key);
 
   final FirebaseUser firebaseUser;
+
+  String? get _user => FirebaseAuth.instance.currentUser?.email;
+
+  Query<FirebaseUserWorkoutComplete> _getWorkouts() {
+    return FirebaseUserWorkoutComplete()
+        .getCollectionReference(user: _user!)
+        .orderBy("created_on", descending: true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 220,
-              width: double.infinity,
-              child:
-                  // The avatar, name and level.
-                  ProfileHeader(firebaseUser: firebaseUser),
-            ),
-            _buildProfileBadgeRow(context),
-            const SizedBox(
-              height: kSpacing * 3,
-            ),
-            const ProgressCard(),
-            const SizedBox(
-              height: kSpacing * 3,
-            ),
-            _buildAccountProfileList(context),
-            const SizedBox(
-              height: kSpacing * 2,
-            ),
-            _buildFitnessProfileList(context),
-            const SizedBox(
-              height: kSpacing * 2,
-            ),
-            _buildCommunityProfileList(),
-            const SizedBox(
-              height: kSpacing * 4,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-              child: SizedBox(
+      child: RefreshIndicator(
+        backgroundColor: kPrimaryColor,
+        color: Colors.white,
+        onRefresh: () async {
+          HapticFeedback.mediumImpact();
+          context.read<BadgeCurrentValues>().runSetMetrics();
+          context.read<ActivityInterfaceProvider>().createWorkoutInterface();
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 220,
                 width: double.infinity,
-                child: PlatformElevatedButton(
-                  cupertino: (_, __) => CupertinoElevatedButtonData(
-                    originalStyle: true,
-                    color: kSecondaryColor,
-                  ),
-                  material: (_, __) => MaterialElevatedButtonData(
-                    style: ElevatedButton.styleFrom(primary: kSecondaryColor),
-                  ),
-                  onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
-                    Navigator.pushReplacement(
-                      context,
-                      platformPageRoute(
-                        context: context,
-                        builder: (_) => const LoginPage(),
-                      ),
-                    );
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(
-                        Icons.flight_land,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: kSpacing,
-                      ),
-                      Text(
-                        "Sign out",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                child:
+                    // The avatar, name and level.
+                    ProfileHeader(firebaseUser: firebaseUser),
+              ),
+              _buildProfileBadgeRow(context),
+              const SizedBox(
+                height: kSpacing * 3,
+              ),
+              const ProgressCard(),
+              const SizedBox(
+                height: kSpacing * 3,
+              ),
+              _buildAccountProfileList(context),
+              const SizedBox(
+                height: kSpacing * 2,
+              ),
+              _buildFitnessProfileList(context),
+              const SizedBox(
+                height: kSpacing * 2,
+              ),
+              _buildCommunityProfileList(),
+              const SizedBox(
+                height: kSpacing * 4,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: PlatformElevatedButton(
+                    cupertino: (_, __) => CupertinoElevatedButtonData(
+                      originalStyle: true,
+                      color: kSecondaryColor,
+                    ),
+                    material: (_, __) => MaterialElevatedButtonData(
+                      style: ElevatedButton.styleFrom(primary: kSecondaryColor),
+                    ),
+                    onPressed: () async {
+                      await FirebaseAuth.instance.signOut();
+                      Navigator.pushReplacement(
+                        context,
+                        platformPageRoute(
+                          context: context,
+                          builder: (_) => const LoginPage(),
                         ),
-                      ),
-                    ],
+                      );
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(
+                          Icons.flight_land,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: kSpacing,
+                        ),
+                        Text(
+                          "Sign out",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: kSpacing * 4,
-            ),
-          ],
+              const SizedBox(
+                height: kSpacing * 4,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -228,6 +255,16 @@ class ProfileBody extends StatelessWidget {
   }
 
   Row _buildProfileBadgeRow(BuildContext context) {
+    final ActivityInterfaceProvider activityInterfaceProvider =
+        context.watch<ActivityInterfaceProvider>();
+
+    final ActivityInterface activityInterface = ActivityInterface(
+      totalWorkouts: activityInterfaceProvider.totalWorkouts,
+      activeDays: activityInterfaceProvider.activeDays,
+      programsComplete: activityInterfaceProvider.programsComplete,
+      trophiesEarned: activityInterfaceProvider.trophiesEarned,
+      completedWorkouts: activityInterfaceProvider.completedWorkouts,
+    );
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -237,8 +274,9 @@ class ProfileBody extends StatelessWidget {
             color: Colors.white,
           ),
           color: Colors.blue,
-          title: "10",
+          title: "${context.watch<BadgeCurrentValues>().totalActiveDays}",
           subtitle: "Active Days",
+          onPressed: null,
         ),
         ProfileBadge(
           icon: const FaIcon(
@@ -246,17 +284,45 @@ class ProfileBody extends StatelessWidget {
             color: Colors.white,
           ),
           color: Colors.yellow.shade700,
-          title: "28",
+          title: "${context.watch<BadgeCurrentValues>().totalWorkoutsDone}",
           subtitle: "Workouts Done",
+          onPressed: () {
+            Navigator.push(
+              context,
+              platformPageRoute(
+                context: context,
+                builder: (_) => FilteredWorkoutScreen(
+                  title: "My Workouts",
+                  query: _getWorkouts(),
+                  key: GlobalKey(),
+                ),
+              ),
+            );
+          },
         ),
         ProfileBadge(
-          icon: const FaIcon(
-            FontAwesomeIcons.trophy,
-            color: Colors.white,
+          icon: const Hero(
+            tag: "profile_trophy",
+            child: FaIcon(
+              FontAwesomeIcons.trophy,
+              color: Colors.white,
+            ),
           ),
           color: Colors.red.shade400,
-          title: "5/15",
-          subtitle: "Trophies Earned",
+          title:
+              "${context.watch<BadgeCurrentValues>().completedBadgeCount}/${context.watch<BadgeCurrentValues>().totalBadgeCount}",
+          subtitle: "Badges Earned",
+          onPressed: () {
+            Navigator.push(
+              context,
+              platformPageRoute(
+                context: context,
+                builder: (_) => const BadgesScreen(
+                  heroId: 'profile_trophy',
+                ),
+              ),
+            );
+          },
         ),
       ],
     );

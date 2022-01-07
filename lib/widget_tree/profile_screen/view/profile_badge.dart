@@ -9,12 +9,14 @@ class ProfileBadge extends StatelessWidget {
     required this.color,
     required this.title,
     required this.subtitle,
+    required this.onPressed,
   }) : super(key: key);
 
   final Widget icon;
   final Color color;
   final String title;
   final String subtitle;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class ProfileBadge extends StatelessWidget {
           ),
           child: PlatformIconButton(
             padding: EdgeInsets.zero,
-            onPressed: () {},
+            onPressed: onPressed,
             icon: icon,
           ),
         ),
@@ -41,7 +43,8 @@ class ProfileBadge extends StatelessWidget {
           style: platformThemeData(
             context,
             material: (data) => data.textTheme.headline6,
-            cupertino: (data) => data.textTheme.navTitleTextStyle.copyWith(fontSize: 20),
+            cupertino: (data) =>
+                data.textTheme.navTitleTextStyle.copyWith(fontSize: 20),
           ),
         ),
         const SizedBox(

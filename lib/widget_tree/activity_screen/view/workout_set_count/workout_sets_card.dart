@@ -1,14 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/providers/badge_current_values.dart';
 import 'package:global_strongman/core/view/card.dart';
 import 'package:global_strongman/widget_tree/activity_screen/model/activity_interface.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/programs_completed/programs_completed_screen.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/workout_set_count/workout_set_count_avatar.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/workout_set_count/workout_set_list_tile.dart';
+import 'package:global_strongman/widget_tree/badges_screen/main.dart';
+import 'package:provider/provider.dart';
 
 class WorkoutSetsCard extends StatelessWidget {
   const WorkoutSetsCard({
@@ -37,12 +38,27 @@ class WorkoutSetsCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   WorkoutSetsListTile(
-                    icon: FaIcon(
-                      FontAwesomeIcons.trophy,
-                      color: Colors.red.shade400,
+                    icon: const Hero(
+                      tag: "activity_trophy",
+                      child: FaIcon(
+                        FontAwesomeIcons.trophy,
+                        color: Color.fromRGBO(248, 186, 73, 1),
+                      ),
                     ),
-                    title: "${activityInterface.trophiesEarned}",
-                    subtitle: "Trophies earned",
+                    title:
+                        "${context.watch<BadgeCurrentValues>().completedBadgeCount}",
+                    subtitle: "Badges earned",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        platformPageRoute(
+                          context: context,
+                          builder: (_) => const BadgesScreen(
+                            heroId: 'activity_trophy',
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   WorkoutSetsListTile(
                     icon: Icon(

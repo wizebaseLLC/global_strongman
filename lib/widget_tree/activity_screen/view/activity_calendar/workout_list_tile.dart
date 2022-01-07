@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:global_strongman/core/controller/badges_controller.dart';
 import 'package:global_strongman/core/controller/showPlatformActionSheet.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
@@ -64,6 +65,7 @@ class WorkoutListTile extends StatelessWidget {
             onTap: () {
               snapshot.reference.delete();
               _decrementUserCompletedWorkouts();
+              _updatedCompletedCategorizedWorkout();
             },
             iconMaterial: const Icon(
               Icons.add_photo_alternate_rounded,
@@ -95,6 +97,18 @@ class WorkoutListTile extends StatelessWidget {
         }
       },
     );
+  }
+
+  void _updatedCompletedCategorizedWorkout() {
+    if (completedWorkout.categories != null &&
+        completedWorkout.categories!.isNotEmpty) {
+      for (final category in completedWorkout.categories!) {
+        BadgesController().updatedCompletedCategorizedWorkout(
+          updateType: BadgeUpdateType.decrement,
+          category: category,
+        );
+      }
+    }
   }
 
   @override

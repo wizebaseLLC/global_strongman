@@ -17,6 +17,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   get appBar => screens.map((e) => e.appBar).toList()[_selectedTabIndex];
+
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(

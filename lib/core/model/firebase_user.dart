@@ -11,6 +11,10 @@ import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_con
 
 class FirebaseUser {
   FirebaseUser({
+    this.strength,
+    this.rehab,
+    this.strongman,
+    this.cardio,
     this.age,
     this.avatar,
     this.experience,
@@ -36,6 +40,10 @@ class FirebaseUser {
   final String? gender;
   final String? height;
   final String? weight;
+  final int? strength;
+  final int? rehab;
+  final int? strongman;
+  final int? cardio;
   final bool? is_gallery_public;
   final int? completed_workouts;
   final int? active_days;
@@ -58,6 +66,10 @@ class FirebaseUser {
           is_gallery_public: json['is_gallery_public'] as bool?,
           goals: json['goals'] as List<dynamic>?,
           injuries: json['injuries'] as List<dynamic>?,
+          strength: json['strength'] as int?,
+          rehab: json['rehab'] as int?,
+          strongman: json['strongman'] as int?,
+          cardio: json['cardio'] as int?,
         );
 
   Map<String, Object?> toJson() {
@@ -75,6 +87,10 @@ class FirebaseUser {
       "is_gallery_public": is_gallery_public,
       "completed_workouts": completed_workouts,
       "active_days": active_days,
+      "strength": active_days,
+      "rehab": active_days,
+      "strongman": active_days,
+      "cardio": active_days,
     };
   }
 
