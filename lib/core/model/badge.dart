@@ -3,6 +3,7 @@ class Badge {
     required this.title,
     required this.value,
     required this.badgeValueType,
+    required this.badgeImage,
     this.currentValue = 0,
     this.meetsCriteria = false,
   });
@@ -10,6 +11,7 @@ class Badge {
   final String title;
   final int value;
   final BadgeValueType badgeValueType;
+  final String badgeImage;
   int currentValue;
   bool meetsCriteria;
 }

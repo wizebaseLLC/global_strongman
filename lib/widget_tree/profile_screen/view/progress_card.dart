@@ -42,7 +42,7 @@ class ProgressCard extends StatelessWidget {
               horizontal: kSpacing * 2,
             ),
             leading: Image.asset(
-              "assets/images/VikingBadge.png",
+              almostThere.badgeImage,
               height: 40,
             ),
             title: Text(

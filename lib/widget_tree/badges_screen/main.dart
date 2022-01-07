@@ -80,7 +80,7 @@ class BadgesScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: kSpacing * 2),
                   child: BadgeTile(
                     title: badgeList[index].title,
-                    image: "assets/images/kettlebellBadge.png",
+                    image: badgeList[index].badgeImage,
                     currentValue: badgeList[index].currentValue,
                     maxValue: badgeList[index].value,
                   ),

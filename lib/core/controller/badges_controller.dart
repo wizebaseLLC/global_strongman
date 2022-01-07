@@ -15,12 +15,14 @@ class BadgesController {
     title: "Complete your first workout",
     value: 1,
     badgeValueType: BadgeValueType.increment,
+    badgeImage: "assets/images/kettlebellBadge.png",
   );
 
   static Badge completeWorkouts({required int value}) => Badge(
         title: "Complete $value workouts",
         value: value,
         badgeValueType: BadgeValueType.increment,
+        badgeImage: "assets/images/kettlebellBadge.png",
       );
 
   static Badge completeCategorizedWorkouts({
@@ -31,6 +33,7 @@ class BadgesController {
         title: "Complete $value $category workouts",
         value: value,
         badgeValueType: BadgeValueType.increment,
+        badgeImage: "assets/images/kettlebellBadge.png",
       );
 
   static Badge surpasSpecificWorkouts({
@@ -41,12 +44,14 @@ class BadgesController {
         title: "$specificWorkout $value lbs",
         value: value,
         badgeValueType: BadgeValueType.surpass,
+        badgeImage: "assets/images/kettlebellBadge.png",
       );
 
   static Badge activeDays({required int value}) => Badge(
         title: "$value active days",
         value: value,
         badgeValueType: BadgeValueType.increment,
+        badgeImage: "assets/images/kettlebellBadge.png",
       );
 
   String get _user => FirebaseAuth.instance.currentUser?.email ?? "n/a";

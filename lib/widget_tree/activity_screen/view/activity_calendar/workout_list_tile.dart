@@ -131,7 +131,7 @@ class WorkoutListTile extends StatelessWidget {
                     imageUrl: snapshotData.thumbnail!,
                     fit: BoxFit.cover,
                     memCacheWidth: 270,
-                    width: 90,
+                    width: 75,
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
                   ),
