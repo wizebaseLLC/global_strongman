@@ -15,7 +15,7 @@ dependencies:
   flutter_platform_widgets: ^1.9.5
   sign_button: ^2.0.1
   introduction_screen: ^2.1.0
-  flutter_svg: ^1.0.0
+  flutter_svg: ^0.22.0
   sprung: ^3.0.0
   multi_select_flutter: ^4.0.0
   image_picker: ^0.8.4+3
