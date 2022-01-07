@@ -20,8 +20,10 @@ class WorkoutListByDay extends StatelessWidget {
   Query<FirebaseUserWorkoutComplete> _getFilteredWorkouts() {
     return FirebaseUserWorkoutComplete()
         .getCollectionReference(user: _user!)
-        .where("created_on",
-            isGreaterThanOrEqualTo: normalizeDate(selectedDate))
+        .where(
+          "created_on",
+          isGreaterThanOrEqualTo: normalizeDate(selectedDate),
+        )
         .where(
           "created_on",
           isLessThanOrEqualTo: normalizeDate(

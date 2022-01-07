@@ -18,6 +18,7 @@ import 'package:global_strongman/widget_tree/started_program_screen/view/seconda
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/sliver_video_app_bar.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/workout_title.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 enum Measurement { lbs, kgs, seconds }
 
@@ -105,7 +106,9 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
     );
 
     FirebaseUserWorkoutComplete(
-      created_on: DateTime.now(),
+      created_on: normalizeDate(
+        DateTime.now(),
+      ),
       seconds: seconds,
       program_id: widget.program_id,
       working_weight_kgs: kgs,

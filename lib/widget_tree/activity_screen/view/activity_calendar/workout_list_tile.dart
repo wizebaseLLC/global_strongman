@@ -136,40 +136,41 @@ class WorkoutListTile extends StatelessWidget {
                         const Icon(Icons.error),
                   ),
                 ),
-                title: Row(
-                  children: [
-                    Text(
-                      snapshotData.name!,
+                title: RichText(
+                  text: TextSpan(
+                      text: snapshotData.name!,
                       style: platformThemeData(
                         context,
-                        material: (data) => data.textTheme.subtitle1,
-                        cupertino: (data) => data.textTheme.textStyle,
-                      ),
-                    ),
-                    if (shouldShowDate == true &&
-                        completedWorkout.created_on != null)
-                      const SizedBox(
-                        width: kSpacing,
-                      ),
-                    if (shouldShowDate == true &&
-                        completedWorkout.created_on != null)
-                      Text(
-                        timeago.format(completedWorkout.created_on!),
-                        style: platformThemeData(
-                          context,
-                          material: (data) =>
-                              data.textTheme.bodyText2?.copyWith(
-                            color: Colors.white70,
-                            fontSize: 10,
-                          ),
-                          cupertino: (data) =>
-                              data.textTheme.textStyle.copyWith(
-                            fontSize: 10,
-                            color: CupertinoColors.systemGrey3,
-                          ),
+                        material: (data) => data.textTheme.subtitle1?.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )
-                  ],
+                        cupertino: (data) => data.textTheme.textStyle.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      children: [
+                        if (shouldShowDate == true &&
+                            completedWorkout.created_on != null)
+                          TextSpan(
+                            text:
+                                "  ${timeago.format(completedWorkout.created_on!)}",
+                            style: platformThemeData(
+                              context,
+                              material: (data) =>
+                                  data.textTheme.bodyText2?.copyWith(
+                                color: Colors.white70,
+                                fontSize: 10,
+                              ),
+                              cupertino: (data) =>
+                                  data.textTheme.textStyle.copyWith(
+                                fontSize: 10,
+                                color: CupertinoColors.systemGrey3,
+                              ),
+                            ),
+                          ),
+                      ]),
                 ),
                 subtitle: (_previousWeight == null && _notes == null)
                     ? null
