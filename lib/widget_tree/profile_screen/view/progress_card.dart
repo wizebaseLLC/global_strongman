@@ -13,10 +13,17 @@ class ProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Badge almostThere = context
+    final Badge? almostThere = context
         .watch<BadgeCurrentValues>()
         .getAllSortedBadges()
-        .firstWhere((element) => element.currentValue < element.value);
+        .firstWhere(
+          (element) =>
+              element.currentValue < element.value && element.currentValue != 0,
+        );
+
+    if (almostThere == null) {
+      return Container();
+    }
 
     final int limitedCurrentValue = almostThere.currentValue > almostThere.value
         ? almostThere.value
