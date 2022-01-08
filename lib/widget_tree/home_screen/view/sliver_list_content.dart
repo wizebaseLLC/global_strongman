@@ -111,7 +111,7 @@ class _SliverListContentState extends State<SliverListContent>
               ),
               const SizedBox(height: kSpacing * 2),
               AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 200),
                 child: tabScreens[currentTab],
               )
             ],

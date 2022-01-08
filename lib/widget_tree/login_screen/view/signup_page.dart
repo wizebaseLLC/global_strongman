@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,6 +41,13 @@ class _SignupPageState extends State<SignupPage> {
       buttonType: buttonType,
       context: context,
     );
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -115,10 +124,11 @@ class _SignupPageState extends State<SignupPage> {
           button: ButtonType.google,
           onPress: () => _handleSocialLogin(ButtonType.google, context),
         ),
-        _buildSignInButton(
-          button: ButtonType.apple,
-          onPress: () => _handleSocialLogin(ButtonType.apple, context),
-        ),
+        if (Platform.isIOS)
+          _buildSignInButton(
+            button: ButtonType.apple,
+            onPress: () => _handleSocialLogin(ButtonType.apple, context),
+          ),
       ],
     );
   }
@@ -129,7 +139,8 @@ class _SignupPageState extends State<SignupPage> {
       style: platformThemeData(
         context,
         material: (data) => data.textTheme.caption?.copyWith(fontSize: 14),
-        cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
+        cupertino: (data) =>
+            data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
       ),
     );
   }
@@ -184,8 +195,10 @@ class _SignupPageState extends State<SignupPage> {
             text: 'Have an account? ',
             style: platformThemeData(
               context,
-              material: (data) => data.textTheme.caption?.copyWith(fontSize: 14),
-              cupertino: (data) => data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
+              material: (data) =>
+                  data.textTheme.caption?.copyWith(fontSize: 14),
+              cupertino: (data) =>
+                  data.textTheme.tabLabelTextStyle.copyWith(fontSize: 14),
             ),
           ),
           TextSpan(
@@ -211,9 +224,11 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _buildSignInButton({required ButtonType button, required Function() onPress}) {
+  Widget _buildSignInButton(
+      {required ButtonType button, required Function() onPress}) {
     return Container(
-      padding: const EdgeInsets.only(left: kSpacing * 4, right: kSpacing * 4, bottom: kSpacing),
+      padding: const EdgeInsets.only(
+          left: kSpacing * 4, right: kSpacing * 4, bottom: kSpacing),
       child: SignInButton(
         buttonType: button,
         onPressed: onPress,

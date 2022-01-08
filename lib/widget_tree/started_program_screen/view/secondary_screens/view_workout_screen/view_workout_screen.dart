@@ -12,13 +12,15 @@ import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
+import 'package:global_strongman/core/providers/activity_interace_provider.dart';
+import 'package:global_strongman/core/providers/badge_current_values.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/measurement_radio_buttons.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/description.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/progression_line_chart.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/sliver_video_app_bar.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/workout_title.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:table_calendar/table_calendar.dart';
+import "package:provider/provider.dart";
 
 enum Measurement { lbs, kgs, seconds }
 
@@ -54,88 +56,111 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
 
     FirebaseFirestore.instance.runTransaction(
       (transaction) async {
-        // Get the document
-        DocumentSnapshot<FirebaseUser> snapshot =
-            await transaction.get(documentReference);
+        try {
+          // Get the document
+          DocumentSnapshot<FirebaseUser> snapshot =
+              await transaction.get(documentReference);
 
-        if (snapshot.exists) {
-          int newCompletedWorkoutCount =
-              (snapshot.data()?.completed_workouts ?? 0) + 1;
+          if (snapshot.exists) {
+            int newCompletedWorkoutCount =
+                (snapshot.data()?.completed_workouts ?? 0) + 1;
 
-          // Perform an update on the document
-          transaction.update(documentReference, {
-            'completed_workouts': newCompletedWorkoutCount,
-          });
+            // Perform an update on the document
+            transaction.update(documentReference, {
+              'completed_workouts': newCompletedWorkoutCount,
+            });
+          }
+        } catch (e) {
+          print(e);
         }
       },
-    );
+    ).catchError((err) => print(err));
   }
 
   Future<void> _handleSubmitWorkoutComplete(BuildContext context) async {
-    num lbs = 0;
-    num kgs = 0;
-    num seconds = 0;
+    try {
+      num lbs = 0;
+      num kgs = 0;
+      num seconds = 0;
 
-    if (_controller.text.isNotEmpty) {
-      if (measurement == Measurement.lbs) {
-        lbs = num.parse(_controller.text);
-        kgs = (num.parse(_controller.text)) / 2.2046;
-      } else if (measurement == Measurement.kgs) {
-        kgs = num.parse(_controller.text);
-        lbs = (num.parse(_controller.text)) * 2.2046;
-      } else {
-        seconds = num.parse(_controller.text);
+      if (_controller.text.isNotEmpty) {
+        if (measurement == Measurement.lbs) {
+          lbs = num.parse(_controller.text);
+          kgs = (num.parse(_controller.text)) / 2.2046;
+        } else if (measurement == Measurement.kgs) {
+          kgs = num.parse(_controller.text);
+          lbs = (num.parse(_controller.text)) * 2.2046;
+        } else {
+          seconds = num.parse(_controller.text);
+        }
+      }
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      prefs.setString(
+        "${_user}_${widget.program_id}_${widget.workout_id}_notes",
+        _notesController.text,
+      );
+
+      final String previousWeight = lbs > 0
+          ? ",  current: ${lbs.toStringAsFixed(1)} lbs (${kgs.toStringAsFixed(1)} kgs)"
+          : seconds > 0
+              ? ",  current: $seconds seconds"
+              : "";
+      prefs.setString(
+        "${_user}_${widget.program_id}_${widget.workout_id}_previousWeight",
+        previousWeight,
+      );
+
+      await FirebaseUserWorkoutComplete(
+        created_on: DateTime.now(),
+        seconds: seconds,
+        program_id: widget.program_id,
+        working_weight_kgs: kgs,
+        working_weight_lbs: lbs,
+        workout_id: widget.workout_id,
+        categories: widget.workout.categories,
+        day: widget.programDay.id,
+        notes: _notesController.text,
+        weight_used_string: previousWeight.replaceAll(",  current: ", ""),
+      ).addCompletedWorkout(
+        user: _user,
+      );
+
+      await _incrementUserCompletedWorkouts();
+      await _updatedCompletedCategorizedWorkout();
+      _setMetricsAsDirty(context);
+      Navigator.pop(context, true);
+    } catch (e) {
+      if (true) {
+        print(e);
       }
     }
-
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    prefs.setString(
-      "${widget.program_id}_${widget.workout_id}_notes",
-      _notesController.text,
-    );
-
-    final String previousWeight = lbs > 0
-        ? ",  current: ${lbs.toStringAsFixed(1)} lbs (${kgs.toStringAsFixed(1)} kgs)"
-        : seconds > 0
-            ? ",  current: $seconds seconds"
-            : "";
-    prefs.setString(
-      "${widget.program_id}_${widget.workout_id}_previousWeight",
-      previousWeight,
-    );
-
-    FirebaseUserWorkoutComplete(
-      created_on: normalizeDate(
-        DateTime.now(),
-      ),
-      seconds: seconds,
-      program_id: widget.program_id,
-      working_weight_kgs: kgs,
-      working_weight_lbs: lbs,
-      workout_id: widget.workout_id,
-      categories: widget.workout.categories,
-      day: widget.programDay.id,
-      notes: _notesController.text,
-      weight_used_string: previousWeight.replaceAll(",  current: ", ""),
-    ).addCompletedWorkout(
-      user: _user,
-    );
-
-    _incrementUserCompletedWorkouts();
-    _updatedCompletedCategorizedWorkout();
-
-    Navigator.pop(context, true);
   }
 
-  void _updatedCompletedCategorizedWorkout() {
-    if (widget.workout.categories != null &&
-        widget.workout.categories!.isNotEmpty) {
-      for (final category in widget.workout.categories!) {
-        BadgesController().updatedCompletedCategorizedWorkout(
+  void _setMetricsAsDirty(BuildContext context) {
+    try {
+      context.read<BadgeCurrentValues>().setIsDirty();
+      context.read<ActivityInterfaceProvider>().setIsDirty();
+    } catch (e) {
+      if (true) {
+        print(e);
+      }
+    }
+  }
+
+  Future<void> _updatedCompletedCategorizedWorkout() async {
+    try {
+      if (widget.workout.categories != null &&
+          widget.workout.categories!.isNotEmpty) {
+        await BadgesController().updatedCompletedCategorizedWorkout(
           updateType: BadgeUpdateType.increment,
-          category: category,
+          category: widget.workout.categories!,
         );
+      }
+    } catch (e) {
+      if (true) {
+        print(e);
       }
     }
   }
@@ -150,14 +175,19 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
         )
         .where("workout_id", isEqualTo: widget.workout_id)
         // .limit(20)
-        .get();
+        .get()
+        .catchError((e) {
+      if (true) {
+        print(e);
+      }
+    });
   }
 
   @override
   void initState() {
     SharedPreferences.getInstance().then((prefs) {
-      foundKey =
-          prefs.getString("${widget.program_id}_${widget.workout_id}_notes");
+      foundKey = prefs.getString(
+          "${_user}_${widget.program_id}_${widget.workout_id}_notes");
     });
 
     super.initState();

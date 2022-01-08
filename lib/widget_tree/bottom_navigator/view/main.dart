@@ -26,26 +26,23 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   List<Widget> get childScreens => screens.map((e) => e.child).toList();
 
   @override
-  void initState() {
-    FirebaseAuth.instance.authStateChanges().listen(
-      (User? user) {
-        if (user != null) {
-          WidgetsBinding.instance?.addPostFrameCallback(
-            (_) {
-              Provider.of<ActivityInterfaceProvider>(context, listen: false)
-                  .createWorkoutInterface();
-              Provider.of<BadgeCurrentValues>(context, listen: false)
-                  .runSetMetrics();
-            },
-          );
-        }
-      },
-    );
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final BadgeCurrentValues badgeCurrentValues =
+        context.read<BadgeCurrentValues>();
+
+    final ActivityInterfaceProvider activityInterface =
+        context.read<ActivityInterfaceProvider>();
+
+    if (badgeCurrentValues.didRunAtleastOnce == false ||
+        badgeCurrentValues.isDirty == true) {
+      badgeCurrentValues.runSetMetrics();
+    }
+
+    if (activityInterface.didRunAtleastOnce == false ||
+        activityInterface.isDirty == true) {
+      activityInterface.createWorkoutInterface();
+    }
+
     return PlatformScaffold(
       key: _scaffoldKey,
       body: AnnotatedRegion<SystemUiOverlayStyle>(

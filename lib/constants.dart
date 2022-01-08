@@ -39,18 +39,19 @@ const List<String> kExperience = [
 ];
 
 const List<String> kInjuries = [
-  "None",
-  "Neck",
-  "Shoulder area",
-  "Back",
-  "Biceps",
-  "Triceps",
-  "Pectoral",
-  "Abdominal",
-  "Hips",
-  "Glutes",
-  "Hamstrings",
-  "Quadriceps",
-  "Ankles",
-  "Feet"
+  'Sprains',
+  'Strains',
+  'Knee',
+  'Swollen muscles',
+  'Achilles tendon rupture',
+  'Fractures',
+  'Dislocations',
+  'Rotator cuff',
+  'Muscle pull and strain',
+  'Sprained ankle',
+  'Shoulder',
+  'Shin splint',
+  'Tendinitis',
+  'Wrist sprain or dislocation',
+  'Lower Back',
 ];

@@ -40,6 +40,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
           context.read<ActivityInterfaceProvider>().createWorkoutInterface();
         },
         child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: kSpacing),
             child: Column(

@@ -59,34 +59,38 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
 
       FirebaseFirestore.instance.runTransaction(
         (transaction) async {
-          DocumentSnapshot<FirebaseProgram> snapshot =
-              await transaction.get(documentReference);
+          try {
+            DocumentSnapshot<FirebaseProgram> snapshot =
+                await transaction.get(documentReference);
 
-          if (!snapshot.exists) {
-            return;
+            if (!snapshot.exists) {
+              return;
+            }
+
+            // Update the count based on the current count
+            // Note: this could be done without a transaction
+            // by updating the population using FieldValue.increment()
+
+            int oldRatingCount = snapshot.data()?.rating_count ?? 0;
+            int newRatingCount = oldRatingCount + 1;
+            num oldAverageRating = snapshot.data()?.average_rating ?? 0;
+
+            // Creating a transaction to increment the count and average of the review.
+            var newRatingAverage = oldRatingCount == 0
+                ? _rating
+                : ((oldAverageRating * oldRatingCount) + _rating) /
+                    newRatingCount;
+
+            // Perform an update on the document
+            transaction.update(documentReference, {
+              'rating_count': newRatingCount,
+              'average_rating': newRatingAverage
+            });
+          } catch (e) {
+            print(e);
           }
-
-          // Update the count based on the current count
-          // Note: this could be done without a transaction
-          // by updating the population using FieldValue.increment()
-
-          int oldRatingCount = snapshot.data()?.rating_count ?? 0;
-          int newRatingCount = oldRatingCount + 1;
-          num oldAverageRating = snapshot.data()?.average_rating ?? 0;
-
-          // Creating a transaction to increment the count and average of the review.
-          var newRatingAverage = oldRatingCount == 0
-              ? _rating
-              : ((oldAverageRating * oldRatingCount) + _rating) /
-                  newRatingCount;
-
-          // Perform an update on the document
-          transaction.update(documentReference, {
-            'rating_count': newRatingCount,
-            'average_rating': newRatingAverage
-          });
         },
-      );
+      ).catchError((err) => print(err));
     } catch (err) {
       print(err.toString());
     }
@@ -105,8 +109,8 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
       final DocumentReference<FirebaseProgram> documentReference =
           FirebaseProgram().getDocumentReferenceByString(widget.program.id);
 
-      FirebaseFirestore.instance.runTransaction(
-        (transaction) async {
+      FirebaseFirestore.instance.runTransaction((transaction) async {
+        try {
           DocumentSnapshot<FirebaseProgram> snapshot =
               await transaction.get(documentReference);
 
@@ -126,10 +130,14 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
                   oldRatingCount;
 
           // Perform an update on the document
-          transaction
-              .update(documentReference, {'average_rating': newRatingAverage});
-        },
-      );
+          transaction.update(
+            documentReference,
+            {'average_rating': newRatingAverage},
+          );
+        } catch (e) {
+          print(e);
+        }
+      }).catchError((err) => print(err));
     } catch (err) {
       print(err.toString());
     }

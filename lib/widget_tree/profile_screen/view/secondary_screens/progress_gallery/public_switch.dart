@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
@@ -35,6 +36,8 @@ class _PublicSwitchState extends State<PublicSwitch> {
   @override
   Widget build(BuildContext context) {
     return Switch(
+      activeColor:
+          Platform.isIOS ? CupertinoColors.activeBlue : Colors.lightBlue,
       value: isActive,
       onChanged: (value) {
         setState(() {

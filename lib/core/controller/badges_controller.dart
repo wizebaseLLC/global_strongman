@@ -11,30 +11,42 @@ enum BadgeUpdateType {
 }
 
 class BadgesController {
-  static final Badge completeFirstWorkout = Badge(
-    title: "Complete your first workout",
-    value: 1,
-    badgeValueType: BadgeValueType.increment,
-    badgeImage: "assets/images/kettlebellBadge.png",
-  );
-
   static Badge completeWorkouts({required int value}) => Badge(
         title: "Complete $value ${value == 1 ? 'workout' : 'workouts'}",
         value: value,
         badgeValueType: BadgeValueType.increment,
-        badgeImage: "assets/images/kettlebellBadge.png",
+        badgeImage: "assets/images/workouts.png",
       );
 
   static Badge completeCategorizedWorkouts({
     required int value,
     required String category,
-  }) =>
-      Badge(
-        title: "Complete $value $category workouts",
-        value: value,
-        badgeValueType: BadgeValueType.increment,
-        badgeImage: "assets/images/kettlebellBadge.png",
-      );
+  }) {
+    String badgeImage = "strength";
+
+    switch (category) {
+      case "strength":
+        break;
+      case "cardio":
+        badgeImage = "cardio";
+        break;
+      case "rehab":
+        badgeImage = 'rehab';
+        break;
+      case "strongman":
+        badgeImage = 'strongman';
+        break;
+      default:
+        break;
+    }
+
+    return Badge(
+      title: "Complete $value $category workouts",
+      value: value,
+      badgeValueType: BadgeValueType.increment,
+      badgeImage: "assets/images/$badgeImage.png",
+    );
+  }
 
   static Badge surpasSpecificWorkouts({
     required int value,
@@ -44,67 +56,63 @@ class BadgesController {
         title: "$specificWorkout $value lbs",
         value: value,
         badgeValueType: BadgeValueType.surpass,
-        badgeImage: "assets/images/kettlebellBadge.png",
+        badgeImage: "assets/images/specific.png",
       );
 
   static Badge activeDays({required int value}) => Badge(
         title: "$value active ${value == 1 ? 'day' : 'days'}",
         value: value,
         badgeValueType: BadgeValueType.increment,
-        badgeImage: "assets/images/kettlebellBadge.png",
+        badgeImage: "assets/images/active_days.png",
       );
 
   String get _user => FirebaseAuth.instance.currentUser?.email ?? "n/a";
 
   Future<void> updatedCompletedCategorizedWorkout({
     required BadgeUpdateType updateType,
-    required String category,
+    required List<dynamic> category,
   }) async {
-    final DocumentReference<FirebaseUser> documentReference =
-        FirebaseUser(email: _user).getDocumentReference();
+    try {
+      final DocumentSnapshot<FirebaseUser> snapshot =
+          await FirebaseUser(email: _user).getDocumentReference().get();
 
-    FirebaseFirestore.instance.runTransaction(
-      (transaction) async {
-        // Get the document
-        DocumentSnapshot<FirebaseUser> snapshot =
-            await transaction.get(documentReference);
+      if (snapshot.exists && snapshot.data() != null) {
+        int strength = snapshot.data()?.strength ?? 0;
+        int cardio = snapshot.data()?.cardio ?? 0;
+        int rehab = snapshot.data()?.rehab ?? 0;
+        int strongman = snapshot.data()?.strongman ?? 0;
 
-        if (snapshot.exists) {
-          int newCompletedWorkoutCount;
-          bool isIncrement = updateType == BadgeUpdateType.increment;
-          switch (category) {
-            case "strength":
-              newCompletedWorkoutCount = isIncrement
-                  ? (snapshot.data()?.strength ?? 0) + 1
-                  : (snapshot.data()?.strength ?? 0) - 1;
-              break;
-            case "cardio":
-              newCompletedWorkoutCount = isIncrement
-                  ? (snapshot.data()?.cardio ?? 0) + 1
-                  : (snapshot.data()?.cardio ?? 0) - 1;
-              break;
-            case "rehab":
-              newCompletedWorkoutCount = isIncrement
-                  ? (snapshot.data()?.rehab ?? 0) + 1
-                  : (snapshot.data()?.rehab ?? 0) - 1;
-              break;
-            case "strongman":
-              newCompletedWorkoutCount = isIncrement
-                  ? (snapshot.data()?.strongman ?? 0) + 1
-                  : (snapshot.data()?.strongman ?? 0) - 1;
-              break;
-            default:
-              return;
-          }
+        bool isIncrement = updateType == BadgeUpdateType.increment;
 
-          // Perform an update on the document
-          transaction.update(documentReference, {
-            category:
-                newCompletedWorkoutCount < 1 ? 0 : newCompletedWorkoutCount,
-          });
+        if (category.contains("strength")) {
+          strength = isIncrement ? strength + 1 : strength - 1;
         }
-      },
-    );
+
+        if (category.contains("cardio")) {
+          cardio = isIncrement ? cardio + 1 : cardio - 1;
+        }
+
+        if (category.contains("rehab")) {
+          rehab = isIncrement ? rehab + 1 : rehab - 1;
+        }
+
+        if (category.contains("strongman")) {
+          strongman = isIncrement ? strongman + 1 : strongman - 1;
+        }
+
+        await FirebaseUser(email: _user).getDocumentReference().update({
+          'strength': strength,
+          'cardio': cardio,
+          'rehab': rehab,
+          'strongman': strongman,
+        });
+      }
+
+      // Perform an update on the document
+
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<int?> getSpecificWorkoutMaxLift({

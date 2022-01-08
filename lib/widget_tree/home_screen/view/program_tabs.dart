@@ -14,10 +14,10 @@ class ProgramTabs extends StatelessWidget {
   final int currentTab;
 
   TextStyle cupertinoSegmentTextColor(BuildContext context) =>
-      CupertinoTheme.of(context)
-          .textTheme
-          .actionTextStyle
-          .copyWith(color: CupertinoColors.white, fontSize: 18);
+      CupertinoTheme.of(context).textTheme.actionTextStyle.copyWith(
+            color: CupertinoColors.white,
+            fontSize: 18,
+          );
 
   @override
   Widget build(BuildContext context) {
@@ -42,18 +42,19 @@ class ProgramTabs extends StatelessWidget {
             },
             onValueChanged: setTab),
         material: (_, __) => DefaultTabController(
-            length: 3,
-            child: TabBar(
-              onTap: setTab,
-              indicatorColor: kPrimaryColor,
-              tabs: const [
-                Tab(
-                  text: "Overview",
-                ),
-                Tab(text: "Workout list"),
-                Tab(text: "Reviews"),
-              ],
-            )),
+          length: 3,
+          child: TabBar(
+            onTap: setTab,
+            indicatorColor: kPrimaryColor,
+            tabs: const [
+              Tab(
+                text: "Overview",
+              ),
+              Tab(text: "Workout list"),
+              Tab(text: "Reviews"),
+            ],
+          ),
+        ),
       ),
     );
   }

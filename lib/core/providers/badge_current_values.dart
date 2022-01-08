@@ -21,6 +21,18 @@ class BadgeCurrentValues with ChangeNotifier {
   final List<Badge> _workoutCountList = [];
   List<Badge> get workoutCountList => _workoutCountList;
 
+  /// Check if this provider ran atleast once
+  bool _didRunAtleastOnce = false;
+  bool get didRunAtleastOnce => _didRunAtleastOnce;
+
+  /// Check if this provider should run again
+  bool _isDirty = false;
+  bool get isDirty => _isDirty;
+
+  void setIsDirty() {
+    _isDirty = true;
+  }
+
   List<Badge> getWorkoutCountList() => [
         completed1Workouts,
         completed10Workouts,
@@ -536,7 +548,8 @@ class BadgeCurrentValues with ChangeNotifier {
       _setMaxDeadlift(),
       _setActiveDays(),
     ]);
-
+    _didRunAtleastOnce = true;
+    _isDirty = false;
     notifyListeners();
   }
 }

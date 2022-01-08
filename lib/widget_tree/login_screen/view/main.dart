@@ -51,7 +51,8 @@ class _LoginPageState extends State<LoginPage> {
             {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
+                platformPageRoute(
+                  context: context,
                   builder: (context) => const BottomNavigator(),
                 ),
               ),
@@ -59,6 +60,13 @@ class _LoginPageState extends State<LoginPage> {
         });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -211,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
           button: ButtonType.google,
           onPress: () => _handleSocialLogin(ButtonType.google, context),
         ),
-        if (Platform.isIOS == true)
+        if (Platform.isIOS)
           _buildSignInButton(
             button: ButtonType.apple,
             onPress: () => _handleSocialLogin(ButtonType.apple, context),
@@ -250,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
             recognizer: TapGestureRecognizer()
               ..onTap = () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SignupPage()),
+                    MaterialPageRoute(builder: (context) => const SignupPage()),
                   ),
           ),
         ],

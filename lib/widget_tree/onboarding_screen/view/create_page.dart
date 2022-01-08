@@ -29,12 +29,14 @@ PageViewModel createPage({
             Colors.black,
             Colors.transparent,
           ],
-        ).createShader(Rect.fromLTRB(
-          0,
-          0,
-          rect.width,
-          rect.height,
-        ));
+        ).createShader(
+          Rect.fromLTRB(
+            0,
+            0,
+            rect.width,
+            rect.height,
+          ),
+        );
       },
       blendMode: BlendMode.dstIn,
       child: Image.asset(
@@ -48,7 +50,7 @@ PageViewModel createPage({
             color: Colors.white,
           ),
       bodyFlex: height > 800 ? 6 : 4,
-      imageFlex: height > 800 ? 3 : 3,
+      imageFlex: 3,
       imageAlignment: Alignment.topCenter,
       imagePadding: const EdgeInsets.only(
         left: 0,

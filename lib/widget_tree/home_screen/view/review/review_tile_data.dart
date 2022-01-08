@@ -140,7 +140,7 @@ class ReviewTileData extends StatelessWidget {
                                   child: const Text(
                                     "Delete",
                                   ),
-                                  onPressed: () => _removeRating(
+                                  onPressed: () async => await _removeRating(
                                         context: context,
                                       )),
                             ],
@@ -172,8 +172,8 @@ class ReviewTileData extends StatelessWidget {
     final DocumentReference<FirebaseProgram> documentReference =
         FirebaseProgram().getDocumentReferenceByString(program.id);
 
-    FirebaseFirestore.instance.runTransaction(
-      (transaction) async {
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      try {
         DocumentSnapshot<FirebaseProgram> snapshot =
             await transaction.get(documentReference);
 
@@ -194,12 +194,14 @@ class ReviewTileData extends StatelessWidget {
             ((oldAverageRating * oldRatingCount) - myRating) / newRatingCount;
 
         // Perform an update on the document
-        transaction.update(documentReference, {
-          'rating_count': newRatingCount,
-          'average_rating': newRatingAverage
-        });
-      },
-    );
+        transaction.update(
+          documentReference,
+          {'rating_count': newRatingCount, 'average_rating': newRatingAverage},
+        );
+      } catch (e) {
+        print(e);
+      }
+    }).catchError((err) => print(err));
     Navigator.pop(context);
   }
 }

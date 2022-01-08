@@ -57,7 +57,10 @@ class ReviewListTile extends StatelessWidget {
             );
           }
           if (snapshot.hasData) {
-            final FirebaseUser? user = snapshot.data?.data()!;
+            final FirebaseUser? user = snapshot.data?.data();
+            if (user == null) {
+              return Container();
+            }
             return Column(
               children: [
                 if (review != null)

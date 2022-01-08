@@ -51,6 +51,7 @@ class ProfileBody extends StatelessWidget {
           context.read<ActivityInterfaceProvider>().createWorkoutInterface();
         },
         child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
               SizedBox(

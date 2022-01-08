@@ -27,8 +27,10 @@ List<Widget> page1Body({
                 '''The best strongman platform on the market''',
                 style: platformThemeData(
                   context,
-                  material: (data) => data.textTheme.subtitle1?.copyWith(color: Colors.grey),
-                  cupertino: (data) => data.textTheme.textStyle.copyWith(color: Colors.grey),
+                  material: (data) =>
+                      data.textTheme.subtitle1?.copyWith(color: Colors.grey),
+                  cupertino: (data) =>
+                      data.textTheme.textStyle.copyWith(color: Colors.grey),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -52,8 +54,10 @@ List<Widget> page1Body({
               'Global Strongman helps you easily track your fitness.  Train interactively and plan your workouts.',
               style: platformThemeData(
                 context,
-                material: (data) => data.textTheme.subtitle1?.copyWith(color: Colors.grey, fontSize: 14),
-                cupertino: (data) => data.textTheme.textStyle.copyWith(color: Colors.grey, fontSize: 14),
+                material: (data) => data.textTheme.subtitle1
+                    ?.copyWith(color: Colors.grey, fontSize: 14),
+                cupertino: (data) => data.textTheme.textStyle
+                    .copyWith(color: Colors.grey, fontSize: 14),
               ),
               textAlign: TextAlign.center,
             ),

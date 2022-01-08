@@ -20,6 +20,18 @@ class ActivityInterfaceProvider with ChangeNotifier {
   int _trophiesEarned = 0;
   int get trophiesEarned => _trophiesEarned;
 
+  /// Check if this provider ran atleast once
+  bool _didRunAtleastOnce = false;
+  bool get didRunAtleastOnce => _didRunAtleastOnce;
+
+  /// Check if this provider should run again
+  bool _isDirty = false;
+  bool get isDirty => _isDirty;
+
+  void setIsDirty() {
+    _isDirty = true;
+  }
+
   List<FirebaseUserWorkoutComplete> _completedWorkouts = [];
   List<FirebaseUserWorkoutComplete> get completedWorkouts => _completedWorkouts;
 
@@ -53,7 +65,8 @@ class ActivityInterfaceProvider with ChangeNotifier {
       _programsComplete = filteredCompletedPrograms.length;
       _trophiesEarned = 0;
       _completedWorkouts = completedWorkoutsInner;
-
+      _didRunAtleastOnce = true;
+      _isDirty = false;
       notifyListeners();
     } catch (e) {
       if (kDebugMode) {

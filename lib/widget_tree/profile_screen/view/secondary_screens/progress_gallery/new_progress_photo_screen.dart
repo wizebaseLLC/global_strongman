@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -469,7 +470,12 @@ class _ProgressPhotoScreenState extends State<ProgressPhotoScreen> {
     return PlatformTextButton(
       child: Text(
         "Save",
-        style: TextStyle(color: saving ? Colors.grey : Colors.lightBlueAccent),
+        style: TextStyle(
+            color: saving
+                ? Colors.grey
+                : Platform.isIOS
+                    ? CupertinoColors.activeBlue
+                    : Colors.lightBlueAccent),
       ),
       onPressed: saving
           ? null

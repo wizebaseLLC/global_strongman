@@ -81,7 +81,7 @@ class _FormAvatarState extends State<FormAvatar> {
               FileImage(
                 File(file!.path),
               ),
-              width: 262,
+              height: 225,
             )
           : null,
     );

@@ -13,6 +13,7 @@ import 'package:global_strongman/core/controller/showPlatformActionSheet.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class WorkoutListTile extends StatelessWidget {
@@ -51,7 +52,7 @@ class WorkoutListTile extends StatelessWidget {
   }
 
   void _showPlatformActionSheet(BuildContext context) {
-    HapticFeedback.lightImpact();
+    HapticFeedback.mediumImpact();
     showPlatformActionSheet(
       context: context,
       actionSheetData: PlatformActionSheet(
@@ -82,21 +83,25 @@ class WorkoutListTile extends StatelessWidget {
 
     FirebaseFirestore.instance.runTransaction(
       (transaction) async {
-        // Get the document
-        DocumentSnapshot<FirebaseUser> snapshot =
-            await transaction.get(documentReference);
+        try {
+          // Get the document
+          DocumentSnapshot<FirebaseUser> snapshot =
+              await transaction.get(documentReference);
 
-        if (snapshot.exists) {
-          int newCompletedWorkoutCount =
-              (snapshot.data()?.completed_workouts ?? 0) - 1;
+          if (snapshot.exists) {
+            int newCompletedWorkoutCount =
+                (snapshot.data()?.completed_workouts ?? 0) - 1;
 
-          // Perform an update on the document
-          transaction.update(documentReference, {
-            'completed_workouts': newCompletedWorkoutCount,
-          });
+            // Perform an update on the document
+            transaction.update(documentReference, {
+              'completed_workouts': newCompletedWorkoutCount,
+            });
+          }
+        } catch (e) {
+          print(e);
         }
       },
-    );
+    ).catchError((err) => print(err));
   }
 
   void _updatedCompletedCategorizedWorkout() {

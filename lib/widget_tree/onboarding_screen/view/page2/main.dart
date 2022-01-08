@@ -35,7 +35,10 @@ List<Widget> page2Body({
             material: (_, __) => MaterialFormFields(
               firebaseUser: firebaseUser,
             ),
-          )
+          ),
+          const SizedBox(
+            height: kSpacing * 6,
+          ),
         ],
       ),
     ];

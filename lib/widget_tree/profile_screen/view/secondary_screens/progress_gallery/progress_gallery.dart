@@ -26,6 +26,7 @@ class ProgressGallery extends StatelessWidget {
     final User authenticatedUser = FirebaseUser.getSignedInUserFromFireStore()!;
     return FirebaseUser(email: authenticatedUser.email!)
         .getProgressGalleryCollectionReference()
+        .orderBy('date', descending: true)
         .snapshots();
   }
 
@@ -66,10 +67,6 @@ class ProgressGallery extends StatelessWidget {
           AsyncSnapshot<QuerySnapshot<ProgressGalleryCard>> snapshot) {
         final List<QueryDocumentSnapshot<ProgressGalleryCard>>?
             streamedGallery = snapshot.data?.docs;
-
-        streamedGallery?.sort(
-          (a, b) => b.data().date.compareTo(a.data().date),
-        );
 
         return SingleChildScrollView(
           child: Column(

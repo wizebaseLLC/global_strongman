@@ -63,9 +63,12 @@ class _OnboardFormState extends State<OnboardForm> {
         });
 
         if (formKey.currentState?.saveAndValidate() == true) {
-          Map<String, dynamic> formValues = formKey.currentState!.value;
-          formValues['age'] =
-              int.tryParse(formValues["age"]) ?? formValues["age"];
+          Map<String, dynamic> formValues = {};
+          formValues.addAll(formKey.currentState!.value);
+          if (formValues['age'] is String) {
+            formValues['age'] =
+                int.tryParse(formValues["age"]) ?? formValues["age"];
+          }
           //  print(formValues);
           SignInController().addUser(context, formValues).then((value) {
             setState(() {
@@ -116,7 +119,11 @@ class _OnboardFormState extends State<OnboardForm> {
         value: SystemUiOverlayStyle.light,
         child: ModalProgressHUD(
           inAsyncCall: saving,
-          child: IntroductionScreen(
+          child: PlatformScaffold(
+            cupertino: (context, platform) => CupertinoPageScaffoldData(
+              resizeToAvoidBottomInset: false,
+            ),
+            body: IntroductionScreen(
               key: widget.introKey,
               pages: pageDataList(
                 context: context,
@@ -140,24 +147,23 @@ class _OnboardFormState extends State<OnboardForm> {
                 ),
               ),
               next: const NextPageButton(),
-              dotsContainerDecorator: BoxDecoration(
-                color: platformThemeData(
-                  context,
-                  material: (data) => data.scaffoldBackgroundColor,
-                  cupertino: (data) => data.primaryContrastingColor,
-                ),
+              dotsContainerDecorator: const BoxDecoration(
+                color: Colors.transparent,
               ),
-              controlsPadding: const EdgeInsets.all(0),
               globalBackgroundColor: backgroundColor,
               dotsDecorator: DotsDecorator(
-                  size: const Size.square(10.0),
-                  activeSize: const Size(20.0, 10.0),
-                  activeColor: Colors.blue,
-                  color: Colors.white,
-                  spacing: const EdgeInsets.symmetric(horizontal: 3.0),
-                  activeShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25.0))),
-              onDone: onDone(context, widget._formKey)),
+                size: const Size.square(10.0),
+                activeSize: const Size(20.0, 10.0),
+                activeColor: Colors.blue,
+                color: Colors.white,
+                spacing: const EdgeInsets.symmetric(horizontal: 3.0),
+                activeShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+              ),
+              onDone: onDone(context, widget._formKey),
+            ),
+          ),
         ),
       ),
     );

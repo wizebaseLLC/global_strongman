@@ -50,12 +50,12 @@ class ExpandedWorkoutList extends StatefulWidget {
 class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
   bool _workoutComplete = false;
   String previousSession = "";
-
+  String? get user => FirebaseAuth.instance.currentUser?.email;
   Future<void> _checkIfWorkoutWasCompleted({
     required SharedPreferences prefs,
   }) async {
     final String? foundKey =
-        prefs.getString("${widget.program_id}_${widget.workout_id}");
+        prefs.getString("${user}_${widget.program_id}_${widget.workout_id}");
 
     if (foundKey != null) {
       if (foundKey.substring(0, 10) ==
@@ -70,8 +70,8 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
   Future<void> _getPreviousSessionAttempt({
     required SharedPreferences prefs,
   }) async {
-    final String? foundKey = prefs
-        .getString("${widget.program_id}_${widget.workout_id}_previousWeight");
+    final String? foundKey = prefs.getString(
+        "${user}_${widget.program_id}_${widget.workout_id}_previousWeight");
 
     if (foundKey != null) {
       setState(() {
@@ -81,26 +81,32 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
   }
 
   Future<void> _incrementActiveDays() async {
-    final DocumentReference<FirebaseUser> documentReference =
-        FirebaseUser(email: FirebaseAuth.instance.currentUser!.email!)
-            .getDocumentReference();
+    if (user != null) {
+      final DocumentReference<FirebaseUser> documentReference = FirebaseUser(
+        email: user!,
+      ).getDocumentReference();
 
-    FirebaseFirestore.instance.runTransaction(
-      (transaction) async {
-        // Get the document
-        DocumentSnapshot<FirebaseUser> snapshot =
-            await transaction.get(documentReference);
+      FirebaseFirestore.instance.runTransaction(
+        (transaction) async {
+          try {
+            // Get the document
+            DocumentSnapshot<FirebaseUser> snapshot =
+                await transaction.get(documentReference);
 
-        if (snapshot.exists) {
-          int newActiveDays = (snapshot.data()?.active_days ?? 0) + 1;
+            if (snapshot.exists) {
+              int newActiveDays = (snapshot.data()?.active_days ?? 0) + 1;
 
-          // Perform an update on the document
-          transaction.update(documentReference, {
-            'active_days': newActiveDays,
-          });
-        }
-      },
-    );
+              // Perform an update on the document
+              transaction.update(documentReference, {
+                'active_days': newActiveDays,
+              });
+            }
+          } catch (e) {
+            print(e);
+          }
+        },
+      ).catchError((err) => print(err));
+    }
   }
 
   @override
@@ -163,46 +169,51 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
       ),
       dense: true,
       onTap: () async {
-        final bool? didCompleteWorkout = await Navigator.push(
-          context,
-          platformPageRoute(
-            context: context,
-            builder: (_) => ViewWorkoutScreen(
-              workout: widget.workoutTile,
-              program_id: widget.program_id,
-              workout_id: widget.workout_id,
-              programDay: widget.programDay,
+        if (user != null) {
+          final bool? didCompleteWorkout = await Navigator.push(
+            context,
+            platformPageRoute(
+              context: context,
+              builder: (_) => ViewWorkoutScreen(
+                workout: widget.workoutTile,
+                program_id: widget.program_id,
+                workout_id: widget.workout_id,
+                programDay: widget.programDay,
+              ),
             ),
-          ),
-        );
-        if (didCompleteWorkout != null && didCompleteWorkout == true) {
-          final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-          await prefs.setString(
-            "${widget.program_id}_${widget.workout_id}",
-            DateTime.now().toString(),
           );
+          if (didCompleteWorkout != null && didCompleteWorkout == true) {
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
 
-          final String? foundKey = prefs.getString(
-              "${widget.program_id}_${widget.workout_id}_previousWeight");
+            await prefs.setString(
+              "${user}_${widget.program_id}_${widget.workout_id}",
+              DateTime.now().toString(),
+            );
 
-          final DateTime now = DateTime.now();
+            final String? foundKey = prefs.getString(
+                "${user}_${widget.program_id}_${widget.workout_id}_previousWeight");
 
-          final String? previousDate =
-              prefs.getString("${now.day}_${now.month}_${now.year}");
-          await prefs.setString(
-            "${now.day}_${now.month}_${now.year}",
-            "${now.day}_${now.month}_${now.year}",
-          );
+            final DateTime now = DateTime.now();
 
-          if (previousDate == null) {
-            _incrementActiveDays();
+            final String? previousDate =
+                prefs.getString("${user}_${now.day}_${now.month}_${now.year}");
+            await prefs.setString(
+              "${user}_${now.day}_${now.month}_${now.year}",
+              "${user}_${now.day}_${now.month}_${now.year}",
+            );
+
+            if (previousDate == null) {
+              await _incrementActiveDays();
+            }
+
+            setState(
+              () {
+                _workoutComplete = true;
+                previousSession = foundKey ?? "";
+              },
+            );
           }
-
-          setState(() {
-            _workoutComplete = true;
-            previousSession = foundKey ?? "";
-          });
         }
       },
     );
