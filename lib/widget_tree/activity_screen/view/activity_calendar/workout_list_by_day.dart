@@ -40,22 +40,17 @@ class WorkoutListByDay extends StatelessWidget {
     return FirestoreListView<FirebaseUserWorkoutComplete>(
       query: _getFilteredWorkouts(),
       padding: EdgeInsets.zero,
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
+      physics: const ScrollPhysics(),
       itemBuilder: (context, snapshot) {
         final FirebaseUserWorkoutComplete snapshotData = snapshot.data();
 
-        return Column(
-          children: [
-            WorkoutListTile(
-              program: snapshotData.program_id!,
-              day: snapshotData.day!,
-              doc: snapshotData.workout_id!,
-              key: GlobalKey(),
-              completedWorkout: snapshotData,
-              snapshot: snapshot,
-            ),
-          ],
+        return WorkoutListTile(
+          program: snapshotData.program_id!,
+          day: snapshotData.day!,
+          doc: snapshotData.workout_id!,
+          key: GlobalKey(),
+          completedWorkout: snapshotData,
+          snapshot: snapshot,
         );
       },
     );

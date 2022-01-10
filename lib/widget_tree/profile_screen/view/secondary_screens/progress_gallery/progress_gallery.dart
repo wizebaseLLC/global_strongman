@@ -69,64 +69,77 @@ class ProgressGallery extends StatelessWidget {
             streamedGallery = snapshot.data?.docs;
 
         return SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: kSpacing * 2,
-              ),
-              if (streamedGallery != null && streamedGallery.isNotEmpty)
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: Platform.isIOS ? 0 : kSpacing,
-                  ),
-                  child: ProgressLineChart(
-                    streamedGallery: streamedGallery,
-                    initialWeight: firebaseUser.weight ?? "0",
-                  ),
-                ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                Column(
                   children: [
-                    ShareOrAddButton(
-                      icon: PlatformIcons(context).add,
-                      title: "Add",
-                      firebaseUser: firebaseUser,
+                    const SizedBox(
+                      height: kSpacing * 2,
+                    ),
+                    if (streamedGallery != null && streamedGallery.isNotEmpty)
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Platform.isIOS ? 0 : kSpacing,
+                        ),
+                        child: ProgressLineChart(
+                          streamedGallery: streamedGallery,
+                          initialWeight: firebaseUser.weight ?? "0",
+                        ),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ShareOrAddButton(
+                            icon: PlatformIcons(context).add,
+                            title: "Add",
+                            firebaseUser: firebaseUser,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
-              ),
-              streamedGallery != null && streamedGallery.isNotEmpty
-                  ? GalleryImageCardContainer(
-                      firebaseUser: firebaseUser,
-                      galleryList: streamedGallery.map((data) {
-                        final galleryData = data.data();
-                        return GalleryImageCard(
-                          imageUrl: galleryData.url,
-                          date: galleryData.date.toString().substring(0, 10),
-                          bmi: galleryData.bmi,
-                          bodyFat: galleryData.bodyFat,
-                          bust: galleryData.bust,
-                          hip: galleryData.hip,
-                          waist: galleryData.waist,
-                          weight: galleryData.weight,
-                          caption: galleryData.description,
-                        );
-                      }).toList(),
-                    )
-                  : const Padding(
-                      padding: EdgeInsets.only(top: kSpacing * 4),
-                      child: Text(
-                        "Press Add to upload your first progress photo!",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
+                streamedGallery != null && streamedGallery.isNotEmpty
+                    ? Expanded(
+                        child: GalleryImageCardContainer(
+                          firebaseUser: firebaseUser,
+                          galleryList: streamedGallery.map(
+                            (data) {
+                              final galleryData = data.data();
+                              return GalleryImageCard(
+                                imageUrl: galleryData.url,
+                                date: galleryData.date
+                                    .toString()
+                                    .substring(0, 10),
+                                bmi: galleryData.bmi,
+                                bodyFat: galleryData.bodyFat,
+                                bust: galleryData.bust,
+                                hip: galleryData.hip,
+                                waist: galleryData.waist,
+                                weight: galleryData.weight,
+                                caption: galleryData.description,
+                              );
+                            },
+                          ).toList(),
+                        ),
+                      )
+                    : const Padding(
+                        padding: EdgeInsets.only(top: kSpacing * 4),
+                        child: Text(
+                          "Press Add to upload your first progress photo!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                          ),
                         ),
                       ),
-                    )
-            ],
+              ],
+            ),
           ),
         );
       },

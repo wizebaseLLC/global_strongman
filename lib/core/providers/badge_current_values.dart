@@ -17,9 +17,8 @@ class BadgeCurrentValues with ChangeNotifier {
 
   int _totalWorkoutsDone = 0;
   int get totalWorkoutsDone => _totalWorkoutsDone;
-
-  final List<Badge> _workoutCountList = [];
-  List<Badge> get workoutCountList => _workoutCountList;
+  // List<Badge> _workoutCountList = [];
+  // List<Badge> get workoutCountList => _workoutCountList;
 
   /// Check if this provider ran atleast once
   bool _didRunAtleastOnce = false;
@@ -549,6 +548,72 @@ class BadgeCurrentValues with ChangeNotifier {
       _setActiveDays(),
     ]);
     _didRunAtleastOnce = true;
+    _isDirty = false;
+    notifyListeners();
+  }
+
+  void resetToDefault() {
+    reach1ActiveDays.currentValue = 0;
+    reach30ActiveDays.currentValue = 0;
+    reach90ActiveDays.currentValue = 0;
+    reach120ActiveDays.currentValue = 0;
+    reach360ActiveDays.currentValue = 0;
+
+    reach100lbDeadlift.currentValue = 0;
+    reach200lbDeadlift.currentValue = 0;
+    reach300lbDeadlift.currentValue = 0;
+    reach400lbDeadlift.currentValue = 0;
+    reach500lbDeadlift.currentValue = 0;
+
+    reach100lbSquat.currentValue = 0;
+    reach200lbSquat.currentValue = 0;
+    reach300lbSquat.currentValue = 0;
+    reach400lbSquat.currentValue = 0;
+    reach500lbSquat.currentValue = 0;
+
+    reach100lbBenchPress.currentValue = 0;
+    reach200lbBenchPress.currentValue = 0;
+    reach300lbBenchPress.currentValue = 0;
+    reach400lbBenchPress.currentValue = 0;
+    reach500lbBenchPress.currentValue = 0;
+
+    completed1Workouts.currentValue = 0;
+    completed50Workouts.currentValue = 0;
+    completed100Workouts.currentValue = 0;
+    completed500Workouts.currentValue = 0;
+    completed1000Workouts.currentValue = 0;
+
+    completed10StrengthWorkouts.currentValue = 0;
+    completed50StrengthWorkouts.currentValue = 0;
+    completed100StrengthWorkouts.currentValue = 0;
+    completed500StrengthWorkouts.currentValue = 0;
+    completed1000StrengthWorkouts.currentValue = 0;
+
+    completed10RehabWorkouts.currentValue = 0;
+    completed50RehabWorkouts.currentValue = 0;
+    completed100RehabWorkouts.currentValue = 0;
+    completed500RehabWorkouts.currentValue = 0;
+    completed1000RehabWorkouts.currentValue = 0;
+
+    completed10CardioWorkouts.currentValue = 0;
+    completed50CardioWorkouts.currentValue = 0;
+    completed100CardioWorkouts.currentValue = 0;
+    completed500CardioWorkouts.currentValue = 0;
+    completed1000CardioWorkouts.currentValue = 0;
+
+    completed10StrongmanWorkouts.currentValue = 0;
+    completed50StrongmanWorkouts.currentValue = 0;
+    completed100StrongmanWorkouts.currentValue = 0;
+    completed500StrongmanWorkouts.currentValue = 0;
+    completed1000StrongmanWorkouts.currentValue = 0;
+
+    _completedBadgeCount = 0;
+    _totalBadgeCount = 0;
+    _totalActiveDays = 0;
+    _totalWorkoutsDone = 0;
+    //_workoutCountList = [];
+
+    _didRunAtleastOnce = false;
     _isDirty = false;
     notifyListeners();
   }

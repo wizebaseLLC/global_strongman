@@ -128,7 +128,7 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
         const SizedBox(
           height: kSpacing * 2,
         ),
-        WorkoutListByDay(selectedDate: _selectedDay),
+        //   WorkoutListByDay(selectedDate: _selectedDay),
       ],
     );
   }

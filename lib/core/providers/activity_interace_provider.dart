@@ -64,6 +64,7 @@ class ActivityInterfaceProvider with ChangeNotifier {
       _activeDays = firebaseUserData?.active_days ?? 0;
       _programsComplete = filteredCompletedPrograms.length;
       _trophiesEarned = 0;
+
       _completedWorkouts = completedWorkoutsInner;
       _didRunAtleastOnce = true;
       _isDirty = false;
@@ -73,6 +74,18 @@ class ActivityInterfaceProvider with ChangeNotifier {
         print(e);
       }
     }
+  }
+
+  void resetToDefault() {
+    _totalWorkouts = 0;
+    _activeDays = 0;
+    _programsComplete = 0;
+    _trophiesEarned = 0;
+    _completedWorkouts = [];
+    _didRunAtleastOnce = false;
+    _isDirty = false;
+
+    notifyListeners();
   }
 
   Future<List<QueryDocumentSnapshot<FirebaseUserStartedProgram>>>

@@ -20,21 +20,21 @@ class FilteredWorkoutScreen extends StatelessWidget {
       title: title,
       trailingActions: const [],
       body: FirestoreListView<FirebaseUserWorkoutComplete>(
-          query: query,
-          padding: EdgeInsets.zero,
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemBuilder: (context, snapshot) {
-            final FirebaseUserWorkoutComplete snapshotData = snapshot.data();
-            return WorkoutListTile(
-              program: snapshotData.program_id!,
-              day: snapshotData.day!,
-              doc: snapshotData.workout_id!,
-              completedWorkout: snapshotData,
-              snapshot: snapshot,
-              shouldShowDate: true,
-            );
-          }),
+        query: query,
+        padding: EdgeInsets.zero,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, snapshot) {
+          final FirebaseUserWorkoutComplete snapshotData = snapshot.data();
+          return WorkoutListTile(
+            program: snapshotData.program_id!,
+            day: snapshotData.day!,
+            doc: snapshotData.workout_id!,
+            completedWorkout: snapshotData,
+            snapshot: snapshot,
+            shouldShowDate: true,
+          );
+        },
+      ),
     );
   }
 }

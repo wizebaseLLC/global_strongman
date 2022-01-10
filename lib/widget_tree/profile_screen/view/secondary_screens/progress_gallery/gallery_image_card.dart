@@ -45,11 +45,10 @@ class GalleryImageCardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      shrinkWrap: true,
       primary: false,
       itemCount: galleryList.length,
-      padding: EdgeInsets.zero,
-      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      physics: const ScrollPhysics(),
       itemBuilder: (context, index) => GestureDetector(
         onLongPress: () async {
           final actionSheetData =

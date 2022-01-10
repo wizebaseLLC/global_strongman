@@ -53,42 +53,47 @@ class WorkoutList extends StatelessWidget {
             );
           }
           if (snapshot.hasData) {
-            var snapshotData = snapshot.data!;
+            final List<FirebaseProgramWorkouts> snapshotData = snapshot.data!;
             snapshotData.sort((a, b) => a.name!.compareTo(b.name!));
-            return ListView(
-              padding: EdgeInsets.zero,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              children: [
-                for (final workout in snapshotData)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: kSpacing),
-                    child: ListTile(
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: CachedNetworkImage(
-                          imageUrl: workout.thumbnail!,
-                          fit: BoxFit.cover,
-                          memCacheWidth: 270,
-                          width: 90,
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kSpacing * 2),
+              child: SizedBox(
+                height: 800,
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  physics: const ScrollPhysics(),
+                  children: [
+                    for (final workout in snapshotData)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: kSpacing),
+                        child: ListTile(
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: CachedNetworkImage(
+                              imageUrl: workout.thumbnail!,
+                              fit: BoxFit.cover,
+                              memCacheWidth: 270,
+                              width: 90,
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            ),
+                          ),
+                          title: Text(
+                            workout.name!,
+                            style: platformThemeData(
+                              context,
+                              material: (data) => data.textTheme.bodyText1,
+                              cupertino: (data) => data.textTheme.textStyle,
+                            ),
+                          ),
                         ),
                       ),
-                      title: Text(
-                        workout.name!,
-                        style: platformThemeData(
-                          context,
-                          material: (data) => data.textTheme.bodyText1,
-                          cupertino: (data) => data.textTheme.textStyle,
-                        ),
-                      ),
-                    ),
-                  ),
-                const SizedBox(
-                  height: kSpacing * 4,
-                )
-              ],
+                    const SizedBox(
+                      height: kSpacing * 4,
+                    )
+                  ],
+                ),
+              ),
             );
           } else {
             return const CircularProgressIndicator.adaptive();

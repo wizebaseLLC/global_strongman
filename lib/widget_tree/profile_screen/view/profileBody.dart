@@ -41,14 +41,20 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final BadgeCurrentValues badgeCurrentValues =
+        context.read<BadgeCurrentValues>();
+
+    final ActivityInterfaceProvider activityInterface =
+        context.read<ActivityInterfaceProvider>();
+
     return SafeArea(
       child: RefreshIndicator(
         backgroundColor: kPrimaryColor,
         color: Colors.white,
         onRefresh: () async {
           HapticFeedback.mediumImpact();
-          context.read<BadgeCurrentValues>().runSetMetrics();
-          context.read<ActivityInterfaceProvider>().createWorkoutInterface();
+          badgeCurrentValues.runSetMetrics();
+          activityInterface.createWorkoutInterface();
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -96,6 +102,8 @@ class ProfileBody extends StatelessWidget {
                       style: ElevatedButton.styleFrom(primary: kSecondaryColor),
                     ),
                     onPressed: () async {
+                      badgeCurrentValues.resetToDefault();
+                      activityInterface.resetToDefault();
                       await FirebaseAuth.instance.signOut();
                       Navigator.pushReplacement(
                         context,

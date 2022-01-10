@@ -60,6 +60,7 @@ flutter_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/images/global_strongman_logo.png"
+  adaptive_icon_background: "#000000"
 
 flutter:
   uses-material-design: true
@@ -67,6 +68,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

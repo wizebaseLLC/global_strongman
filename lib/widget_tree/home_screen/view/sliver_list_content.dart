@@ -46,75 +46,77 @@ class _SliverListContentState extends State<SliverListContent>
     return SliverList(
       delegate: SliverChildListDelegate(
         [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(kSpacing),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      programData.name!,
-                      style: platformThemeData(context,
-                          material: (data) => data.textTheme.headline6,
-                          cupertino: (data) => data
-                              .textTheme.navLargeTitleTextStyle
-                              .copyWith(fontSize: 22)),
-                    ),
-                    const SizedBox(height: kSpacing * 2),
-                    _buildHighlightsText(
-                      context: context,
-                      text:
-                          "${programData.workout_count.toString()} exclusive trainings",
-                      icon: FaIcon(
-                        FontAwesomeIcons.dumbbell,
-                        size: 16,
-                        color: Platform.isIOS
-                            ? CupertinoColors.systemGrey2
-                            : Colors.grey.shade400,
+          SizedBox(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(kSpacing),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        programData.name!,
+                        style: platformThemeData(context,
+                            material: (data) => data.textTheme.headline6,
+                            cupertino: (data) => data
+                                .textTheme.navLargeTitleTextStyle
+                                .copyWith(fontSize: 22)),
                       ),
-                    ),
-                    const SizedBox(height: kSpacing),
-                    _buildHighlightsText(
-                      context: context,
-                      text: "Duration: 90 Days",
-                      icon: FaIcon(
-                        FontAwesomeIcons.calendarDay,
-                        size: 16,
-                        color: Platform.isIOS
-                            ? CupertinoColors.systemGrey2
-                            : Colors.grey.shade400,
+                      const SizedBox(height: kSpacing * 2),
+                      _buildHighlightsText(
+                        context: context,
+                        text:
+                            "${programData.workout_count.toString()} exclusive trainings",
+                        icon: FaIcon(
+                          FontAwesomeIcons.dumbbell,
+                          size: 16,
+                          color: Platform.isIOS
+                              ? CupertinoColors.systemGrey2
+                              : Colors.grey.shade400,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: kSpacing),
-                    _buildHighlightsText(
-                      context: context,
-                      text: "Created on $createdOn",
-                      icon: Icon(
-                        PlatformIcons(context).timeSolid,
-                        size: 16,
-                        color: Platform.isIOS
-                            ? CupertinoColors.systemGrey2
-                            : Colors.grey.shade400,
+                      const SizedBox(height: kSpacing),
+                      _buildHighlightsText(
+                        context: context,
+                        text: "Duration: 90 Days",
+                        icon: FaIcon(
+                          FontAwesomeIcons.calendarDay,
+                          size: 16,
+                          color: Platform.isIOS
+                              ? CupertinoColors.systemGrey2
+                              : Colors.grey.shade400,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: kSpacing),
+                      _buildHighlightsText(
+                        context: context,
+                        text: "Created on $createdOn",
+                        icon: Icon(
+                          PlatformIcons(context).timeSolid,
+                          size: 16,
+                          color: Platform.isIOS
+                              ? CupertinoColors.systemGrey2
+                              : Colors.grey.shade400,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: kSpacing * 2),
-              ProgramTabs(
-                currentTab: currentTab,
-                setTab: (value) => setState(() {
-                  currentTab = value as int;
-                }),
-              ),
-              const SizedBox(height: kSpacing * 2),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                child: tabScreens[currentTab],
-              )
-            ],
+                const SizedBox(height: kSpacing * 2),
+                ProgramTabs(
+                  currentTab: currentTab,
+                  setTab: (value) => setState(() {
+                    currentTab = value as int;
+                  }),
+                ),
+                const SizedBox(height: kSpacing * 2),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  child: tabScreens[currentTab],
+                )
+              ],
+            ),
           )
         ],
       ),
