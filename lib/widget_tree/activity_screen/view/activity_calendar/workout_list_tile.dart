@@ -11,6 +11,7 @@ import 'package:global_strongman/core/controller/badges_controller.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class WorkoutListTile extends StatelessWidget {
@@ -33,7 +34,7 @@ class WorkoutListTile extends StatelessWidget {
 
   String? get _notes => completedWorkout.notes;
   String? get _previousWeight => completedWorkout.weight_used_string;
-  String get _user => FirebaseAuth.instance.currentUser!.email!;
+  String? get _user => FirebaseAuth.instance.currentUser!.email;
   Future<DocumentSnapshot<FirebaseProgramWorkouts>?> _getWorkoutData() async {
     try {
       return FirebaseProgramWorkouts()
@@ -48,40 +49,47 @@ class WorkoutListTile extends StatelessWidget {
     }
   }
 
-  void _showPlatformActionSheet(BuildContext context) {
-    HapticFeedback.mediumImpact();
+  Future<void> _deleteWorkout(BuildContext context) async {
+    if (_user != null) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.remove("${_user}_${program}_${completedWorkout.workout_id}");
+    }
+
+    HapticFeedback.heavyImpact();
     _decrementUserCompletedWorkouts();
     _updatedCompletedCategorizedWorkout();
     snapshot.reference.delete();
   }
 
   Future<void> _decrementUserCompletedWorkouts() async {
-    final DocumentReference<FirebaseUser> documentReference =
-        FirebaseUser(email: _user).getDocumentReference();
+    if (_user != null) {
+      final DocumentReference<FirebaseUser> documentReference =
+          FirebaseUser(email: _user!).getDocumentReference();
 
-    FirebaseFirestore.instance.runTransaction(
-      (transaction) async {
-        try {
-          // Get the document
-          DocumentSnapshot<FirebaseUser> snapshot =
-              await transaction.get(documentReference);
+      FirebaseFirestore.instance.runTransaction(
+        (transaction) async {
+          try {
+            // Get the document
+            DocumentSnapshot<FirebaseUser> snapshot =
+                await transaction.get(documentReference);
 
-          if (snapshot.exists) {
-            int newCompletedWorkoutCount =
-                (snapshot.data()?.completed_workouts ?? 0) - 1;
+            if (snapshot.exists) {
+              int newCompletedWorkoutCount =
+                  (snapshot.data()?.completed_workouts ?? 0) - 1;
 
-            // Perform an update on the document
-            transaction.update(documentReference, {
-              'completed_workouts': newCompletedWorkoutCount,
-            });
+              // Perform an update on the document
+              transaction.update(documentReference, {
+                'completed_workouts': newCompletedWorkoutCount,
+              });
+            }
+          } catch (e) {
+            if (kDebugMode) {
+              print(e);
+            }
           }
-        } catch (e) {
-          if (kDebugMode) {
-            print(e);
-          }
-        }
-      },
-    ).catchError((err) => print(err));
+        },
+      ).catchError((err) => print(err));
+    }
   }
 
   void _updatedCompletedCategorizedWorkout() {
@@ -114,7 +122,7 @@ class WorkoutListTile extends StatelessWidget {
                   ),
                 ),
                 key: ValueKey<FirebaseProgramWorkouts>(snapshotData),
-                onDismissed: (_) => _showPlatformActionSheet(context),
+                onDismissed: (_) => _deleteWorkout(context),
                 child: ListTile(
                   dense: true,
                   leading: ClipRRect(

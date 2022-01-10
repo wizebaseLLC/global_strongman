@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_user_started_program.dart';
-import 'package:global_strongman/widget_tree/home_screen/view/main.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/day_container.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class WorkoutListDayTiles extends StatefulWidget {
   const WorkoutListDayTiles({
@@ -36,7 +35,9 @@ class _WorkoutListDayTilesState extends State<WorkoutListDayTiles> {
 
       return Future.wait([day_1, day_2, day_3]);
     } catch (err) {
-      print(err.toString());
+      if (kDebugMode) {
+        print(err.toString());
+      }
     }
   }
 

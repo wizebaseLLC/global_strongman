@@ -237,17 +237,23 @@ class GalleryImageCard extends StatelessWidget {
                       ),
                     ),
                     if (caption != null)
-                      Text(
-                        caption!,
-                        style: platformThemeData(
-                          context,
-                          material: (data) =>
-                              data.textTheme.bodyText1?.copyWith(
-                            fontSize: 14,
-                          ),
-                          cupertino: (data) =>
-                              data.textTheme.textStyle.copyWith(
-                            fontSize: 16,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: kSpacing * 2,
+                        ),
+                        child: Text(
+                          caption!,
+                          textAlign: TextAlign.center,
+                          style: platformThemeData(
+                            context,
+                            material: (data) =>
+                                data.textTheme.bodyText1?.copyWith(
+                              fontSize: 14,
+                            ),
+                            cupertino: (data) =>
+                                data.textTheme.textStyle.copyWith(
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
