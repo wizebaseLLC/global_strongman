@@ -19,6 +19,7 @@ class ActivityScreen extends StatefulWidget {
 }
 
 class _ActivityScreenState extends State<ActivityScreen> {
+  DateTime selectedDay = DateTime.now();
   @override
   Widget build(BuildContext context) {
     final ActivityInterfaceProvider activityInterfaceProvider =
@@ -44,52 +45,55 @@ class _ActivityScreenState extends State<ActivityScreen> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WorkoutSetsCard(
-                        activityInterface: activityInterface,
-                      ),
-                      const SizedBox(
-                        height: kSpacing * 4,
-                      ),
-                      const WorkoutDescription(
-                        title: "Categories",
-                        subtitle: "Workouts completed by category",
-                      ),
-                      WorkoutsCompletedByCategory(
-                        activityInterface: activityInterface,
-                      ),
-                      const SizedBox(
-                        height: kSpacing * 4,
-                      ),
-                      const WorkoutDescription(
-                        title: "Workout Calendar",
-                        subtitle: "",
-                      ),
-                      ActivityCalendar(
-                        activityInterface: activityInterface,
-                      ),
-                      const SizedBox(
-                        height: kSpacing * 3,
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: WorkoutListByDay(
-                      selectedDate:
-                          DateTime.now().subtract(const Duration(days: 1)),
+            child: Column(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    WorkoutSetsCard(
+                      activityInterface: activityInterface,
                     ),
+                    const SizedBox(
+                      height: kSpacing * 4,
+                    ),
+                    const WorkoutDescription(
+                      title: "Categories",
+                      subtitle: "Workouts completed by category",
+                    ),
+                    WorkoutsCompletedByCategory(
+                      activityInterface: activityInterface,
+                    ),
+                    const SizedBox(
+                      height: kSpacing * 4,
+                    ),
+                    const WorkoutDescription(
+                      title: "Workout Calendar",
+                      subtitle: "",
+                    ),
+                    ActivityCalendar(
+                      activityInterface: activityInterface,
+                      selectedDay: selectedDay,
+                      setActivityScreenState: (pickedDate) {
+                        setState(() {
+                          selectedDay = pickedDate;
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: kSpacing * 3,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: WorkoutListByDay(
+                    selectedDate: selectedDay,
                   ),
-                  const SizedBox(
-                    height: kSpacing * 4,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(
+                  height: kSpacing * 4,
+                ),
+              ],
             ),
           ),
         ),

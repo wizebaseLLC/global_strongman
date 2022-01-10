@@ -11,19 +11,49 @@ class ProgressCard extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  Badge getClosestToAchievingBadge(List<Badge> filteredBadges) =>
+      filteredBadges.reduce(
+        (kingOfTheHill, element) {
+          final int elementCurrentValue = element.currentValue;
+          final int elementDesiredValue = element.value;
+
+          if (elementCurrentValue >= elementDesiredValue) {
+            return kingOfTheHill;
+          }
+
+          final int difference = elementDesiredValue - elementCurrentValue;
+
+          final int kingOfTheHillCurrentValue = kingOfTheHill.currentValue;
+          final int kingOfTheHillDesiredValue = kingOfTheHill.currentValue;
+
+          final int kingDifference =
+              kingOfTheHillDesiredValue - kingOfTheHillCurrentValue;
+
+          return kingDifference > difference ? element : kingOfTheHill;
+        },
+      );
+
   @override
   Widget build(BuildContext context) {
-    final Badge? almostThere = context
-        .watch<BadgeCurrentValues>()
-        .getAllSortedBadges()
-        .firstWhere(
-          (element) =>
-              element.currentValue < element.value && element.currentValue != 0,
-        );
+    final List<Badge> allSortedBadges =
+        context.watch<BadgeCurrentValues>().getAllSortedBadges();
 
-    if (almostThere == null) {
+    if (allSortedBadges.isEmpty) {
       return Container();
     }
+
+    final List<Badge> filteredBadges = allSortedBadges
+        .where(
+          (element) =>
+              element.currentValue < element.value && element.currentValue != 0,
+        )
+        .toList();
+
+    if (filteredBadges.isEmpty) {
+      return Container();
+    }
+
+    final almostThere = getClosestToAchievingBadge(filteredBadges);
 
     final int limitedCurrentValue = almostThere.currentValue > almostThere.value
         ? almostThere.value

@@ -6,23 +6,24 @@ import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
 import 'package:global_strongman/widget_tree/activity_screen/model/activity_interface.dart';
 import 'package:global_strongman/widget_tree/activity_screen/model/event.dart';
-import 'package:global_strongman/widget_tree/activity_screen/view/activity_calendar/workout_list_by_day.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class ActivityCalendar extends StatefulWidget {
   const ActivityCalendar({
+    required this.selectedDay,
     required this.activityInterface,
+    required this.setActivityScreenState,
     Key? key,
   }) : super(key: key);
   final ActivityInterface activityInterface;
-
+  final void Function(DateTime pickedDate) setActivityScreenState;
+  final DateTime selectedDay;
   @override
   State<ActivityCalendar> createState() => _ActivityCalendarState();
 }
 
 class _ActivityCalendarState extends State<ActivityCalendar> {
   CalendarFormat format = CalendarFormat.twoWeeks;
-  DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   Map<DateTime, List<Event>> selectedEvents = {};
   late List<FirebaseUserWorkoutComplete> workoutsGroupedByDate;
@@ -78,13 +79,15 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
           onFormatChanged: (_format) => setState(() {
             format = _format;
           }),
-          selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-          onDaySelected: (selectedDay, focusedDay) => setState(
-            () {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-            },
-          ),
+          selectedDayPredicate: (day) => isSameDay(widget.selectedDay, day),
+          onDaySelected: (pickedDay, focusedDay) {
+            widget.setActivityScreenState(pickedDay);
+            setState(
+              () {
+                _focusedDay = focusedDay;
+              },
+            );
+          },
           calendarStyle: CalendarStyle(
             isTodayHighlighted: true,
             markersMaxCount: 1,
@@ -128,7 +131,6 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
         const SizedBox(
           height: kSpacing * 2,
         ),
-        //   WorkoutListByDay(selectedDate: _selectedDay),
       ],
     );
   }
