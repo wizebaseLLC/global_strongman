@@ -18,22 +18,33 @@ class WorkoutListByDay extends StatelessWidget {
   String? get _user => FirebaseAuth.instance.currentUser?.email;
 
   Query<FirebaseUserWorkoutComplete>? _getFilteredWorkouts() {
+    final DateTime startOfSelectedDay = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+    );
+
     if (_user != null) {
       return FirebaseUserWorkoutComplete()
           .getCollectionReference(user: _user!)
           .where(
             "created_on",
-            isGreaterThanOrEqualTo: normalizeDate(selectedDate),
+            isGreaterThanOrEqualTo: startOfSelectedDay,
           )
           .where(
             "created_on",
-            isLessThanOrEqualTo: normalizeDate(
-              selectedDate.add(
-                const Duration(days: 1),
-              ),
+            isLessThanOrEqualTo: DateTime(
+              selectedDate.year,
+              selectedDate.month,
+              selectedDate.day,
+            ).add(
+              const Duration(days: 1),
             ),
           )
-          .orderBy("created_on", descending: true);
+          .orderBy(
+            "created_on",
+            descending: true,
+          );
     }
   }
 
