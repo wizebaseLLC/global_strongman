@@ -35,14 +35,15 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
   void initState() {
     workoutsGroupedByDate = widget.activityInterface.completedWorkouts
         .map((workout) => FirebaseUserWorkoutComplete(
-              categories: workout.categories,
-              created_on: normalizeDate(workout.created_on!),
-              program_id: workout.program_id,
-              seconds: workout.seconds,
-              working_weight_kgs: workout.working_weight_kgs,
-              working_weight_lbs: workout.working_weight_lbs,
-              workout_id: workout.workout_id,
-            ))
+            categories: workout.categories,
+            created_on: normalizeDate(workout.created_on!),
+            program_id: workout.program_id,
+            seconds: workout.seconds,
+            working_weight_kgs: workout.working_weight_kgs,
+            working_weight_lbs: workout.working_weight_lbs,
+            workout_id: workout.workout_id,
+            name: workout.name,
+            thumbnail: workout.thumbnail))
         .toList();
 
     for (var element in workoutsGroupedByDate) {

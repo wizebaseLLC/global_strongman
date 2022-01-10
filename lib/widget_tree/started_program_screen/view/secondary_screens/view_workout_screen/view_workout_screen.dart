@@ -123,6 +123,8 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
         day: widget.programDay.id,
         notes: _notesController.text,
         weight_used_string: previousWeight.replaceAll(",  current: ", ""),
+        name: widget.workout.name,
+        thumbnail: widget.workout.thumbnail,
       ).addCompletedWorkout(
         user: _user,
       );

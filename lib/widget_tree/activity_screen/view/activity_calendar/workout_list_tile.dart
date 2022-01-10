@@ -14,6 +14,9 @@ import 'package:global_strongman/core/model/firebase_user_workout_complete.dart'
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+const String defaultThumbanil =
+    "https://firebasestorage.googleapis.com/v0/b/global-strongman.appspot.com/o/Programs%2Fthumbnails%2FB707D09F-03F3-44A2-959F-2F724AA18FF4.jpeg?alt=media&token=510d1716-a083-4ee5-93fc-9b9719f80fa6";
+
 class WorkoutListTile extends StatelessWidget {
   const WorkoutListTile({
     required this.program,
@@ -35,19 +38,6 @@ class WorkoutListTile extends StatelessWidget {
   String? get _notes => completedWorkout.notes;
   String? get _previousWeight => completedWorkout.weight_used_string;
   String? get _user => FirebaseAuth.instance.currentUser!.email;
-  Future<DocumentSnapshot<FirebaseProgramWorkouts>?> _getWorkoutData() async {
-    try {
-      return FirebaseProgramWorkouts()
-          .getDocumentReference(
-            program: program,
-            day: day,
-            doc: doc,
-          )
-          .get();
-    } catch (e) {
-      Future.error(e);
-    }
-  }
 
   Future<void> _deleteWorkout(BuildContext context) async {
     if (_user != null) {
@@ -104,135 +94,115 @@ class WorkoutListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot<FirebaseProgramWorkouts>?>(
-      future: _getWorkoutData(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final FirebaseProgramWorkouts? snapshotData = snapshot.data?.data();
-
-          if (snapshotData != null) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: kSpacing),
-              child: Dismissible(
-                background: Container(
-                  color: Colors.red,
-                  child: Icon(
-                    PlatformIcons(context).delete,
-                    color: Colors.white,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: kSpacing),
+      child: Dismissible(
+        background: Container(
+          color: Colors.red,
+          child: Icon(
+            PlatformIcons(context).delete,
+            color: Colors.white,
+          ),
+        ),
+        key: ValueKey<String>(snapshot.id),
+        onDismissed: (_) => _deleteWorkout(context),
+        child: ListTile(
+          dense: true,
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: CachedNetworkImage(
+              imageUrl: completedWorkout.thumbnail ?? defaultThumbanil,
+              fit: BoxFit.cover,
+              memCacheWidth: 270,
+              width: 75,
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+            ),
+          ),
+          title: RichText(
+            text: TextSpan(
+                text: completedWorkout.name ?? "",
+                style: platformThemeData(
+                  context,
+                  material: (data) => data.textTheme.subtitle1?.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  cupertino: (data) => data.textTheme.textStyle.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                key: ValueKey<FirebaseProgramWorkouts>(snapshotData),
-                onDismissed: (_) => _deleteWorkout(context),
-                child: ListTile(
-                  dense: true,
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: CachedNetworkImage(
-                      imageUrl: snapshotData.thumbnail!,
-                      fit: BoxFit.cover,
-                      memCacheWidth: 270,
-                      width: 75,
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                children: [
+                  if (shouldShowDate == true &&
+                      completedWorkout.created_on != null)
+                    TextSpan(
+                      text: "  ${timeago.format(completedWorkout.created_on!)}",
+                      style: platformThemeData(
+                        context,
+                        material: (data) => data.textTheme.bodyText2?.copyWith(
+                          color: Colors.white70,
+                          fontSize: 10,
+                        ),
+                        cupertino: (data) => data.textTheme.textStyle.copyWith(
+                          fontSize: 10,
+                          color: CupertinoColors.systemGrey3,
+                        ),
+                      ),
                     ),
-                  ),
-                  title: RichText(
-                    text: TextSpan(
-                        text: snapshotData.name!,
-                        style: platformThemeData(
-                          context,
-                          material: (data) =>
-                              data.textTheme.subtitle1?.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          cupertino: (data) =>
-                              data.textTheme.textStyle.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        children: [
-                          if (shouldShowDate == true &&
-                              completedWorkout.created_on != null)
-                            TextSpan(
-                              text:
-                                  "  ${timeago.format(completedWorkout.created_on!)}",
-                              style: platformThemeData(
-                                context,
-                                material: (data) =>
-                                    data.textTheme.bodyText2?.copyWith(
-                                  color: Colors.white70,
-                                  fontSize: 10,
-                                ),
-                                cupertino: (data) =>
-                                    data.textTheme.textStyle.copyWith(
-                                  fontSize: 10,
-                                  color: CupertinoColors.systemGrey3,
-                                ),
-                              ),
+                ]),
+          ),
+          subtitle: (_previousWeight == null && _notes == null)
+              ? null
+              : Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_previousWeight != null)
+                        Text(
+                          _previousWeight!,
+                          style: platformThemeData(
+                            context,
+                            material: (data) =>
+                                data.textTheme.bodyText2?.copyWith(
+                              color: Colors.white70,
+                              fontSize: 12,
                             ),
-                        ]),
-                  ),
-                  subtitle: (_previousWeight == null && _notes == null)
-                      ? null
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (_previousWeight != null)
-                                Text(
-                                  _previousWeight!,
-                                  style: platformThemeData(
-                                    context,
-                                    material: (data) =>
-                                        data.textTheme.bodyText2?.copyWith(
-                                      color: Colors.white70,
-                                      fontSize: 12,
-                                    ),
-                                    cupertino: (data) =>
-                                        data.textTheme.textStyle.copyWith(
-                                      fontSize: 12,
-                                      color: CupertinoColors.systemGrey3,
-                                    ),
-                                  ),
-                                ),
-                              if (_notes != null &&
-                                  _notes!.isNotEmpty &&
-                                  _previousWeight != null)
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                              if (_notes != null && _notes!.isNotEmpty)
-                                Text(
-                                  _notes!,
-                                  style: platformThemeData(
-                                    context,
-                                    material: (data) =>
-                                        data.textTheme.bodyText2?.copyWith(
-                                      color: Colors.white70,
-                                      fontSize: 10,
-                                    ),
-                                    cupertino: (data) =>
-                                        data.textTheme.textStyle.copyWith(
-                                      fontSize: 10,
-                                      color: CupertinoColors.systemGrey3,
-                                    ),
-                                  ),
-                                ),
-                            ],
+                            cupertino: (data) =>
+                                data.textTheme.textStyle.copyWith(
+                              fontSize: 12,
+                              color: CupertinoColors.systemGrey3,
+                            ),
                           ),
                         ),
+                      if (_notes != null &&
+                          _notes!.isNotEmpty &&
+                          _previousWeight != null)
+                        const SizedBox(
+                          height: 4,
+                        ),
+                      if (_notes != null && _notes!.isNotEmpty)
+                        Text(
+                          _notes!,
+                          style: platformThemeData(
+                            context,
+                            material: (data) =>
+                                data.textTheme.bodyText2?.copyWith(
+                              color: Colors.white70,
+                              fontSize: 10,
+                            ),
+                            cupertino: (data) =>
+                                data.textTheme.textStyle.copyWith(
+                              fontSize: 10,
+                              color: CupertinoColors.systemGrey3,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-        }
-        return const Center(
-          child: CircularProgressIndicator.adaptive(),
-        );
-      },
+        ),
+      ),
     );
   }
 }

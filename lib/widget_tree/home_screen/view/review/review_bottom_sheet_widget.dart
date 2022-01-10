@@ -7,6 +7,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_program_reviews.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 
 class ReviewBottomSheetWidget extends StatefulWidget {
   const ReviewBottomSheetWidget({
@@ -45,52 +46,60 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
 
   Future<void> onSubmit() async {
     try {
-      widget.program.reference.collection("reviews").add(
-            FirebaseProgramRating(
-              uid: FirebaseAuth.instance.currentUser!.email,
-              review: _controller.text,
-              rating: _rating,
-              created_on: DateTime.now(),
-            ).toJson(),
-          );
+      final String? email = FirebaseAuth.instance.currentUser!.email;
+      if (email != null) {
+        final DocumentSnapshot<FirebaseUser> userDoc =
+            await FirebaseUser(email: email).getDocumentReference().get();
+        final FirebaseUser? user = userDoc.data();
 
-      final DocumentReference<FirebaseProgram> documentReference =
-          FirebaseProgram().getDocumentReferenceByString(widget.program.id);
+        widget.program.reference.collection("reviews").add(
+              FirebaseProgramRating(
+                uid: email,
+                review: _controller.text,
+                rating: _rating,
+                created_on: DateTime.now(),
+                user: user?.toJson(),
+              ).toJson(),
+            );
 
-      FirebaseFirestore.instance.runTransaction(
-        (transaction) async {
-          try {
-            DocumentSnapshot<FirebaseProgram> snapshot =
-                await transaction.get(documentReference);
+        final DocumentReference<FirebaseProgram> documentReference =
+            FirebaseProgram().getDocumentReferenceByString(widget.program.id);
 
-            if (!snapshot.exists) {
-              return;
+        FirebaseFirestore.instance.runTransaction(
+          (transaction) async {
+            try {
+              DocumentSnapshot<FirebaseProgram> snapshot =
+                  await transaction.get(documentReference);
+
+              if (!snapshot.exists) {
+                return;
+              }
+
+              // Update the count based on the current count
+              // Note: this could be done without a transaction
+              // by updating the population using FieldValue.increment()
+
+              int oldRatingCount = snapshot.data()?.rating_count ?? 0;
+              int newRatingCount = oldRatingCount + 1;
+              num oldAverageRating = snapshot.data()?.average_rating ?? 0;
+
+              // Creating a transaction to increment the count and average of the review.
+              var newRatingAverage = oldRatingCount == 0
+                  ? _rating
+                  : ((oldAverageRating * oldRatingCount) + _rating) /
+                      newRatingCount;
+
+              // Perform an update on the document
+              transaction.update(documentReference, {
+                'rating_count': newRatingCount,
+                'average_rating': newRatingAverage
+              });
+            } catch (e) {
+              print(e);
             }
-
-            // Update the count based on the current count
-            // Note: this could be done without a transaction
-            // by updating the population using FieldValue.increment()
-
-            int oldRatingCount = snapshot.data()?.rating_count ?? 0;
-            int newRatingCount = oldRatingCount + 1;
-            num oldAverageRating = snapshot.data()?.average_rating ?? 0;
-
-            // Creating a transaction to increment the count and average of the review.
-            var newRatingAverage = oldRatingCount == 0
-                ? _rating
-                : ((oldAverageRating * oldRatingCount) + _rating) /
-                    newRatingCount;
-
-            // Perform an update on the document
-            transaction.update(documentReference, {
-              'rating_count': newRatingCount,
-              'average_rating': newRatingAverage
-            });
-          } catch (e) {
-            print(e);
-          }
-        },
-      ).catchError((err) => print(err));
+          },
+        ).catchError((err) => print(err));
+      }
     } catch (err) {
       print(err.toString());
     }

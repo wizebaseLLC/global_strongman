@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/activity_calendar/workout_list_tile.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class WorkoutListByDay extends StatelessWidget {
   const WorkoutListByDay({
@@ -31,16 +30,12 @@ class WorkoutListByDay extends StatelessWidget {
             "created_on",
             isGreaterThanOrEqualTo: startOfSelectedDay,
           )
-          .where(
-            "created_on",
-            isLessThanOrEqualTo: DateTime(
-              selectedDate.year,
-              selectedDate.month,
-              selectedDate.day,
-            ).add(
-              const Duration(days: 1),
-            ),
-          )
+          .where("created_on",
+              isLessThanOrEqualTo: DateTime(
+                selectedDate.year,
+                selectedDate.month,
+                selectedDate.day,
+              ).add(const Duration(days: 1)))
           .orderBy(
             "created_on",
             descending: true,
@@ -65,7 +60,7 @@ class WorkoutListByDay extends StatelessWidget {
             program: snapshotData.program_id!,
             day: snapshotData.day!,
             doc: snapshotData.workout_id!,
-            key: GlobalKey(),
+            key: ValueKey<String>(snapshot.id),
             completedWorkout: snapshotData,
             snapshot: snapshot,
           );

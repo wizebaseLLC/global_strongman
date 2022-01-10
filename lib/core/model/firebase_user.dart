@@ -76,6 +76,7 @@ class FirebaseUser {
     return {
       'age': age,
       'avatar': avatar,
+      'email': email,
       'experience': experience,
       'first_name': first_name,
       'last_name': last_name,

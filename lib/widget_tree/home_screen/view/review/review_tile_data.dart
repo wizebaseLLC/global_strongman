@@ -74,19 +74,21 @@ class ReviewTileData extends StatelessWidget {
           const SizedBox(
             height: kSpacing / 2,
           ),
-          Text(
-            review.review!,
-            style: platformThemeData(
-              context,
-              material: (data) => data.textTheme.bodyText2?.copyWith(
-                fontSize: 12,
+          if (review.review != null && review.review!.isNotEmpty)
+            Text(
+              review.review!,
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.bodyText2?.copyWith(
+                  fontSize: 12,
+                ),
+                cupertino: (data) => data.textTheme.textStyle,
               ),
-              cupertino: (data) => data.textTheme.textStyle,
             ),
-          ),
-          const SizedBox(
-            height: kSpacing / 2,
-          ),
+          if (review.review != null && review.review!.isNotEmpty)
+            const SizedBox(
+              height: kSpacing / 2,
+            ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -205,9 +207,3 @@ class ReviewTileData extends StatelessWidget {
     Navigator.pop(context);
   }
 }
-
-// style: TextStyle(
-// color: Platform.isIOS
-// ? CupertinoColors.systemBlue
-//     : Colors.blueAccent,
-// ),
