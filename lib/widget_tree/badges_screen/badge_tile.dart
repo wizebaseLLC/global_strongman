@@ -40,6 +40,7 @@ class BadgeTile extends StatelessWidget {
           leading: Image.asset(
             image,
             height: 50,
+            cacheHeight: 120,
           ),
           title: Padding(
             padding: const EdgeInsets.symmetric(vertical: kSpacing),

@@ -144,7 +144,7 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: program.data().thumbnail_url!,
                     fit: BoxFit.fill,
-                    memCacheWidth: 909,
+                    memCacheWidth: 780,
                   ),
                 )
               : ClipRRect(
@@ -159,7 +159,7 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
                       child: Ink.image(
                         image: CachedNetworkImageProvider(
                           program.data().thumbnail_url!,
-                          maxWidth: 833,
+                          maxWidth: 780,
                         ),
                         fit: BoxFit.fill,
                       ),

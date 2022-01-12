@@ -50,6 +50,7 @@ class PlatformSliverAppBarWithSearch extends StatelessWidget {
             tag: "search",
             child: Material(
               child: TextField(
+                textCapitalization: TextCapitalization.sentences,
                 focusNode: focusNode,
                 onTap: () => _handlePlatformSearchRoute(context, focusNode),
                 decoration: InputDecoration(

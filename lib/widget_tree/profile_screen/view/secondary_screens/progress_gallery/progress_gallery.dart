@@ -16,6 +16,7 @@ class ProgressGallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: false,
       child: PlatformScaffoldIosSliverTitle(
         title: "My Progress",
         body: GalleryStream(

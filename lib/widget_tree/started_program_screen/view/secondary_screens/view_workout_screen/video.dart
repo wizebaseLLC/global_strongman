@@ -121,7 +121,7 @@ class _WorkoutVideoState extends State<WorkoutVideo> {
                 isMuted
                     ? PlatformIcons(context).volumeMute
                     : PlatformIcons(context).volumeUp,
-                size: 30,
+                size: 24,
                 color: Colors.white,
               ),
             ),

@@ -52,7 +52,6 @@ class WorkoutListByDay extends StatelessWidget {
       return FirestoreListView<FirebaseUserWorkoutComplete>(
         query: filteredWorkouts,
         padding: EdgeInsets.zero,
-        physics: const ScrollPhysics(),
         itemBuilder: (context, snapshot) {
           final FirebaseUserWorkoutComplete snapshotData = snapshot.data();
 

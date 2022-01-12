@@ -75,9 +75,12 @@ class _OnboardFormState extends State<OnboardForm> {
               saving = false;
             });
             Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BottomNavigator()));
+              context,
+              platformPageRoute(
+                context: context,
+                builder: (context) => const BottomNavigator(),
+              ),
+            );
           });
         } else {
           showPlatformDialog(

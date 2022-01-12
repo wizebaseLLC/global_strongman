@@ -251,8 +251,11 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
                     maxLines: 10,
                     keyboardType: TextInputType.multiline,
                     hintText: "What did you like or dislike?",
-                    cupertino: (_, __) => CupertinoTextFieldData(),
+                    cupertino: (_, __) => CupertinoTextFieldData(
+                      textCapitalization: TextCapitalization.sentences,
+                    ),
                     material: (_, __) => MaterialTextFieldData(
+                      textCapitalization: TextCapitalization.sentences,
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.all(kSpacing),
                         border: InputBorder.none,

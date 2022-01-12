@@ -41,7 +41,8 @@ class SignInController {
             if (firebaseUserExists) {
               Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
+                  platformPageRoute(
+                      context: context,
                       builder: (context) => const BottomNavigator()));
             } else {
               Navigator.pushReplacement(
@@ -66,7 +67,8 @@ class SignInController {
             if (firebaseUserExists) {
               Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
+                  platformPageRoute(
+                      context: context,
                       builder: (context) => const BottomNavigator()));
             } else {
               Navigator.pushReplacement(
@@ -91,7 +93,8 @@ class SignInController {
             if (firebaseUserExists) {
               Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
+                  platformPageRoute(
+                      context: context,
                       builder: (context) => const BottomNavigator()));
             } else {
               Navigator.pushReplacement(
@@ -148,6 +151,7 @@ class SignInController {
             const Text("Enter your accounts email address"),
             const SizedBox(height: kSpacing),
             PlatformTextField(
+              textCapitalization: TextCapitalization.sentences,
               keyboardType: TextInputType.emailAddress,
               onChanged: (value) {
                 forgotPasswordEmail = value;
@@ -226,8 +230,13 @@ class SignInController {
       );
 
       if (userCredential.user != null) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const BottomNavigator()));
+        Navigator.pushReplacement(
+          context,
+          platformPageRoute(
+            context: context,
+            builder: (context) => const BottomNavigator(),
+          ),
+        );
 
         if (!userCredential.user!.emailVerified) {
           await userCredential.user?.sendEmailVerification();

@@ -98,23 +98,16 @@ class ProfileHeader extends StatelessWidget {
                               iosTitle: "Profile Image",
                               fullscreenDialog: true,
                               builder: (context) => ProfileImageView(
-                                imageProvider: CachedNetworkImageProvider(
-                                  firebaseUser.avatar!,
-                                ),
+                                url: firebaseUser.avatar!,
                               ),
                             ),
                           ),
                           child: Hero(
                             tag: "profile_gallery_avatar",
-                            child: Image.network(
-                              firebaseUser.avatar!,
-                              cacheHeight: 300,
+                            child: CachedNetworkImage(
+                              imageUrl: firebaseUser.avatar!,
+                              memCacheWidth: 300,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Icon(
-                                PlatformIcons(context).error,
-                                size: 60,
-                                color: Colors.white,
-                              ),
                             ),
                           ),
                         ),

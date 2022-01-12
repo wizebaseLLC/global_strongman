@@ -62,13 +62,15 @@ class _ProgressPhotoScreenState extends State<ProgressPhotoScreen> {
                   padding: EdgeInsets.zero,
                   onPressed: () => Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    platformPageRoute(
+                      context: context,
                       builder: (context) => ProfileImageView(
-                          heroTag: "Progress Photo",
-                          title: "Progress Photo",
-                          imageProvider: FileImage(
-                            widget.file,
-                          )),
+                        heroTag: "Progress Photo",
+                        title: "Progress Photo",
+                        file: widget.file,
+                        usesFileProvider: true,
+                        url: "",
+                      ),
                     ),
                   ),
                   child: Hero(
@@ -109,12 +111,14 @@ class _ProgressPhotoScreenState extends State<ProgressPhotoScreen> {
               });
             },
             material: (_, __) => MaterialTextFieldData(
+              textCapitalization: TextCapitalization.sentences,
               decoration: const InputDecoration(
                 label: Text("Say Something"),
                 border: InputBorder.none,
               ),
             ),
             cupertino: (_, __) => CupertinoTextFieldData(
+              textCapitalization: TextCapitalization.sentences,
               placeholder: "Say Something",
               decoration: BoxDecoration(
                 border: Border.all(width: 0),

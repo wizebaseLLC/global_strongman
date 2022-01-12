@@ -275,6 +275,8 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                                           Expanded(
                                             flex: 3,
                                             child: PlatformTextField(
+                                              textCapitalization:
+                                                  TextCapitalization.sentences,
                                               hintText: measurement ==
                                                       Measurement.seconds
                                                   ? "Seconds"
@@ -284,6 +286,9 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                                                   .numberWithOptions(),
                                               cupertino: (_, __) =>
                                                   CupertinoTextFieldData(
+                                                textCapitalization:
+                                                    TextCapitalization
+                                                        .sentences,
                                                 decoration: const BoxDecoration(
                                                   color: CupertinoColors
                                                       .darkBackgroundGray,
@@ -291,6 +296,9 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                                               ),
                                               material: (_, __) =>
                                                   MaterialTextFieldData(
+                                                textCapitalization:
+                                                    TextCapitalization
+                                                        .sentences,
                                                 decoration:
                                                     const InputDecoration(
                                                   border: OutlineInputBorder(),
@@ -351,6 +359,8 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                                         horizontal: kSpacing,
                                       ),
                                       child: PlatformTextField(
+                                        textCapitalization:
+                                            TextCapitalization.sentences,
                                         hintText:
                                             "What did I learn this session",
                                         minLines: 2,
@@ -359,6 +369,8 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                                         keyboardType: TextInputType.multiline,
                                         cupertino: (_, __) =>
                                             CupertinoTextFieldData(
+                                          textCapitalization:
+                                              TextCapitalization.sentences,
                                           decoration: const BoxDecoration(
                                             color: CupertinoColors
                                                 .darkBackgroundGray,
@@ -366,6 +378,8 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                                         ),
                                         material: (_, __) =>
                                             MaterialTextFieldData(
+                                          textCapitalization:
+                                              TextCapitalization.sentences,
                                           decoration: const InputDecoration(
                                             border: OutlineInputBorder(),
                                           ),

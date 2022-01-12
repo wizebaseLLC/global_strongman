@@ -76,9 +76,7 @@ class GalleryImageCardContainer extends StatelessWidget {
                   builder: (context) => ProfileImageView(
                     heroTag: galleryList[index].imageUrl,
                     title: "Progress Photo",
-                    imageProvider: CachedNetworkImageProvider(
-                      galleryList[index].imageUrl,
-                    ),
+                    url: galleryList[index].imageUrl,
                   ),
                 ),
               );
@@ -91,13 +89,12 @@ class GalleryImageCardContainer extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
+                platformPageRoute(
+                  context: context,
                   builder: (context) => ProfileImageView(
                     heroTag: galleryList[index].imageUrl,
                     title: "Progress Photo",
-                    imageProvider: CachedNetworkImageProvider(
-                      galleryList[index].imageUrl,
-                    ),
+                    url: galleryList[index].imageUrl,
                   ),
                 ),
               );

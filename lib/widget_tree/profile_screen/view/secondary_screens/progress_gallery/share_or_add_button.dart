@@ -91,7 +91,8 @@ class ShareOrAddButton extends StatelessWidget {
       if (image?.path != null) {
         Navigator.push(
           context,
-          MaterialPageRoute(
+          platformPageRoute(
+            context: context,
             builder: (_) => ProgressPhotoScreen(
               file: File(image!.path),
               firebaseUser: firebaseUser,

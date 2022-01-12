@@ -37,12 +37,15 @@ class HeaderImageAndLogo extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: CircleAvatar(
-                backgroundColor: Platform.isIOS ? CupertinoTheme.of(context).scaffoldBackgroundColor : Theme.of(context).scaffoldBackgroundColor,
+                backgroundColor: Platform.isIOS
+                    ? CupertinoTheme.of(context).scaffoldBackgroundColor
+                    : Theme.of(context).scaffoldBackgroundColor,
                 radius: 79.5,
                 child: Hero(
                   tag: "LoginLogo",
                   child: Image.asset(
                     "assets/images/global_strongman_logo.png",
+                    cacheHeight: 477,
                   ),
                 ),
               ),

@@ -30,12 +30,10 @@ class ShadedImage extends StatelessWidget {
       blendMode: BlendMode.dstIn,
       child: Hero(
         tag: heroId,
-        child: Material(
-          child: CachedNetworkImage(
-            imageUrl: program.data().thumbnail_url!,
-            fit: BoxFit.cover,
-            memCacheWidth: 934,
-          ),
+        child: CachedNetworkImage(
+          imageUrl: program.data().thumbnail_url!,
+          fit: BoxFit.cover,
+          memCacheWidth: 934,
         ),
       ),
     );

@@ -83,6 +83,7 @@ class ProgressCard extends StatelessWidget {
             leading: Image.asset(
               almostThere.badgeImage,
               height: 40,
+              cacheHeight: 120,
             ),
             title: Text(
               'Almost there, keep it up!',

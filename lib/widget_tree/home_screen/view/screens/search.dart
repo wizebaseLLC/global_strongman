@@ -50,6 +50,7 @@ class SearchScreen extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: TextField(
+                textCapitalization: TextCapitalization.sentences,
                 autofocus: true,
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(
