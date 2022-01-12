@@ -19,21 +19,24 @@ class FilteredWorkoutScreen extends StatelessWidget {
     return PlatformScaffoldIosSliverTitle(
       title: title,
       trailingActions: const [],
-      body: FirestoreListView<FirebaseUserWorkoutComplete>(
-        query: query,
-        padding: EdgeInsets.zero,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, snapshot) {
-          final FirebaseUserWorkoutComplete snapshotData = snapshot.data();
-          return WorkoutListTile(
-            program: snapshotData.program_id!,
-            day: snapshotData.day!,
-            doc: snapshotData.workout_id!,
-            completedWorkout: snapshotData,
-            snapshot: snapshot,
-            shouldShowDate: true,
-          );
-        },
+      body: SafeArea(
+        top: false,
+        child: FirestoreListView<FirebaseUserWorkoutComplete>(
+          query: query,
+          padding: EdgeInsets.zero,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, snapshot) {
+            final FirebaseUserWorkoutComplete snapshotData = snapshot.data();
+            return WorkoutListTile(
+              program: snapshotData.program_id!,
+              day: snapshotData.day!,
+              doc: snapshotData.workout_id!,
+              completedWorkout: snapshotData,
+              snapshot: snapshot,
+              shouldShowDate: true,
+            );
+          },
+        ),
       ),
     );
   }

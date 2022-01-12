@@ -119,4 +119,14 @@ class FirebaseProgramWorkouts {
           toFirestore: (data, _) => data.toJson(),
         );
   }
+
+  /// To create workouts in a catalog.  Should not be used in production
+  Future<void> createCatalogWorkout({required String docName}) async {
+    if (name != null) {
+      FirebaseFirestore.instance
+          .collection("workout_catalog")
+          .doc(docName)
+          .set(toJson());
+    }
+  }
 }

@@ -83,6 +83,9 @@ Widget _buildMaterialBottomSheet(
         leading: const Icon(Icons.stop_rounded),
         title: const Text(
           'Cancel',
+          style: TextStyle(
+            color: Colors.orangeAccent,
+          ),
         ),
         onTap: () {
           Navigator.pop(context);

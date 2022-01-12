@@ -192,6 +192,15 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
           "${_user}_${widget.program_id}_${widget.workout_id}_notes");
     });
 
+    // To create a workout catalog quick.  Just view this workout and it'll generate one.
+    // FirebaseProgramWorkouts()
+    //     .getDocumentReference(
+    //         program: widget.program_id,
+    //         day: widget.programDay.id,
+    //         doc: widget.workout_id)
+    //     .get()
+    //     .then((value) =>
+    //         value.data()?.createCatalogWorkout(docName: widget.workout_id));
     super.initState();
   }
 
