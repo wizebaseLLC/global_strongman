@@ -143,7 +143,7 @@ class GalleryImageCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         color: platformThemeData(
           context,
-          material: (data) => data.backgroundColor,
+          material: (data) => data.cardColor,
           cupertino: (data) => data.barBackgroundColor,
         ),
         child: Container(
