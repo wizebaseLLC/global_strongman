@@ -105,6 +105,9 @@ Widget _buildCupertinoActionSheet(
       // isDestructiveAction: true,
       child: const Text(
         'Cancel',
+        style: TextStyle(
+          color: CupertinoColors.systemOrange,
+        ),
       ),
       onPressed: () {
         Navigator.pop(context);

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -40,9 +41,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _buildAppBarTextButton(BuildContext context) {
     return PlatformTextButton(
-      child: const Text(
+      child: Text(
         "Save",
-        style: TextStyle(color: Colors.lightBlueAccent),
+        style: TextStyle(
+          color: Platform.isIOS ? CupertinoColors.activeBlue : Colors.blue,
+        ),
       ),
       onPressed: () => saving ? null : onDone(context, _formKey),
       cupertino: (_, __) => CupertinoTextButtonData(

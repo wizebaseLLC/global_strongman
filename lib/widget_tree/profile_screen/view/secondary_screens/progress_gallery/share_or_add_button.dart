@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/core/controller/showPlatformActionSheet.dart';
@@ -50,7 +51,11 @@ class ShareOrAddButton extends StatelessWidget {
               model: [
                 ActionSheetModel(
                   title: "Library",
-                  textStyle: const TextStyle(color: Colors.lightBlueAccent),
+                  textStyle: TextStyle(
+                    color: Platform.isIOS
+                        ? CupertinoColors.activeBlue
+                        : Colors.blue,
+                  ),
                   onTap: () => _uploadImage(
                     imageSource: ImageSource.gallery,
                     context: context,
@@ -61,7 +66,11 @@ class ShareOrAddButton extends StatelessWidget {
                 ),
                 ActionSheetModel(
                   title: "Camera",
-                  textStyle: const TextStyle(color: Colors.lightBlueAccent),
+                  textStyle: TextStyle(
+                    color: Platform.isIOS
+                        ? CupertinoColors.activeBlue
+                        : Colors.blue,
+                  ),
                   onTap: () => _uploadImage(
                     imageSource: ImageSource.camera,
                     context: context,

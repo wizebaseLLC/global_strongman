@@ -48,7 +48,9 @@ class ProfileHeader extends StatelessWidget {
         model: [
           ActionSheetModel(
             title: "Library",
-            textStyle: const TextStyle(color: Colors.lightBlueAccent),
+            textStyle: TextStyle(
+              color: Platform.isIOS ? CupertinoColors.activeBlue : Colors.blue,
+            ),
             onTap: () => _uploadImage(
               context: context,
               imageSource: ImageSource.gallery,
@@ -59,7 +61,9 @@ class ProfileHeader extends StatelessWidget {
           ),
           ActionSheetModel(
             title: "Camera",
-            textStyle: const TextStyle(color: Colors.lightBlueAccent),
+            textStyle: TextStyle(
+              color: Platform.isIOS ? CupertinoColors.activeBlue : Colors.blue,
+            ),
             onTap: () => _uploadImage(
               imageSource: ImageSource.camera,
               context: context,
