@@ -1,8 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/core/providers/activity_interace_provider.dart';
 import 'package:global_strongman/core/providers/badge_current_values.dart';
@@ -73,13 +75,23 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           //   icon: Icon(PlatformIcons(context).playCircle),
           //   label: "Watch",
           // ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(PlatformIcons(context).addCircled),
-          //   label: "Add",
-          // ),
+
           const BottomNavigationBarItem(
             icon: FaIcon(FontAwesomeIcons.chartLine),
             label: "Activity",
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(
+              "assets/images/muscle.svg",
+              color: Platform.isIOS
+                  ? _selectedTabIndex == 2
+                      ? CupertinoColors.activeBlue
+                      : CupertinoColors.systemGrey
+                  : _selectedTabIndex == 2
+                      ? Colors.blue
+                      : Colors.grey.withOpacity(.2),
+            ),
+            label: "Workouts",
           ),
           BottomNavigationBarItem(
             icon: Icon(PlatformIcons(context).person),
