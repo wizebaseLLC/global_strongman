@@ -164,7 +164,7 @@ class _SignupPageState extends State<SignupPage> {
         left: kSpacing * 2,
         right: kSpacing * 2,
       ),
-      child: PlatformButton(
+      child: PlatformElevatedButton(
         onPressed: () => _handleSignupFromEmail(context),
         child: PlatformText(
           'Sign Up',
@@ -172,16 +172,14 @@ class _SignupPageState extends State<SignupPage> {
             color: Colors.white,
           ),
         ),
-        material: (_, __) => MaterialRaisedButtonData(
-            textColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            )),
-        cupertino: (_, __) => CupertinoButtonData(),
-        color: platformThemeData(
-          context,
-          material: (data) => data.primaryColor,
-          cupertino: (data) => data.primaryColor,
+        material: (_, __) => MaterialElevatedButtonData(
+          style: ElevatedButton.styleFrom(
+            primary: kPrimaryColor,
+          ),
+        ),
+        cupertino: (_, __) => CupertinoElevatedButtonData(
+          color: kPrimaryColor,
+          originalStyle: true,
         ),
       ),
     );

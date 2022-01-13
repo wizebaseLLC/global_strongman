@@ -33,6 +33,7 @@ class WorkoutSetCountAvatar extends StatelessWidget {
           title: title,
           query: _getWorkouts(),
           key: GlobalKey(),
+          previousPageTitle: "Activity",
         ),
       ),
     );

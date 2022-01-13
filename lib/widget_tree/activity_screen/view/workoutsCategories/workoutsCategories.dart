@@ -48,7 +48,7 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
         builder: (_) => FilteredWorkoutScreen(
           title: title,
           query: _getFilteredWorkouts(category),
-          key: GlobalKey(),
+          previousPageTitle: "Activity",
         ),
       ),
     );

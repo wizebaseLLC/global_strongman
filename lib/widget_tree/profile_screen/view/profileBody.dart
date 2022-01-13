@@ -269,16 +269,6 @@ class ProfileBody extends StatelessWidget {
   }
 
   Row _buildProfileBadgeRow(BuildContext context) {
-    final ActivityInterfaceProvider activityInterfaceProvider =
-        context.watch<ActivityInterfaceProvider>();
-
-    final ActivityInterface activityInterface = ActivityInterface(
-      totalWorkouts: activityInterfaceProvider.totalWorkouts,
-      activeDays: activityInterfaceProvider.activeDays,
-      programsComplete: activityInterfaceProvider.programsComplete,
-      trophiesEarned: activityInterfaceProvider.trophiesEarned,
-      completedWorkouts: activityInterfaceProvider.completedWorkouts,
-    );
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -308,7 +298,7 @@ class ProfileBody extends StatelessWidget {
                 builder: (_) => FilteredWorkoutScreen(
                   title: "My Workouts",
                   query: _getWorkouts(),
-                  key: GlobalKey(),
+                  previousPageTitle: "My Profile",
                 ),
               ),
             );
@@ -333,6 +323,7 @@ class ProfileBody extends StatelessWidget {
                 context: context,
                 builder: (_) => const BadgesScreen(
                   heroId: 'profile_trophy',
+                  previousPageTitle: "My Profile",
                 ),
               ),
             );

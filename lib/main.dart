@@ -54,7 +54,8 @@ class MyApp extends StatelessWidget {
         ),
         cupertino: (_, __) => CupertinoAppData(
           theme: const CupertinoThemeData(
-            primaryColor: kPrimaryColor,
+            // This primary color is far too dark.
+            // primaryColor: kPrimaryColor,
             brightness: Brightness.dark,
           ),
         ),

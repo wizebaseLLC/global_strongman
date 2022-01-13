@@ -70,6 +70,7 @@ class _FormAvatarState extends State<FormAvatar> {
 
   Widget _buildCircleAvatar(BuildContext context) {
     return CircleAvatar(
+      backgroundColor: kPrimaryColor,
       child: file?.path == null
           ? Icon(
               PlatformIcons(context).person,

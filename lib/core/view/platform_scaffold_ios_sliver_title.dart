@@ -9,11 +9,13 @@ class PlatformScaffoldIosSliverTitle extends StatelessWidget {
     required this.title,
     required this.trailingActions,
     required this.body,
+    this.previousPageTitle,
   }) : super(key: key);
 
   final String title;
   final List<Widget> trailingActions;
   final Widget body;
+  final String? previousPageTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class PlatformScaffoldIosSliverTitle extends StatelessWidget {
               largeTitle: Text(
                 title,
               ),
+              previousPageTitle: previousPageTitle,
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: trailingActions,

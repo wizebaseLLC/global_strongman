@@ -55,6 +55,7 @@ class WorkoutSetsCard extends StatelessWidget {
                         platformPageRoute(
                           context: context,
                           builder: (_) => const BadgesScreen(
+                            previousPageTitle: "Activity",
                             heroId: 'activity_trophy',
                           ),
                         ),
@@ -81,7 +82,9 @@ class WorkoutSetsCard extends StatelessWidget {
                         context,
                         platformPageRoute(
                           context: context,
-                          builder: (_) => const ProgramsCompletedScreen(),
+                          builder: (_) => const ProgramsCompletedScreen(
+                            previousPageTitle: "Activity",
+                          ),
                         ),
                       );
                     },

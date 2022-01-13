@@ -132,7 +132,7 @@ class WorkoutListTimelineTile extends StatelessWidget {
             ),
           ),
           startChild: Padding(
-            padding: const EdgeInsets.only(left: kSpacing),
+            padding: const EdgeInsets.only(left: kSpacing * 2),
             child: Text(
               dateFormat.format(completedWorkout.created_on!),
               style: platformThemeData(

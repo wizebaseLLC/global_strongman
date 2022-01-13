@@ -19,6 +19,7 @@ class ProgressGallery extends StatelessWidget {
       top: false,
       child: PlatformScaffoldIosSliverTitle(
         title: "My Progress",
+        previousPageTitle: "My Profile",
         body: GalleryStream(
           firebaseUser: firebaseUser,
         ),

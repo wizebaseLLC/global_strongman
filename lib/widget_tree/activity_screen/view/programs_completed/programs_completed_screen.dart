@@ -8,8 +8,11 @@ import 'package:global_strongman/widget_tree/home_screen/view/exclusive_workout_
 
 class ProgramsCompletedScreen extends StatelessWidget {
   const ProgramsCompletedScreen({
+    required this.previousPageTitle,
     Key? key,
   }) : super(key: key);
+
+  final String previousPageTitle;
 
   Future<QuerySnapshot<FirebaseProgram>> _getPrograms() => FirebaseProgram()
       .getCollectionReference()
@@ -40,6 +43,7 @@ class ProgramsCompletedScreen extends StatelessWidget {
 
             return PlatformScaffoldIosSliverTitle(
               title: "Completed Programs",
+              previousPageTitle: previousPageTitle,
               trailingActions: const [],
               body: ExclusiveWorkoutPrograms(
                 docs: programSnapshot.data!.docs

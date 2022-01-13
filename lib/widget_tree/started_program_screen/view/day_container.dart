@@ -34,72 +34,73 @@ class DayContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<QuerySnapshot<FirebaseProgramWorkouts>?>(
-        future: _getProgramData(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final orderedDocs = snapshot.data!.docs;
+      future: _getProgramData(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final orderedDocs = snapshot.data!.docs;
 
-            orderedDocs
-                .sort((a, b) => a.data().order!.compareTo(b.data().order!));
+          orderedDocs
+              .sort((a, b) => a.data().order!.compareTo(b.data().order!));
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: kSpacing),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(kSpacing),
-                child: ExpansionTile(
-                  backgroundColor: platformThemeData(
-                    context,
-                    material: (data) => data.cardColor,
-                    cupertino: (data) => data.barBackgroundColor,
-                  ),
-                  collapsedBackgroundColor: platformThemeData(
-                    context,
-                    material: (data) => data.cardColor,
-                    cupertino: (data) => data.barBackgroundColor,
-                  ),
-                  iconColor: Colors.white60,
-                  collapsedIconColor: Colors.white60,
-                  title: Text(
-                    programDay.id.toUpperCase().replaceAll("_", " "),
-                    style: platformThemeData(
-                      context,
-                      material: (data) => data.textTheme.subtitle1?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      cupertino: (data) => data.textTheme.navTitleTextStyle,
-                    ),
-                  ),
-                  subtitle: Text(
-                    "${snapshot.data?.docs.length} workouts",
-                    style: platformThemeData(
-                      context,
-                      material: (data) => data.textTheme.bodyText1?.copyWith(
-                        color: Colors.white70,
-                      ),
-                      cupertino: (data) => data.textTheme.textStyle.copyWith(
-                        fontSize: 14,
-                        color: CupertinoColors.systemGrey3,
-                      ),
-                    ),
-                  ),
-                  children: orderedDocs
-                      .map(
-                        (data) => ExpandedWorkoutList(
-                          workoutTile: data.data(),
-                          program_id: program.id,
-                          workout_id: data.id,
-                          programDay: programDay,
-                        ),
-                      )
-                      .toList(),
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: kSpacing),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(kSpacing),
+              child: ExpansionTile(
+                backgroundColor: platformThemeData(
+                  context,
+                  material: (data) => data.cardColor,
+                  cupertino: (data) => data.barBackgroundColor,
                 ),
+                collapsedBackgroundColor: platformThemeData(
+                  context,
+                  material: (data) => data.cardColor,
+                  cupertino: (data) => data.barBackgroundColor,
+                ),
+                iconColor: Colors.white60,
+                collapsedIconColor: Colors.white60,
+                title: Text(
+                  programDay.id.toUpperCase().replaceAll("_", " "),
+                  style: platformThemeData(
+                    context,
+                    material: (data) => data.textTheme.subtitle1?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    cupertino: (data) => data.textTheme.navTitleTextStyle,
+                  ),
+                ),
+                subtitle: Text(
+                  "${snapshot.data?.docs.length} workouts",
+                  style: platformThemeData(
+                    context,
+                    material: (data) => data.textTheme.bodyText1?.copyWith(
+                      color: Colors.white70,
+                    ),
+                    cupertino: (data) => data.textTheme.textStyle.copyWith(
+                      fontSize: 14,
+                      color: CupertinoColors.systemGrey3,
+                    ),
+                  ),
+                ),
+                children: orderedDocs
+                    .map(
+                      (data) => ExpandedWorkoutList(
+                        workoutTile: data.data(),
+                        program_id: program.id,
+                        workout_id: data.id,
+                        programDay: programDay,
+                      ),
+                    )
+                    .toList(),
               ),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(),
-            );
-          }
-        });
+            ),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator.adaptive(),
+          );
+        }
+      },
+    );
   }
 }

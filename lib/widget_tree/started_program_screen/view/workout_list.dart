@@ -80,13 +80,19 @@ class _WorkoutListDayTilesState extends State<WorkoutListDayTiles> {
               children: [
                 ...programDays,
                 const SizedBox(
-                  height: kSpacing * 6,
+                  height: kSpacing * 2,
                 ),
                 SizedBox(
                   width: double.infinity,
                   child: PlatformElevatedButton(
                     material: (_, __) => MaterialElevatedButtonData(
-                      style: ElevatedButton.styleFrom(primary: kPrimaryColor),
+                      style: ElevatedButton.styleFrom(
+                        primary: kPrimaryColor,
+                      ),
+                    ),
+                    cupertino: (_, __) => CupertinoElevatedButtonData(
+                      color: kPrimaryColor,
+                      originalStyle: true,
                     ),
                     onPressed: () {
                       FirebaseUserStartedProgram().toggleProgramActiveState(
@@ -106,7 +112,10 @@ class _WorkoutListDayTilesState extends State<WorkoutListDayTiles> {
                       ),
                     ),
                   ),
-                )
+                ),
+                const SizedBox(
+                  height: kSpacing * 2,
+                ),
               ],
             );
           } else {

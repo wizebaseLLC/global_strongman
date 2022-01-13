@@ -146,7 +146,12 @@ class _OverviewTabState extends State<OverviewTab> {
               width: double.infinity,
               child: PlatformElevatedButton(
                 material: (_, __) => MaterialElevatedButtonData(
-                    style: ElevatedButton.styleFrom(primary: kPrimaryColor)),
+                  style: ElevatedButton.styleFrom(primary: kPrimaryColor),
+                ),
+                cupertino: (_, __) => CupertinoElevatedButtonData(
+                  color: kPrimaryColor,
+                  originalStyle: true,
+                ),
                 onPressed: () => OverviewTab.handleGetStarted(
                   programId: widget.program.id,
                   userId: FirebaseAuth.instance.currentUser!.email!,

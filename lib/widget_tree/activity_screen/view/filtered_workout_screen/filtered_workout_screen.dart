@@ -9,15 +9,18 @@ class FilteredWorkoutScreen extends StatelessWidget {
   const FilteredWorkoutScreen({
     required this.title,
     required this.query,
+    required this.previousPageTitle,
     Key? key,
   }) : super(key: key);
 
   final Query<FirebaseUserWorkoutComplete> query;
   final String title;
+  final String previousPageTitle;
   @override
   Widget build(BuildContext context) {
     return PlatformScaffoldIosSliverTitle(
       title: title,
+      previousPageTitle: previousPageTitle,
       trailingActions: const [],
       body: SafeArea(
         top: false,

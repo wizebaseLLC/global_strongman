@@ -412,8 +412,14 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                             width: double.infinity,
                             child: PlatformElevatedButton(
                               material: (_, __) => MaterialElevatedButtonData(
-                                  style: ElevatedButton.styleFrom(
-                                      primary: kPrimaryColor)),
+                                style: ElevatedButton.styleFrom(
+                                  primary: kPrimaryColor,
+                                ),
+                              ),
+                              cupertino: (_, __) => CupertinoElevatedButtonData(
+                                color: kPrimaryColor,
+                                originalStyle: true,
+                              ),
                               onPressed: () =>
                                   _handleSubmitWorkoutComplete(context),
                               child: const Text(

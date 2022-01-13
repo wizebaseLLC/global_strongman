@@ -13,7 +13,7 @@ final List<TabBarScreen> screens = [
   //#TODO Add a Watch/Add content screen
   TabBarScreen(
     child: const ActivityScreen(),
-    appBar: buildStandardAppbar(title: "Activity Report"),
+    appBar: buildStandardAppbar(title: "Activity"),
   ),
 
   TabBarScreen(

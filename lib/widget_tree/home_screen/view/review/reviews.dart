@@ -16,7 +16,10 @@ class Reviews extends StatelessWidget {
         .getCollectionReference(
           program: program.id,
         )
-        .orderBy("created_on", descending: true);
+        .orderBy(
+          "created_on",
+          descending: true,
+        );
   }
 
   @override

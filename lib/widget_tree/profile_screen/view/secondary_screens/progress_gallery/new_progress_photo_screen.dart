@@ -48,6 +48,7 @@ class _ProgressPhotoScreenState extends State<ProgressPhotoScreen> {
   Widget build(BuildContext context) {
     return PlatformScaffoldIosSliverTitle(
       title: "Progress Photo",
+      previousPageTitle: "My Progress",
       trailingActions: [
         _buildAppBarTextButton(context),
       ],

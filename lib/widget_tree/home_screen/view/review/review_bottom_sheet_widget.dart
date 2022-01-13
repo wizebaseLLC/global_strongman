@@ -176,7 +176,7 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  _shouldEditReview ? "Create review" : "Edit review",
+                  _shouldEditReview ? "Edit review" : "Create review",
                   style: platformThemeData(
                     context,
                     material: (data) =>

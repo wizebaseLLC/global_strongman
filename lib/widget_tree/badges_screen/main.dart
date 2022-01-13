@@ -11,8 +11,14 @@ import 'package:global_strongman/widget_tree/badges_screen/badge_tile.dart';
 import 'package:provider/provider.dart';
 
 class BadgesScreen extends StatelessWidget {
-  const BadgesScreen({required this.heroId, Key? key}) : super(key: key);
+  const BadgesScreen({
+    required this.heroId,
+    required this.previousPageTitle,
+    Key? key,
+  }) : super(key: key);
+
   final String heroId;
+  final String previousPageTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +27,7 @@ class BadgesScreen extends StatelessWidget {
     return PlatformScaffoldIosSliverTitle(
       title: "Badges",
       trailingActions: const [],
+      previousPageTitle: previousPageTitle,
       body: SingleChildScrollView(
         child: SizedBox(
           width: double.infinity,

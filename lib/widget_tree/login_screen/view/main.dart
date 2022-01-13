@@ -172,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
         left: kSpacing * 2,
         right: kSpacing * 2,
       ),
-      child: PlatformButton(
+      child: PlatformElevatedButton(
         onPressed: () => _handleLoginWithEmail(context),
         child: PlatformText(
           'Sign In',
@@ -180,16 +180,14 @@ class _LoginPageState extends State<LoginPage> {
             color: Colors.white,
           ),
         ),
-        material: (_, __) => MaterialRaisedButtonData(
-            textColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            )),
-        cupertino: (_, __) => CupertinoButtonData(),
-        color: platformThemeData(
-          context,
-          material: (data) => data.primaryColor,
-          cupertino: (data) => data.primaryColor,
+        material: (_, __) => MaterialElevatedButtonData(
+          style: ElevatedButton.styleFrom(
+            primary: kPrimaryColor,
+          ),
+        ),
+        cupertino: (_, __) => CupertinoElevatedButtonData(
+          color: kPrimaryColor,
+          originalStyle: true,
         ),
       ),
     );

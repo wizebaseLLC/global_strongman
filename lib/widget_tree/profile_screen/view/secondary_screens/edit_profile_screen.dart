@@ -32,6 +32,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return PlatformScaffoldIosSliverTitle(
       title: "Edit Profile",
+      previousPageTitle: "My Profile",
       body: _buildBody(context),
       trailingActions: [
         _buildAppBarTextButton(context),
