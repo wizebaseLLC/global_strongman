@@ -44,6 +44,7 @@ dependencies:
   intl: ^0.17.0
   provider: ^6.0.2
   onboarding: ^2.1.0
+  timeline_tile: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -59,7 +60,7 @@ dependency_overrides:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/global_strongman_logo.png"
+  image_path: "assets/images/global_strongman_logo_AppStore.jpeg"
   adaptive_icon_background: "#000000"
 
 flutter:

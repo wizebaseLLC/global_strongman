@@ -79,9 +79,9 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         });
                       },
                     ),
-                    const SizedBox(
-                      height: kSpacing * 3,
-                    ),
+                    // const SizedBox(
+                    //   height: kSpacing * 3,
+                    // ),
                   ],
                 ),
                 SizedBox(
@@ -89,9 +89,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   child: WorkoutListByDay(
                     selectedDate: selectedDay,
                   ),
-                ),
-                const SizedBox(
-                  height: kSpacing * 4,
                 ),
               ],
             ),

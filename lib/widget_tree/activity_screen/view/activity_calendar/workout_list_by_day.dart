@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
-import 'package:global_strongman/widget_tree/activity_screen/view/activity_calendar/workout_list_tile.dart';
+import 'package:global_strongman/widget_tree/activity_screen/view/activity_calendar/workout_list_timeline_tile.dart';
 
 class WorkoutListByDay extends StatelessWidget {
   const WorkoutListByDay({
@@ -49,23 +48,44 @@ class WorkoutListByDay extends StatelessWidget {
         _getFilteredWorkouts();
 
     if (filteredWorkouts != null) {
-      return FirestoreListView<FirebaseUserWorkoutComplete>(
+      return FirestoreQueryBuilder<FirebaseUserWorkoutComplete>(
         query: filteredWorkouts,
-        padding: EdgeInsets.zero,
-        itemBuilder: (context, snapshot) {
-          final FirebaseUserWorkoutComplete snapshotData = snapshot.data();
+        builder: (context, snapshot, _) {
+          final List<QueryDocumentSnapshot<FirebaseUserWorkoutComplete>> docs =
+              snapshot.docs;
 
-          return WorkoutListTile(
-            program: snapshotData.program_id!,
-            day: snapshotData.day!,
-            doc: snapshotData.workout_id!,
-            key: ValueKey<String>(snapshot.id),
-            completedWorkout: snapshotData,
-            snapshot: snapshot,
+          return ListView.builder(
+            itemCount: docs.length,
+            padding: EdgeInsets.zero,
+            itemBuilder: (context, index) {
+              final FirebaseUserWorkoutComplete snapshotData =
+                  docs[index].data();
+
+              if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+                // Tell FirestoreQueryBuilder to try to obtain more items.
+                // It is safe to call this function from within the build method.
+                snapshot.fetchMore();
+              }
+
+              if (snapshot.hasData) {
+                return WorkoutListTimelineTile(
+                  program: snapshotData.program_id!,
+                  day: snapshotData.day!,
+                  doc: snapshotData.workout_id!,
+                  key: ValueKey<String>(docs[index].id),
+                  completedWorkout: snapshotData,
+                  snapshot: docs[index],
+                  isFirst: index == 0,
+                  isLast: docs.length == index + 1,
+                );
+              }
+
+              return const CircularProgressIndicator.adaptive();
+            },
           );
         },
       );
     }
-    return Container();
+    return const CircularProgressIndicator.adaptive();
   }
 }

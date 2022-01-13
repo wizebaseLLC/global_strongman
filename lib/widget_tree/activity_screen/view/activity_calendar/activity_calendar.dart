@@ -68,71 +68,63 @@ class _ActivityCalendarState extends State<ActivityCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TableCalendar(
-          availableGestures: AvailableGestures.horizontalSwipe,
-          firstDay: DateTime.utc(2022),
-          lastDay: DateTime.now(),
-          focusedDay: _focusedDay,
-          eventLoader: _getEventsFromDay,
-          calendarFormat: format,
-          onFormatChanged: (_format) => setState(() {
-            format = _format;
-          }),
-          selectedDayPredicate: (day) => isSameDay(widget.selectedDay, day),
-          onDaySelected: (pickedDay, focusedDay) {
-            widget.setActivityScreenState(pickedDay);
-            setState(
-              () {
-                _focusedDay = focusedDay;
-              },
-            );
+    return TableCalendar(
+      availableGestures: AvailableGestures.horizontalSwipe,
+      firstDay: DateTime.utc(2022),
+      lastDay: DateTime.now(),
+      focusedDay: _focusedDay,
+      eventLoader: _getEventsFromDay,
+      calendarFormat: format,
+      onFormatChanged: (_format) => setState(() {
+        format = _format;
+      }),
+      selectedDayPredicate: (day) => isSameDay(widget.selectedDay, day),
+      onDaySelected: (pickedDay, focusedDay) {
+        widget.setActivityScreenState(pickedDay);
+        setState(
+          () {
+            _focusedDay = focusedDay;
           },
-          calendarStyle: CalendarStyle(
-            isTodayHighlighted: true,
-            markersMaxCount: 1,
-            markerDecoration: const BoxDecoration(
-              color: Color(0XFFFE7762),
-              shape: BoxShape.circle,
-            ),
-            defaultTextStyle: const TextStyle(
-              color: Colors.white,
-            ),
-            weekendTextStyle: const TextStyle(color: Colors.white),
-            outsideTextStyle: const TextStyle(color: Colors.white),
-            disabledTextStyle: TextStyle(
-              color:
-                  Platform.isIOS ? CupertinoColors.systemGrey : Colors.white30,
-            ),
-            selectedDecoration: const BoxDecoration(
-              color: kPrimaryColor,
-              shape: BoxShape.circle,
-            ),
-            todayDecoration: const BoxDecoration(
-              color: kSecondaryColor,
-              shape: BoxShape.circle,
-            ),
+        );
+      },
+      calendarStyle: CalendarStyle(
+        isTodayHighlighted: true,
+        markersMaxCount: 1,
+        markerDecoration: const BoxDecoration(
+          color: Color(0XFFFE7762),
+          shape: BoxShape.circle,
+        ),
+        defaultTextStyle: const TextStyle(
+          color: Colors.white,
+        ),
+        weekendTextStyle: const TextStyle(color: Colors.white),
+        outsideTextStyle: const TextStyle(color: Colors.white),
+        disabledTextStyle: TextStyle(
+          color: Platform.isIOS ? CupertinoColors.systemGrey : Colors.white30,
+        ),
+        selectedDecoration: const BoxDecoration(
+          color: kPrimaryColor,
+          shape: BoxShape.circle,
+        ),
+        todayDecoration: const BoxDecoration(
+          color: kSecondaryColor,
+          shape: BoxShape.circle,
+        ),
+      ),
+      headerStyle: HeaderStyle(
+        titleTextStyle: const TextStyle(color: Colors.white),
+        formatButtonTextStyle: const TextStyle(color: Colors.white60),
+        formatButtonDecoration: BoxDecoration(
+          border: Border.all(
+            color: kPrimaryColor,
           ),
-          headerStyle: HeaderStyle(
-            titleTextStyle: const TextStyle(color: Colors.white),
-            formatButtonTextStyle: const TextStyle(color: Colors.white60),
-            formatButtonDecoration: BoxDecoration(
-              border: Border.all(
-                color: kPrimaryColor,
-              ),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(12.0),
-              ),
-            ),
-            formatButtonShowsNext: false,
-            titleCentered: true,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(12.0),
           ),
         ),
-        const SizedBox(
-          height: kSpacing * 2,
-        ),
-      ],
+        formatButtonShowsNext: false,
+        titleCentered: true,
+      ),
     );
   }
 }
