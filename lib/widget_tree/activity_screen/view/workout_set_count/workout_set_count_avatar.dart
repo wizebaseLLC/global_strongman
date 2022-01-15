@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
@@ -13,16 +14,16 @@ class WorkoutSetCountAvatar extends StatelessWidget {
   }) : super(key: key);
 
   final ActivityInterface activityInterface;
-  String? get _user => FirebaseAuth.instance.currentUser?.email;
 
-  Query<FirebaseUserWorkoutComplete> _getWorkouts() {
+  Query<FirebaseUserWorkoutComplete> _getWorkouts(String? _user) {
     return FirebaseUserWorkoutComplete()
-        .getCollectionReference(user: _user!)
+        .getCollectionReference(user: _user)
         .orderBy("created_on", descending: true);
   }
 
   void _onCategoryPress({
     required String title,
+    required String? user,
     required BuildContext context,
   }) {
     Navigator.push(
@@ -31,7 +32,7 @@ class WorkoutSetCountAvatar extends StatelessWidget {
         context: context,
         builder: (_) => FilteredWorkoutScreen(
           title: title,
-          query: _getWorkouts(),
+          query: _getWorkouts(user),
           key: GlobalKey(),
           previousPageTitle: "Activity",
         ),
@@ -41,9 +42,11 @@ class WorkoutSetCountAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     return PlatformTextButton(
       onPressed: () => _onCategoryPress(
         title: "My Workouts",
+        user: _user.authUser?.email,
         context: context,
       ),
       child: CircleAvatar(

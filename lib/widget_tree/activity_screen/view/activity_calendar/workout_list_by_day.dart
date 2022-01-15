@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/activity_calendar/workout_list_timeline_tile.dart';
+import 'package:provider/provider.dart';
 
 class WorkoutListByDay extends StatelessWidget {
   const WorkoutListByDay({
@@ -13,9 +14,7 @@ class WorkoutListByDay extends StatelessWidget {
 
   final DateTime selectedDate;
 
-  String? get _user => FirebaseAuth.instance.currentUser?.email;
-
-  Query<FirebaseUserWorkoutComplete>? _getFilteredWorkouts() {
+  Query<FirebaseUserWorkoutComplete>? _getFilteredWorkouts(String? _user) {
     final DateTime startOfSelectedDay = DateTime(
       selectedDate.year,
       selectedDate.month,
@@ -24,7 +23,7 @@ class WorkoutListByDay extends StatelessWidget {
 
     if (_user != null) {
       return FirebaseUserWorkoutComplete()
-          .getCollectionReference(user: _user!)
+          .getCollectionReference(user: _user)
           .where(
             "created_on",
             isGreaterThanOrEqualTo: startOfSelectedDay,
@@ -44,8 +43,9 @@ class WorkoutListByDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     final Query<FirebaseUserWorkoutComplete>? filteredWorkouts =
-        _getFilteredWorkouts();
+        _getFilteredWorkouts(_user.authUser?.email);
 
     if (filteredWorkouts != null) {
       return FirestoreQueryBuilder<FirebaseUserWorkoutComplete>(

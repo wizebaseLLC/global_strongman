@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,7 @@ import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/controller/badges_controller.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -36,24 +37,23 @@ class WorkoutListTile extends StatelessWidget {
 
   String? get _notes => completedWorkout.notes;
   String? get _previousWeight => completedWorkout.weight_used_string;
-  String? get _user => FirebaseAuth.instance.currentUser!.email;
 
-  Future<void> _deleteWorkout(BuildContext context) async {
+  Future<void> _deleteWorkout(BuildContext context, String? _user) async {
     if (_user != null) {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove("${_user}_${program}_${completedWorkout.workout_id}");
     }
 
     HapticFeedback.heavyImpact();
-    _decrementUserCompletedWorkouts();
+    _decrementUserCompletedWorkouts(_user);
     _updatedCompletedCategorizedWorkout();
     snapshot.reference.delete();
   }
 
-  Future<void> _decrementUserCompletedWorkouts() async {
+  Future<void> _decrementUserCompletedWorkouts(String? _user) async {
     if (_user != null) {
       final DocumentReference<FirebaseUser> documentReference =
-          FirebaseUser(email: _user!).getDocumentReference();
+          FirebaseUser(email: _user).getDocumentReference();
 
       FirebaseFirestore.instance.runTransaction(
         (transaction) async {
@@ -93,6 +93,7 @@ class WorkoutListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: kSpacing),
       child: Dismissible(
@@ -104,7 +105,7 @@ class WorkoutListTile extends StatelessWidget {
           ),
         ),
         key: ValueKey<String>(snapshot.id),
-        onDismissed: (_) => _deleteWorkout(context),
+        onDismissed: (_) => _deleteWorkout(context, _user.authUser?.email),
         child: ListTile(
           dense: true,
           leading: ClipRRect(

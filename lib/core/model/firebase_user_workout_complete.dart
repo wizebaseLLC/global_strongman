@@ -83,7 +83,7 @@ class FirebaseUserWorkoutComplete {
 
   /// Get a reference to the entire collection.
   CollectionReference<FirebaseUserWorkoutComplete> getCollectionReference({
-    required String user,
+    required String? user,
   }) {
     return FirebaseFirestore.instance
         .collection('users')

@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -30,18 +31,20 @@ class _HomeScreenState extends State<HomeScreen> {
       .where("is_active", isEqualTo: true)
       .snapshots();
 
-  Stream<QuerySnapshot<FirebaseUserStartedProgram>> _getOngoingPrograms() =>
+  Stream<QuerySnapshot<FirebaseUserStartedProgram>> _getOngoingPrograms(
+          String? user) =>
       FirebaseUserStartedProgram()
           .getCollectionReference(
-            userId: FirebaseAuth.instance.currentUser!.email!,
+            userId: user,
           )
           .where("is_active", isEqualTo: true)
           .snapshots();
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     return StreamBuilder<QuerySnapshot<FirebaseUserStartedProgram>>(
-        stream: _getOngoingPrograms(),
+        stream: _getOngoingPrograms(_user.authUser?.email),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const CircularProgressIndicator.adaptive();

@@ -1,13 +1,14 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/controller/showPlatformActionSheet.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/profile_image_view.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -22,6 +23,7 @@ class ProfileHeader extends StatelessWidget {
   Future<void> _uploadImage({
     required BuildContext context,
     required ImageSource imageSource,
+    required String? email,
   }) async {
     try {
       final ImagePicker _picker = ImagePicker();
@@ -29,7 +31,6 @@ class ProfileHeader extends StatelessWidget {
         source: imageSource,
       );
       if (image?.path != null) {
-        String? email = FirebaseAuth.instance.currentUser?.email;
         if (email != null) {
           await FirebaseUser(email: email).addUserAvatarToStorage(
               context: context, file: File(image!.path));
@@ -40,7 +41,10 @@ class ProfileHeader extends StatelessWidget {
     }
   }
 
-  void _cupertinoActionSheet(BuildContext context) {
+  void _cupertinoActionSheet(
+    BuildContext context,
+    String? email,
+  ) {
     showPlatformActionSheet(
       context: context,
       actionSheetData: PlatformActionSheet(
@@ -54,6 +58,7 @@ class ProfileHeader extends StatelessWidget {
             onTap: () => _uploadImage(
               context: context,
               imageSource: ImageSource.gallery,
+              email: email,
             ),
             iconMaterial: const Icon(
               Icons.add_photo_alternate_rounded,
@@ -67,6 +72,7 @@ class ProfileHeader extends StatelessWidget {
             onTap: () => _uploadImage(
               imageSource: ImageSource.camera,
               context: context,
+              email: email,
             ),
             iconMaterial: const Icon(
               Icons.add_a_photo_rounded,
@@ -79,6 +85,7 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -132,7 +139,8 @@ class ProfileHeader extends StatelessWidget {
                       color: kPrimaryColor.withOpacity(.8),
                     ),
                     child: PlatformIconButton(
-                      onPressed: () => _cupertinoActionSheet(context),
+                      onPressed: () =>
+                          _cupertinoActionSheet(context, _user.authUser?.email),
                       padding: EdgeInsets.zero,
                       materialIcon: const Icon(
                         Icons.photo_camera,

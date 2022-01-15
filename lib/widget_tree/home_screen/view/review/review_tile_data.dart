@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -12,6 +12,7 @@ import 'package:global_strongman/core/controller/slidingBottomSheetBuilder.dart'
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_program_reviews.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/review/review_bottom_sheet_widget.dart';
 
 class ReviewTileData extends StatelessWidget {
@@ -27,10 +28,10 @@ class ReviewTileData extends StatelessWidget {
   final FirebaseProgramRating review;
   final String? reviewId;
   final QueryDocumentSnapshot<FirebaseProgram> program;
-  String? get myUserId => FirebaseAuth.instance.currentUser?.email;
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     return ListTile(
       leading: user?.avatar != null
           ? ClipOval(
@@ -101,7 +102,7 @@ class ReviewTileData extends StatelessWidget {
                 itemCount: 5,
                 itemSize: 12.0,
               ),
-              if (myUserId! == review.uid)
+              if (_user.authUser?.email == review.uid)
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

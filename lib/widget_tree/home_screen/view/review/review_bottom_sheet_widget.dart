@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -44,9 +45,8 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
         ),
       );
 
-  Future<void> onSubmit() async {
+  Future<void> onSubmit(String? email) async {
     try {
-      final String? email = FirebaseAuth.instance.currentUser!.email;
       if (email != null) {
         final DocumentSnapshot<FirebaseUser> userDoc =
             await FirebaseUser(email: email).getDocumentReference().get();
@@ -165,6 +165,7 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
   bool get _shouldEditReview => widget.currentReview != null;
   @override
   Widget build(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     return SizedBox(
       height: 700,
       child: Column(
@@ -280,7 +281,7 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
                       onPressed: () async {
                         _shouldEditReview
                             ? await onEditSubmit()
-                            : await onSubmit();
+                            : await onSubmit(_user.authUser?.email);
                         Navigator.pop(context);
                       },
                       child: Text(

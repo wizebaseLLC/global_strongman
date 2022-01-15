@@ -45,24 +45,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  void initState() {
-    SignInController().getSignedInUserFromFireStore().then((bool userExist) => {
-          if (userExist)
-            {
-              Navigator.pushReplacement(
-                context,
-                platformPageRoute(
-                  context: context,
-                  builder: (context) => const BottomNavigator(),
-                ),
-              ),
-            }
-        });
-
-    super.initState();
-  }
-
-  @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();

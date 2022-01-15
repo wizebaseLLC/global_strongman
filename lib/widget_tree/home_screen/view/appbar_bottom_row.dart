@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/core/view/premium_chip.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/overview/overview_tab.dart';
+import 'package:provider/provider.dart';
 
 class AppBarBottomRow extends StatelessWidget {
   const AppBarBottomRow({
@@ -22,6 +24,7 @@ class AppBarBottomRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     return Container(
       color: platformThemeData(
         context,
@@ -60,7 +63,7 @@ class AppBarBottomRow extends StatelessWidget {
           PlatformTextButton(
             onPressed: () => OverviewTab.handleGetStarted(
               programId: program.id,
-              userId: FirebaseAuth.instance.currentUser!.email!,
+              userId: _user.authUser?.email ?? 'n/a',
               context: context,
               program: program,
             ),

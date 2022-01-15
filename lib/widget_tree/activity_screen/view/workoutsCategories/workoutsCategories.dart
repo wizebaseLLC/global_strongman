@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/widget_tree/activity_screen/model/activity_interface.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/filtered_workout_screen/filtered_workout_screen.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/filter_icon.dart';
@@ -16,7 +17,7 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
     Key? key,
   }) : super(key: key);
   final ActivityInterface activityInterface;
-  String? get _user => FirebaseAuth.instance.currentUser?.email;
+
   WorkoutCategoryCount _buildWorkoutCategoryCount() => WorkoutCategoryCount(
         cardio: _filterCategoryCount("cardio"),
         rehab: _filterCategoryCount("rehab"),
@@ -29,9 +30,12 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
           .where((element) => element.categories!.contains(category))
           .length;
 
-  Query<FirebaseUserWorkoutComplete> _getFilteredWorkouts(String category) {
+  Query<FirebaseUserWorkoutComplete> _getFilteredWorkouts(
+    String category,
+    String? _user,
+  ) {
     return FirebaseUserWorkoutComplete()
-        .getCollectionReference(user: _user!)
+        .getCollectionReference(user: _user)
         .where("categories", arrayContains: category)
         .orderBy("created_on", descending: true);
   }
@@ -39,6 +43,7 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
   void _onCategoryPress({
     required String category,
     required String title,
+    required String? user,
     required BuildContext context,
   }) {
     Navigator.push(
@@ -47,7 +52,7 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
         context: context,
         builder: (_) => FilteredWorkoutScreen(
           title: title,
-          query: _getFilteredWorkouts(category),
+          query: _getFilteredWorkouts(category, user),
           previousPageTitle: "Activity",
         ),
       ),
@@ -60,6 +65,7 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
   }
 
   Widget _buildFilterIconRow(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     final WorkoutCategoryCount _workoutCategoryCount =
         _buildWorkoutCategoryCount();
     return Row(
@@ -80,6 +86,7 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
             toggleState: () => _onCategoryPress(
               title: "Cardio",
               category: "cardio",
+              user: _user.authUser?.email,
               context: context,
             ),
           ),
@@ -99,6 +106,7 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
             toggleState: () => _onCategoryPress(
               category: "strength",
               title: "Strength",
+              user: _user.authUser?.email,
               context: context,
             ),
           ),
@@ -118,6 +126,7 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
             toggleState: () => _onCategoryPress(
               category: "rehab",
               title: "Rehab",
+              user: _user.authUser?.email,
               context: context,
             ),
           ),
@@ -137,6 +146,7 @@ class WorkoutsCompletedByCategory extends StatelessWidget {
             toggleState: () => _onCategoryPress(
               category: "strongman",
               title: "Strongman",
+              user: _user.authUser?.email,
               context: context,
             ),
           ),

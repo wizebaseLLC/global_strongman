@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_user_started_program.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/core/view/platform_scaffold_ios_sliver_title.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/exclusive_workout_programs.dart';
 
@@ -19,21 +20,23 @@ class ProgramsCompletedScreen extends StatelessWidget {
       .where("is_active", isEqualTo: true)
       .get();
 
-  Stream<QuerySnapshot<FirebaseUserStartedProgram>> _getOngoingPrograms() =>
+  Stream<QuerySnapshot<FirebaseUserStartedProgram>> _getOngoingPrograms(
+          String? _user) =>
       FirebaseUserStartedProgram()
           .getCollectionReference(
-            userId: FirebaseAuth.instance.currentUser!.email!,
+            userId: _user,
           )
           .where("is_active", isEqualTo: false)
           .snapshots();
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     return FutureBuilder<QuerySnapshot<FirebaseProgram>>(
       future: _getPrograms(),
       builder: (context, programSnapshot) {
         return StreamBuilder<QuerySnapshot<FirebaseUserStartedProgram>>(
-          stream: _getOngoingPrograms(),
+          stream: _getOngoingPrograms(_user.authUser?.email),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const CircularProgressIndicator.adaptive();

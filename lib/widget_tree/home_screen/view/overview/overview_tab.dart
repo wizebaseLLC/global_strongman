@@ -1,12 +1,13 @@
 import 'package:chewie/chewie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_user_started_program.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/main.dart';
 import 'package:video_player/video_player.dart';
 
@@ -22,7 +23,7 @@ class OverviewTab extends StatefulWidget {
 
   static Future<void> handleGetStarted({
     required String programId,
-    required String userId,
+    required String? userId,
     required QueryDocumentSnapshot<FirebaseProgram> program,
     required BuildContext context,
   }) async {
@@ -43,7 +44,6 @@ class OverviewTab extends StatefulWidget {
     } else {
       startedProgram.toggleProgramActiveState(
         state: true,
-        programId: programId,
         userId: userId,
         docId: existingProgram.docs.first.id,
       );
@@ -99,6 +99,7 @@ class _OverviewTabState extends State<OverviewTab> {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     return Padding(
       padding: const EdgeInsets.all(kSpacing),
       child: Column(
@@ -154,7 +155,7 @@ class _OverviewTabState extends State<OverviewTab> {
                 ),
                 onPressed: () => OverviewTab.handleGetStarted(
                   programId: widget.program.id,
-                  userId: FirebaseAuth.instance.currentUser!.email!,
+                  userId: _user.authUser?.email,
                   context: context,
                   program: widget.program,
                 ),

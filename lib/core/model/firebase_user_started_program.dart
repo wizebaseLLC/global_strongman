@@ -48,7 +48,7 @@ class FirebaseUserStartedProgram {
   /// Get a reference to the entire collection.
   /// Don't forget to add a where clause.
   CollectionReference<FirebaseUserStartedProgram> getCollectionReference({
-    required String userId,
+    required String? userId,
   }) {
     return FirebaseFirestore.instance
         .collection('users')
@@ -62,8 +62,8 @@ class FirebaseUserStartedProgram {
   }
 
   Future<void> createStartedPrograms({
-    required String programId,
-    required String userId,
+    required String? programId,
+    required String? userId,
   }) async {
     getCollectionReference(userId: userId).add(FirebaseUserStartedProgram(
       is_active: true,
@@ -74,14 +74,15 @@ class FirebaseUserStartedProgram {
 
   Future<void> toggleProgramActiveState({
     required bool state,
-    required String programId,
-    required String userId,
-    required String docId,
+    required String? userId,
+    required String? docId,
   }) async {
-    getDocumentReference(userId: userId, docId: docId).update(
-      {
-        "is_active": state,
-      },
-    );
+    if (userId != null && docId != null) {
+      getDocumentReference(userId: userId, docId: docId).update(
+        {
+          "is_active": state,
+        },
+      );
+    }
   }
 }

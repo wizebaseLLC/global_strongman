@@ -1,12 +1,13 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/core/view/platform_scaffold_ios_sliver_title.dart';
 import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_controller.dart';
 import 'package:global_strongman/widget_tree/onboarding_screen/view/page2/main.dart';
@@ -30,17 +31,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool saving = false;
   @override
   Widget build(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
+
     return PlatformScaffoldIosSliverTitle(
       title: "Edit Profile",
       previousPageTitle: "My Profile",
       body: _buildBody(context),
       trailingActions: [
-        _buildAppBarTextButton(context),
+        _buildAppBarTextButton(context, _user.authUser?.email),
       ],
     );
   }
 
-  Widget _buildAppBarTextButton(BuildContext context) {
+  Widget _buildAppBarTextButton(
+    BuildContext context,
+    String? userEmail,
+  ) {
     return PlatformTextButton(
       child: Text(
         "Save",
@@ -48,7 +54,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           color: Platform.isIOS ? CupertinoColors.activeBlue : Colors.blue,
         ),
       ),
-      onPressed: () => saving ? null : onDone(context, _formKey),
+      onPressed: () => saving
+          ? null
+          : onDone(
+              context,
+              _formKey,
+              userEmail,
+            ),
       cupertino: (_, __) => CupertinoTextButtonData(
         padding: EdgeInsets.zero,
       ),
@@ -91,6 +103,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> onDone(
     BuildContext context,
     GlobalKey<FormBuilderState> formKey,
+    String? userEmail,
   ) async {
     try {
       setState(() {
@@ -103,7 +116,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         if (copiedValues["age"] != null && !Platform.isIOS) {
           copiedValues["age"] = int.tryParse(copiedValues["age"]);
         }
-        final userEmail = FirebaseAuth.instance.currentUser?.email;
 
         if (userEmail != null) {
           await FirebaseUser(email: userEmail)

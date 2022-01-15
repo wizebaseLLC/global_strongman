@@ -10,10 +10,9 @@ import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
 import 'package:global_strongman/core/providers/activity_interace_provider.dart';
 import 'package:global_strongman/core/providers/badge_current_values.dart';
-import 'package:global_strongman/widget_tree/activity_screen/model/activity_interface.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/filtered_workout_screen/filtered_workout_screen.dart';
 import 'package:global_strongman/widget_tree/badges_screen/main.dart';
-import 'package:global_strongman/widget_tree/login_screen/view/main.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_badge.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_header.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/profile_list.dart';
@@ -31,11 +30,9 @@ class ProfileBody extends StatelessWidget {
 
   final FirebaseUser firebaseUser;
 
-  String? get _user => FirebaseAuth.instance.currentUser?.email;
-
-  Query<FirebaseUserWorkoutComplete> _getWorkouts() {
+  Query<FirebaseUserWorkoutComplete> _getWorkouts(String? user) {
     return FirebaseUserWorkoutComplete()
-        .getCollectionReference(user: _user!)
+        .getCollectionReference(user: user)
         .orderBy("created_on", descending: true);
   }
 
@@ -105,13 +102,6 @@ class ProfileBody extends StatelessWidget {
                       badgeCurrentValues.resetToDefault();
                       activityInterface.resetToDefault();
                       await FirebaseAuth.instance.signOut();
-                      Navigator.pushReplacement(
-                        context,
-                        platformPageRoute(
-                          context: context,
-                          builder: (_) => const LoginPage(),
-                        ),
-                      );
                     },
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -269,6 +259,7 @@ class ProfileBody extends StatelessWidget {
   }
 
   Row _buildProfileBadgeRow(BuildContext context) {
+    final UserProvider _user = context.watch<UserProvider>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -297,7 +288,7 @@ class ProfileBody extends StatelessWidget {
                 context: context,
                 builder: (_) => FilteredWorkoutScreen(
                   title: "My Workouts",
-                  query: _getWorkouts(),
+                  query: _getWorkouts(_user.authUser?.email),
                   previousPageTitle: "My Profile",
                 ),
               ),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
@@ -254,25 +255,31 @@ class SignInController {
   }
 
   void showDialog(BuildContext context, String content) {
-    showPlatformDialog(
-      context: context,
-      builder: (_) => PlatformAlertDialog(
-        title: const Text(
-          'Error',
-          style: TextStyle(color: Colors.red),
-        ),
-        content: Text(content),
-        actions: <Widget>[
-          PlatformDialogAction(
-            child: PlatformText(
-              'Ok',
-              style: const TextStyle(color: Colors.blue),
-            ),
-            onPressed: () => Navigator.pop(context),
+    try {
+      showPlatformDialog(
+        context: context,
+        builder: (_) => PlatformAlertDialog(
+          title: const Text(
+            'Error',
+            style: TextStyle(color: Colors.red),
           ),
-        ],
-      ),
-    );
+          content: Text(content),
+          actions: <Widget>[
+            PlatformDialogAction(
+              child: PlatformText(
+                'Ok',
+                style: const TextStyle(color: Colors.blue),
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 
   Future<void> addUser(

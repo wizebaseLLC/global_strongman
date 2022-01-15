@@ -25,7 +25,7 @@ class _WorkoutListDayTilesState extends State<WorkoutListDayTiles> {
 
   late String _docId;
 
-  String get _userId => FirebaseAuth.instance.currentUser!.email!;
+  String? get _userId => FirebaseAuth.instance.currentUser?.email;
 
   Future<List<DocumentReference<FirebaseProgram>>?> _getProgramDays() async {
     try {
@@ -97,7 +97,6 @@ class _WorkoutListDayTilesState extends State<WorkoutListDayTiles> {
                     onPressed: () {
                       FirebaseUserStartedProgram().toggleProgramActiveState(
                         state: false,
-                        programId: widget.program.id,
                         userId: _userId,
                         docId: _docId,
                       );
