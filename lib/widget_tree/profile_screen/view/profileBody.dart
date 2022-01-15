@@ -44,6 +44,8 @@ class ProfileBody extends StatelessWidget {
     final ActivityInterfaceProvider activityInterface =
         context.read<ActivityInterfaceProvider>();
 
+    final UserProvider userProvider = context.read<UserProvider>();
+
     return SafeArea(
       child: RefreshIndicator(
         backgroundColor: kPrimaryColor,
@@ -101,6 +103,7 @@ class ProfileBody extends StatelessWidget {
                     onPressed: () async {
                       badgeCurrentValues.resetToDefault();
                       activityInterface.resetToDefault();
+                      userProvider.resetToDefault();
                       await FirebaseAuth.instance.signOut();
                     },
                     child: Row(

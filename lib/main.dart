@@ -13,6 +13,7 @@ import 'package:global_strongman/core/providers/firebase_instance_tools_provider
 import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/widget_tree/bottom_navigator/view/main.dart';
 import 'package:global_strongman/widget_tree/login_screen/view/main.dart';
+import 'package:global_strongman/widget_tree/onboarding_screen/view/main.dart';
 import 'package:provider/provider.dart';
 
 import 'core/providers/activity_interace_provider.dart';
@@ -41,53 +42,65 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  User? _user;
+  FirebaseUser? _firebaseUser;
+
   /// Checks if the user exist in the firestore db.
-  Future<DocumentSnapshot<Map<String, dynamic>>> getSignedInUserFromFireStore(
-          User user) =>
-      FirebaseFirestore.instance.collection('users').doc(user.email).get();
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getSignedInUserFromFireStore(
+    User? user,
+  ) =>
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(user?.email)
+          .snapshots();
+
+  @override
+  void initState() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        setState(() {
+          _user = user;
+        });
+        Provider.of<UserProvider>(context, listen: false).updateAuthUser(user);
+      }
+    });
+
+    getSignedInUserFromFireStore(FirebaseAuth.instance.currentUser)
+        .listen((firebaseUserSnapshot) {
+      if (firebaseUserSnapshot.exists) {
+        final FirebaseUser firebaseUser =
+            FirebaseUser.fromJson(firebaseUserSnapshot.data()!);
+        setState(() {
+          _firebaseUser = firebaseUser;
+        });
+        Provider.of<UserProvider>(context, listen: false)
+            .updateFirebaseUser(firebaseUser);
+      }
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, authUserSnapshot) {
-          final User? user = authUserSnapshot.data;
-
-          if (user == null) {
-            return MyAppScreen(
-              user: null,
-              firebaseUser: null,
-              isLoading:
-                  authUserSnapshot.connectionState == ConnectionState.waiting,
-            );
-          }
-
-          return FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            future: getSignedInUserFromFireStore(user),
-            builder: (context, firebaseUserSnapshot) {
-              FirebaseUser? firebaseUser;
-              final bool isLoading =
-                  authUserSnapshot.connectionState == ConnectionState.waiting ||
-                      firebaseUserSnapshot.connectionState ==
-                          ConnectionState.waiting;
-
-              if (firebaseUserSnapshot.data != null &&
-                  firebaseUserSnapshot.data!.exists) {
-                firebaseUser =
-                    FirebaseUser.fromJson(firebaseUserSnapshot.data!.data()!);
-              }
-
-              return MyAppScreen(
-                user: user,
-                firebaseUser: firebaseUser,
-                isLoading: isLoading,
-              );
-            },
-          );
-        });
+    if (_user != null && _firebaseUser != null) {
+      return MyAppScreen(
+        user: _user,
+        firebaseUser: _firebaseUser,
+      );
+    }
+    return const MyAppScreen(
+      user: null,
+      firebaseUser: null,
+    );
   }
 }
 
@@ -96,12 +109,19 @@ class MyAppScreen extends StatelessWidget {
     Key? key,
     required this.user,
     required this.firebaseUser,
-    required this.isLoading,
   }) : super(key: key);
 
   final User? user;
   final FirebaseUser? firebaseUser;
-  final bool isLoading;
+
+  Widget _buildHomePage() {
+    if (user == null) {
+      return const LoginPage();
+    } else if (user != null && firebaseUser == null) {
+      return const OnBoarding();
+    }
+    return const BottomNavigator();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,11 +137,7 @@ class MyAppScreen extends StatelessWidget {
           DefaultCupertinoLocalizations.delegate,
         ],
         title: 'Global Strongman',
-        home: isLoading
-            ? const Center(child: CircularProgressIndicator.adaptive())
-            : user == null || firebaseUser == null
-                ? const LoginPage()
-                : const BottomNavigator(),
+        home: _buildHomePage(),
         material: (_, __) => MaterialAppData(
           theme: ThemeData(
             primaryColor: kPrimaryColor,

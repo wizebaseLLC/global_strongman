@@ -1,24 +1,18 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/providers/activity_interace_provider.dart';
 import 'package:global_strongman/core/providers/badge_current_values.dart';
-import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/widget_tree/bottom_navigator/model/screen_list.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavigator extends StatefulWidget {
-  const BottomNavigator({
-    Key? key,
-  }) : super(key: key);
+  const BottomNavigator({Key? key}) : super(key: key);
 
   @override
   State<BottomNavigator> createState() => _BottomNavigatorState();
@@ -27,53 +21,11 @@ class BottomNavigator extends StatefulWidget {
 class _BottomNavigatorState extends State<BottomNavigator> {
   int _selectedTabIndex = 0;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  late UserProvider userProvider;
+
   PlatformAppBar? get appBar =>
       screens.map((e) => e.appBar).toList()[_selectedTabIndex];
 
   List<Widget> get childScreens => screens.map((e) => e.child).toList();
-
-  /// Checks if the user exist in the firestore db.
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getSignedInUserFromFireStore(
-    User? user,
-  ) =>
-      FirebaseFirestore.instance
-          .collection('users')
-          .doc(user?.email)
-          .snapshots();
-
-  @override
-  void initState() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user != null) {
-        userProvider.updateAuthUser(user);
-      }
-    });
-
-    getSignedInUserFromFireStore(FirebaseAuth.instance.currentUser)
-        .listen((firebaseUserSnapshot) {
-      if (firebaseUserSnapshot.exists) {
-        final FirebaseUser firebaseUser =
-            FirebaseUser.fromJson(firebaseUserSnapshot.data()!);
-
-        context.read<UserProvider>().updateFirebaseUser(firebaseUser);
-      }
-    });
-
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    // userProvider = Provider.of<UserProvider>(context, listen: false);
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    userProvider.resetToDefault();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
