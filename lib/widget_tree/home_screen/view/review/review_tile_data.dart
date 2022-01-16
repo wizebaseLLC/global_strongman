@@ -29,141 +29,147 @@ class ReviewTileData extends StatelessWidget {
   final String? reviewId;
   final QueryDocumentSnapshot<FirebaseProgram> program;
 
+  bool get _userExist => user != null;
+
   @override
   Widget build(BuildContext context) {
     final UserProvider _user = context.watch<UserProvider>();
     return ListTile(
-      leading: user?.avatar != null
-          ? ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: user!.avatar!,
-                fit: BoxFit.cover,
-                width: 45,
-                height: 45.0,
-                memCacheWidth: 135,
-              ),
+      leading: !_userExist
+          ? null
+          : user?.avatar != null
+              ? ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: user!.avatar!,
+                    fit: BoxFit.cover,
+                    width: 45,
+                    height: 45.0,
+                    memCacheWidth: 135,
+                  ),
+                )
+              : null,
+      title: !_userExist
+          ? const Center(
+              child: CircularProgressIndicator.adaptive(),
             )
-          : null,
-      title: Text(
-        '${user?.first_name} ${user?.last_name}',
-        style: platformThemeData(
-          context,
-          material: (data) => data.textTheme.subtitle1,
-          cupertino: (data) => data.textTheme.textStyle,
-        ),
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: kSpacing / 2,
-          ),
-          Text(
-            review.created_on!.toUtc().toString().substring(0, 10),
-            style: platformThemeData(
-              context,
-              material: (data) => data.textTheme.bodyText2?.copyWith(
-                color: Colors.white70,
-                fontSize: 10,
-              ),
-              cupertino: (data) => data.textTheme.textStyle.copyWith(
-                fontSize: 14,
-                color: CupertinoColors.systemGrey3,
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: kSpacing / 2,
-          ),
-          if (review.review != null && review.review!.isNotEmpty)
-            Text(
-              review.review!,
+          : Text(
+              '${user?.first_name} ${user?.last_name}',
               style: platformThemeData(
                 context,
-                material: (data) => data.textTheme.bodyText2?.copyWith(
-                  fontSize: 12,
-                ),
+                material: (data) => data.textTheme.subtitle1,
                 cupertino: (data) => data.textTheme.textStyle,
               ),
             ),
-          if (review.review != null && review.review!.isNotEmpty)
-            const SizedBox(
-              height: kSpacing / 2,
-            ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              RatingBarIndicator(
-                rating: review.rating!.toDouble(),
-                itemBuilder: (context, index) => Icon(
-                  Icons.star,
-                  color: Colors.yellowAccent.shade700,
+      subtitle: !_userExist
+          ? null
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(
+                  height: kSpacing / 2,
                 ),
-                itemCount: 5,
-                itemSize: 12.0,
-              ),
-              if (_user.authUser?.email == review.uid)
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    PlatformIconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () => SlidingBottomSheetBuilder(
-                        context: context,
-                        child: ReviewBottomSheetWidget(
-                          program: program,
-                          currentReview: review.review,
-                          currentRating: review.rating,
-                          reviewId: reviewId,
-                        ),
-                      ).showAsBottomSheet(),
-                      icon: Icon(
-                        PlatformIcons(context).edit,
-                        size: 18,
-                        color: Platform.isIOS
-                            ? CupertinoColors.systemGrey3
-                            : Colors.white,
-                      ),
+                Text(
+                  review.created_on!.toUtc().toString().substring(0, 10),
+                  style: platformThemeData(
+                    context,
+                    material: (data) => data.textTheme.bodyText2?.copyWith(
+                      color: Colors.white70,
+                      fontSize: 10,
                     ),
-                    PlatformIconButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        showPlatformDialog(
-                          context: context,
-                          builder: (_) => PlatformAlertDialog(
-                            title: const Text('Delete Review'),
-                            content: const Text(
-                                'Are you sure you would like to delete this review?'),
-                            actions: <Widget>[
-                              PlatformDialogAction(
-                                child: const Text("Cancel"),
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                              PlatformDialogAction(
-                                  child: const Text(
-                                    "Delete",
-                                  ),
-                                  onPressed: () async => await _removeRating(
-                                        context: context,
-                                      )),
-                            ],
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        PlatformIcons(context).delete,
-                        size: 18,
-                        color: Platform.isIOS
-                            ? CupertinoColors.systemGrey3
-                            : Colors.white,
+                    cupertino: (data) => data.textTheme.textStyle.copyWith(
+                      fontSize: 14,
+                      color: CupertinoColors.systemGrey3,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: kSpacing / 2,
+                ),
+                RatingBarIndicator(
+                  rating: review.rating!.toDouble(),
+                  itemBuilder: (context, index) => Icon(
+                    Icons.star,
+                    color: Colors.yellowAccent.shade700,
+                  ),
+                  itemCount: 5,
+                  itemSize: 12.0,
+                ),
+                const SizedBox(
+                  height: kSpacing / 2,
+                ),
+                if (review.review != null && review.review!.isNotEmpty)
+                  Text(
+                    review.review!,
+                    style: platformThemeData(
+                      context,
+                      material: (data) => data.textTheme.bodyText2?.copyWith(
+                        fontSize: 12,
                       ),
-                    )
-                  ],
+                      cupertino: (data) =>
+                          data.textTheme.textStyle.copyWith(fontSize: 13),
+                    ),
+                  ),
+              ],
+            ),
+      trailing: _user.authUser?.email == review.uid
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                PlatformIconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () => SlidingBottomSheetBuilder(
+                    context: context,
+                    child: ReviewBottomSheetWidget(
+                      program: program,
+                      currentReview: review.review,
+                      currentRating: review.rating,
+                      reviewId: reviewId,
+                    ),
+                  ).showAsBottomSheet(),
+                  icon: Icon(
+                    PlatformIcons(context).edit,
+                    size: 18,
+                    color: Platform.isIOS
+                        ? CupertinoColors.systemGrey3
+                        : Colors.white,
+                  ),
+                ),
+                PlatformIconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    showPlatformDialog(
+                      context: context,
+                      builder: (_) => PlatformAlertDialog(
+                        title: const Text('Delete Review'),
+                        content: const Text(
+                            'Are you sure you would like to delete this review?'),
+                        actions: <Widget>[
+                          PlatformDialogAction(
+                            child: const Text("Cancel"),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                          PlatformDialogAction(
+                              child: const Text(
+                                "Delete",
+                              ),
+                              onPressed: () async => await _removeRating(
+                                    context: context,
+                                  )),
+                        ],
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    PlatformIcons(context).delete,
+                    size: 18,
+                    color: Platform.isIOS
+                        ? CupertinoColors.systemGrey3
+                        : Colors.white,
+                  ),
                 )
-            ],
-          ),
-        ],
-      ),
+              ],
+            )
+          : null,
     );
   }
 

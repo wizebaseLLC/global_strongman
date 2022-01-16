@@ -7,11 +7,26 @@ class ShadedImage extends StatelessWidget {
   const ShadedImage({
     Key? key,
     required this.heroId,
-    required this.program,
+    this.program,
+    this.image,
   }) : super(key: key);
 
   final String heroId;
-  final QueryDocumentSnapshot<FirebaseProgram> program;
+  final QueryDocumentSnapshot<FirebaseProgram>? program;
+  final Widget? image;
+
+  Widget _buildHeroChild() {
+    if (image != null) {
+      return image!;
+    } else if (program != null && program!.exists) {
+      return CachedNetworkImage(
+        imageUrl: program!.data().thumbnail_url!,
+        fit: BoxFit.cover,
+        memCacheWidth: 934,
+      );
+    }
+    return Container();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +45,7 @@ class ShadedImage extends StatelessWidget {
       blendMode: BlendMode.dstIn,
       child: Hero(
         tag: heroId,
-        child: CachedNetworkImage(
-          imageUrl: program.data().thumbnail_url!,
-          fit: BoxFit.cover,
-          memCacheWidth: 934,
-        ),
+        child: _buildHeroChild(),
       ),
     );
   }

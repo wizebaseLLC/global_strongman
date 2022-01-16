@@ -120,6 +120,34 @@ class FirebaseProgramWorkouts {
         );
   }
 
+  /// Get a reference to the single workout.
+  DocumentReference<FirebaseProgramWorkouts>
+      getWorkoutCatalogDocumentReference({
+    required String doc,
+  }) {
+    return FirebaseFirestore.instance
+        .collection('workout_catalog')
+        .doc(doc)
+        .withConverter<FirebaseProgramWorkouts>(
+          fromFirestore: (snapshot, _) =>
+              FirebaseProgramWorkouts.fromJson(snapshot.data()!),
+          toFirestore: (data, _) => data.toJson(),
+        );
+  }
+
+  /// Get a reference to the entire collection.
+  /// Don't forget to add a where clause.
+  CollectionReference<FirebaseProgramWorkouts>
+      getWorkoutCatalogCollectionReference() {
+    return FirebaseFirestore.instance
+        .collection('workout_catalog')
+        .withConverter<FirebaseProgramWorkouts>(
+          fromFirestore: (snapshot, _) =>
+              FirebaseProgramWorkouts.fromJson(snapshot.data()!),
+          toFirestore: (data, _) => data.toJson(),
+        );
+  }
+
   /// To create workouts in a catalog.  Should not be used in production
   Future<void> createCatalogWorkout({required String docName}) async {
     if (name != null) {

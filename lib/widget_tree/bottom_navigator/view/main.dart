@@ -25,7 +25,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   PlatformAppBar? get appBar =>
       screens.map((e) => e.appBar).toList()[_selectedTabIndex];
 
-  List<Widget> get childScreens => screens.map((e) => e.child).toList();
+  final List<Widget> childScreens = screens.map((e) => e.child).toList();
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -14,9 +15,6 @@ import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeline_tile/timeline_tile.dart';
-
-const String defaultThumbanil =
-    "https://firebasestorage.googleapis.com/v0/b/global-strongman.appspot.com/o/Programs%2Fthumbnails%2FB707D09F-03F3-44A2-959F-2F724AA18FF4.jpeg?alt=media&token=510d1716-a083-4ee5-93fc-9b9719f80fa6";
 
 final dateFormat = DateFormat('hh:mm a');
 
@@ -98,6 +96,22 @@ class WorkoutListTimelineTile extends StatelessWidget {
     }
   }
 
+  String _chooseIconImage(List<dynamic>? categories) {
+    if (categories != null) {
+      if (categories.contains("strongman")) {
+        return "weightlifting";
+      } else if (categories.contains("cardio")) {
+        return "pulse";
+      } else if (categories.contains("rehab")) {
+        return "pulse 2";
+      } else if (categories.contains("strength")) {
+        return "muscle";
+      }
+    }
+
+    return "muscle";
+  }
+
   @override
   Widget build(BuildContext context) {
     final UserProvider _user = context.watch<UserProvider>();
@@ -122,13 +136,11 @@ class WorkoutListTimelineTile extends StatelessWidget {
           indicatorStyle: IndicatorStyle(
             width: 50,
             height: 50,
-            indicator: ClipRRect(
-              borderRadius: BorderRadius.circular(75),
-              child: CachedNetworkImage(
-                imageUrl: completedWorkout.thumbnail ?? defaultThumbanil,
-                fit: BoxFit.cover,
-                memCacheWidth: 150,
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+            indicator: CircleAvatar(
+              backgroundColor: kPrimaryColor,
+              child: SvgPicture.asset(
+                "assets/images/${_chooseIconImage(completedWorkout.categories)}.svg",
+                color: Colors.white,
               ),
             ),
           ),

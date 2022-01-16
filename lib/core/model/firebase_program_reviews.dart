@@ -8,19 +8,16 @@ class FirebaseProgramRating {
     this.review,
     this.uid,
     this.created_on,
-    this.user,
   });
 
   final num? rating;
   final String? review;
   final String? uid;
   final DateTime? created_on;
-  final Map<String, dynamic>? user;
 
   FirebaseProgramRating.fromJson(Map<String, Object?> json)
       : this(
           rating: (json['rating']) as num?,
-          user: (json['user']) as Map<String, dynamic>?,
           review: json['review'] as String?,
           uid: json['uid'] as String?,
           created_on: (json['created_on'] as Timestamp?)?.toDate(),
@@ -32,7 +29,6 @@ class FirebaseProgramRating {
       'review': review,
       'uid': uid,
       'created_on': created_on,
-      'user': user,
     };
   }
 

@@ -48,17 +48,12 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
   Future<void> onSubmit(String? email) async {
     try {
       if (email != null) {
-        final DocumentSnapshot<FirebaseUser> userDoc =
-            await FirebaseUser(email: email).getDocumentReference().get();
-        final FirebaseUser? user = userDoc.data();
-
         widget.program.reference.collection("reviews").add(
               FirebaseProgramRating(
                 uid: email,
                 review: _controller.text,
                 rating: _rating,
                 created_on: DateTime.now(),
-                user: user?.toJson(),
               ).toJson(),
             );
 
@@ -276,8 +271,7 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
                         style: ElevatedButton.styleFrom(primary: kPrimaryColor),
                       ),
                       cupertino: (_, __) => CupertinoElevatedButtonData(
-                        color: kPrimaryColor,
-                      ),
+                          color: kPrimaryColor, originalStyle: true),
                       onPressed: () async {
                         _shouldEditReview
                             ? await onEditSubmit()

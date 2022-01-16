@@ -64,29 +64,37 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user != null) {
-        setState(() {
-          _user = user;
-        });
-        Provider.of<UserProvider>(context, listen: false).updateAuthUser(user);
-      }
-    });
-
-    getSignedInUserFromFireStore(FirebaseAuth.instance.currentUser)
-        .listen((firebaseUserSnapshot) {
-      if (firebaseUserSnapshot.exists) {
-        final FirebaseUser firebaseUser =
-            FirebaseUser.fromJson(firebaseUserSnapshot.data()!);
-        setState(() {
-          _firebaseUser = firebaseUser;
-        });
-        Provider.of<UserProvider>(context, listen: false)
-            .updateFirebaseUser(firebaseUser);
-      }
-    });
-
     super.initState();
+
+    FirebaseAuth.instance.authStateChanges().listen(
+      (User? user) {
+        if (user != null) {
+          _user = user;
+          setState(() {});
+          Future.microtask(
+            () => Provider.of<UserProvider>(context, listen: false)
+                .updateAuthUser(user),
+          );
+        }
+      },
+    );
+
+    getSignedInUserFromFireStore(FirebaseAuth.instance.currentUser).listen(
+      (firebaseUserSnapshot) {
+        if (firebaseUserSnapshot.exists) {
+          final FirebaseUser firebaseUser =
+              FirebaseUser.fromJson(firebaseUserSnapshot.data()!);
+          _firebaseUser = firebaseUser;
+          setState(() {});
+          if (_firebaseUser != null) {
+            Future.microtask(
+              () => Provider.of<UserProvider>(context, listen: false)
+                  .updateFirebaseUser(firebaseUser),
+            );
+          }
+        }
+      },
+    );
   }
 
   @override
@@ -156,3 +164,9 @@ class MyAppScreen extends StatelessWidget {
     );
   }
 }
+// To full clean especially ios
+// flutter clean        
+// rm -Rf ios/Pods
+// rm -Rf ios/.symlinks
+// rm -Rf ios/Flutter/Flutter.framework
+// rm -Rf ios/Flutter/Flutter.podspec

@@ -108,7 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   } else {
-                    return const CircularProgressIndicator.adaptive();
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    );
                   }
                 }),
           );
