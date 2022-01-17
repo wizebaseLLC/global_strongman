@@ -28,14 +28,14 @@ class ViewWorkoutScreen extends StatefulWidget {
   const ViewWorkoutScreen({
     required this.workout,
     required this.workout_id,
-    required this.program_id,
-    required this.programDay,
+    this.program_id,
+    this.programDay,
     Key? key,
   }) : super(key: key);
 
-  final DocumentReference<FirebaseProgram> programDay;
+  final DocumentReference<FirebaseProgram>? programDay;
   final FirebaseProgramWorkouts workout;
-  final String program_id;
+  final String? program_id;
   final String workout_id;
 
   @override
@@ -120,7 +120,7 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
         working_weight_lbs: lbs,
         workout_id: widget.workout_id,
         categories: widget.workout.categories,
-        day: widget.programDay.id,
+        day: widget.programDay?.id,
         notes: _notesController.text,
         weight_used_string: previousWeight.replaceAll(",  current: ", ""),
         name: widget.workout.name,

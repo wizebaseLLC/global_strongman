@@ -28,7 +28,6 @@ class FilteredVaultListScreen extends StatelessWidget {
         child: SafeArea(
           top: false,
           child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
             slivers: [
               FilteredVaultAppBar(
                 title: title,

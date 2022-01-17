@@ -69,8 +69,8 @@ class WorkoutListByDay extends StatelessWidget {
 
               if (snapshot.hasData) {
                 return WorkoutListTimelineTile(
-                  program: snapshotData.program_id!,
-                  day: snapshotData.day!,
+                  program: snapshotData.program_id,
+                  day: snapshotData.day,
                   doc: snapshotData.workout_id!,
                   key: ValueKey<String>(docs[index].id),
                   completedWorkout: snapshotData,

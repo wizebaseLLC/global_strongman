@@ -25,7 +25,6 @@ class FilteredVaultAppBar extends StatelessWidget {
       floating: true,
       expandedHeight: 200,
       stretch: true,
-      pinned: false,
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
           title,

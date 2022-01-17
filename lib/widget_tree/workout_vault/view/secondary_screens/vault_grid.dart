@@ -31,7 +31,10 @@ class VaultGrid extends StatelessWidget {
                 final FirebaseProgramWorkouts workout =
                     snapshot.docs[index].data();
 
-                return VaultGridItem(workout: workout);
+                return VaultGridItem(
+                  workout: workout,
+                  workoutId: snapshot.docs[index].id,
+                );
               }
 
               return Container(

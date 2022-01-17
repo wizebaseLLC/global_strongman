@@ -31,8 +31,8 @@ class WorkoutListTimelineTile extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final String program;
-  final String day;
+  final String? program;
+  final String? day;
   final String doc;
   final bool isFirst;
   final bool isLast;
