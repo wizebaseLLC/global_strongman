@@ -24,6 +24,7 @@ class WorkoutVaultScreen extends StatelessWidget {
                 title: vaultItems[index].title,
                 subtitle: vaultItems[index].subtitle,
                 image: vaultItems[index].image,
+                query: vaultItems[index].query,
               ),
               const SizedBox(
                 height: kSpacing * 2,

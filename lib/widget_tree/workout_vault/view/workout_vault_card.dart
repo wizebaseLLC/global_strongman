@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:global_strongman/core/model/firebase_program_workouts.dart';
 import 'package:global_strongman/widget_tree/workout_vault/view/secondary_screens/filtered_vault_list_screen.dart';
 import '../../../constants.dart';
 
@@ -9,12 +11,14 @@ class WorkoutVaultCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.image,
+    required this.query,
     Key? key,
   }) : super(key: key);
 
   final String title;
   final String subtitle;
   final String image;
+  final Query<FirebaseProgramWorkouts> query;
 
   void _onPress(BuildContext context) {
     Navigator.push(
@@ -25,6 +29,7 @@ class WorkoutVaultCard extends StatelessWidget {
           heroId: "assets/images/$image",
           image: "assets/images/$image",
           title: title,
+          query: query,
         ),
       ),
     );
