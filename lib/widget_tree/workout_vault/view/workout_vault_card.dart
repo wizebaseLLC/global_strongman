@@ -85,12 +85,12 @@ class WorkoutVaultCard extends StatelessWidget {
                 style: platformThemeData(
                   context,
                   material: (data) => data.textTheme.subtitle1?.copyWith(
-                    fontSize: 22,
+                    fontSize: 26,
                     fontWeight: FontWeight.bold,
                   ),
                   cupertino: (data) =>
                       data.textTheme.navTitleTextStyle.copyWith(
-                    fontSize: 22,
+                    fontSize: 26,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -103,12 +103,12 @@ class WorkoutVaultCard extends StatelessWidget {
                 style: platformThemeData(
                   context,
                   material: (data) => data.textTheme.bodyText1?.copyWith(
-                    fontSize: 13,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: Colors.white70,
                   ),
                   cupertino: (data) => data.textTheme.textStyle.copyWith(
-                    fontSize: 13,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: CupertinoColors.systemGrey2,
                   ),

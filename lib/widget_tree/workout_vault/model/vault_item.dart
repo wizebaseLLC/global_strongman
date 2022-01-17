@@ -24,16 +24,8 @@ final List<VaultItem> vaultItems = [
         .getWorkoutCatalogCollectionReference()
         .orderBy("name"),
   ),
-  // VaultItem(
-  //   title: "Training Programs",
-  //   subtitle: "Premade routines constructed by Hans Pirman himself.",
-  //   image: "fitness_background_2.jpg",
-  //   query: FirebaseProgramWorkouts()
-  //       .getWorkoutCatalogCollectionReference()
-  //       .orderBy("name"),
-  // ),
   VaultItem(
-    title: "Strength training",
+    title: "Strength",
     subtitle: "Improve muscular health and longevity.",
     image: "fitness_background_6.jpg",
     query: FirebaseProgramWorkouts()

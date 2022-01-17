@@ -46,9 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return StreamBuilder<QuerySnapshot<FirebaseUserStartedProgram>>(
         stream: _getOngoingPrograms(_user.authUser?.email),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const CircularProgressIndicator.adaptive();
-          }
           final List<String?>? ongoingPrograms =
               snapshot.data?.docs.map((e) => e.data().program_id).toList();
           return SafeArea(

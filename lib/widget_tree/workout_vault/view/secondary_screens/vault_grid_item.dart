@@ -35,6 +35,15 @@ class VaultGridItem extends StatelessWidget {
           title: "Add Progress Photo",
           model: [
             ActionSheetModel(
+              title: "Review Workout",
+              textStyle: TextStyle(
+                color:
+                    Platform.isIOS ? CupertinoColors.activeBlue : Colors.blue,
+              ),
+              onTap: () {},
+              iconMaterial: const Icon(Icons.rate_review),
+            ),
+            ActionSheetModel(
               title: "Add to Calendar",
               textStyle: TextStyle(
                 color:
@@ -76,8 +85,31 @@ class VaultGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformWidgetBuilder(
-      cupertino: (_, child, __) => GestureDetector(
-        onLongPress: () => _onLongTap(context),
+      cupertino: (_, child, __) => CupertinoContextMenu(
+        actions: <Widget>[
+          CupertinoContextMenuAction(
+            child: const Text('Action zero'),
+            trailingIcon: CupertinoIcons.airplane,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          CupertinoContextMenuAction(
+            child: const Text('Action one'),
+            trailingIcon: CupertinoIcons.airplane,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          CupertinoContextMenuAction(
+            child: const Text('Action two'),
+            isDestructiveAction: true,
+            trailingIcon: CupertinoIcons.airplane,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
         child: CupertinoButton(
           child: child!,
           padding: EdgeInsets.zero,
