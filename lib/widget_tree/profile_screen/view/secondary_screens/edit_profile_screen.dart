@@ -73,27 +73,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       initialValue: widget.firebaseUser.toJson(),
       child: ModalProgressHUD(
         inAsyncCall: saving,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ...page2Body(
-                context: context,
-                shouldShowAvatar: false,
-                firebaseUser: widget.firebaseUser,
-              ),
-              ...page3Body(
-                context: context,
-                firebaseUser: widget.firebaseUser,
-              ),
-              ...page4Body(
-                context: context,
-                firebaseUser: widget.firebaseUser,
-              ),
-              const SizedBox(
-                height: kSpacing,
-              ),
-            ],
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...page2Body(
+                  context: context,
+                  shouldShowAvatar: false,
+                  firebaseUser: widget.firebaseUser,
+                ),
+                ...page3Body(
+                  context: context,
+                  firebaseUser: widget.firebaseUser,
+                ),
+                ...page4Body(
+                  context: context,
+                  firebaseUser: widget.firebaseUser,
+                ),
+                const SizedBox(
+                  height: kSpacing,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -19,11 +19,11 @@ class BottomNavigator extends StatefulWidget {
 }
 
 class _BottomNavigatorState extends State<BottomNavigator> {
-  int _selectedTabIndex = 0;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  int _selectedTabIndex = 1;
+  PlatformTabController tabController = PlatformTabController(initialIndex: 1);
 
-  PlatformAppBar? get appBar =>
-      screens.map((e) => e.appBar).toList()[_selectedTabIndex];
+  List<PlatformAppBar?> get appBar => screens.map((e) => e.appBar).toList();
 
   final List<Widget> childScreens = screens.map((e) => e.child).toList();
 
@@ -45,60 +45,55 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       activityInterface.createWorkoutInterface();
     }
 
-    return PlatformScaffold(
+    return PlatformTabScaffold(
+      tabController: tabController,
       key: _scaffoldKey,
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
+      bodyBuilder: (context, index) => AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: IndexedStack(
           children: childScreens,
-          index: _selectedTabIndex,
+          index: index,
         ),
       ),
-      appBar: appBar,
-      bottomNavBar: PlatformNavBar(
-        currentIndex: _selectedTabIndex,
-        itemChanged: (index) => setState(() {
-          _selectedTabIndex = index;
-        }),
-        material: (_, __) => MaterialNavBarData(
-          fixedColor: Colors.blue,
+      appBarBuilder: (_, index) => appBar[index],
+      itemChanged: (index) => setState(() {
+        _selectedTabIndex = index;
+      }),
+      iosContentPadding: true,
+      iosContentBottomPadding: true,
+      cupertino: (context, platform) => CupertinoTabScaffoldData(),
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(PlatformIcons(context).home),
+          label: "Home",
         ),
-        cupertino: (_, __) => CupertinoTabBarData(
-          activeColor: CupertinoColors.activeBlue,
-        ),
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(PlatformIcons(context).home),
-            label: "Home",
-          ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(PlatformIcons(context).playCircle),
-          //   label: "Watch",
-          // ),
+        // BottomNavigationBarItem(
+        //   icon: Icon(PlatformIcons(context).playCircle),
+        //   label: "Watch",
+        // ),
 
-          const BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.chartLine),
-            label: "Activity",
+        const BottomNavigationBarItem(
+          icon: FaIcon(FontAwesomeIcons.chartLine),
+          label: "Activity",
+        ),
+        BottomNavigationBarItem(
+          icon: SvgPicture.asset(
+            "assets/images/muscle.svg",
+            color: Platform.isIOS
+                ? _selectedTabIndex == 2
+                    ? CupertinoColors.activeBlue
+                    : CupertinoColors.systemGrey
+                : _selectedTabIndex == 2
+                    ? Colors.blue
+                    : Colors.grey.withOpacity(.2),
           ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/images/muscle.svg",
-              color: Platform.isIOS
-                  ? _selectedTabIndex == 2
-                      ? CupertinoColors.activeBlue
-                      : CupertinoColors.systemGrey
-                  : _selectedTabIndex == 2
-                      ? Colors.blue
-                      : Colors.grey.withOpacity(.2),
-            ),
-            label: "Workouts",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(PlatformIcons(context).person),
-            label: "Profile",
-          ),
-        ],
-      ),
+          label: "Workouts",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(PlatformIcons(context).person),
+          label: "Profile",
+        ),
+      ],
     );
   }
 }

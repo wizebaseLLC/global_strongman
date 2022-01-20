@@ -158,7 +158,7 @@ class FirebaseUser {
           .child("/avatar.jpg");
       TaskSnapshot uploadTask = await ref.putFile(file);
       final url = await uploadTask.ref.getDownloadURL();
-      getDocumentReference().update({"avatar": url});
+      await getDocumentReference().update({"avatar": url});
     } catch (e) {
       SignInController().showDialog(context, "Failed to upload image: $e");
     }

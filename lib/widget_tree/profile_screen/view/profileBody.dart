@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -47,92 +46,82 @@ class ProfileBody extends StatelessWidget {
     final UserProvider userProvider = context.read<UserProvider>();
 
     return SafeArea(
-      child: RefreshIndicator(
-        backgroundColor: kPrimaryColor,
-        color: Colors.white,
-        onRefresh: () async {
-          HapticFeedback.mediumImpact();
-          badgeCurrentValues.runSetMetrics();
-          activityInterface.createWorkoutInterface();
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 220,
-                width: double.infinity,
-                child:
-                    // The avatar, name and level.
-                    ProfileHeader(firebaseUser: firebaseUser),
-              ),
-              _buildProfileBadgeRow(context),
-              const SizedBox(
-                height: kSpacing * 3,
-              ),
-              const ProgressCard(),
-              const SizedBox(
-                height: kSpacing * 3,
-              ),
-              _buildAccountProfileList(context),
-              const SizedBox(
-                height: kSpacing * 2,
-              ),
-              _buildFitnessProfileList(context),
-              //#TODO add more fitness tiles
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 220,
+              width: double.infinity,
+              child:
+                  // The avatar, name and level.
+                  ProfileHeader(firebaseUser: firebaseUser),
+            ),
+            _buildProfileBadgeRow(context),
+            const SizedBox(
+              height: kSpacing * 3,
+            ),
+            const ProgressCard(),
+            const SizedBox(
+              height: kSpacing * 3,
+            ),
+            _buildAccountProfileList(context),
+            const SizedBox(
+              height: kSpacing * 2,
+            ),
+            _buildFitnessProfileList(context),
+            //#TODO add more fitness tiles
 
-              // const SizedBox(
-              //   height: kSpacing * 2,
-              // ),
-              // _buildCommunityProfileList(),
-              const SizedBox(
-                height: kSpacing * 4,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: PlatformElevatedButton(
-                    cupertino: (_, __) => CupertinoElevatedButtonData(
-                      originalStyle: true,
-                      color: kSecondaryColor,
-                    ),
-                    material: (_, __) => MaterialElevatedButtonData(
-                      style: ElevatedButton.styleFrom(primary: kSecondaryColor),
-                    ),
-                    onPressed: () async {
-                      badgeCurrentValues.resetToDefault();
-                      activityInterface.resetToDefault();
-                      userProvider.resetToDefault();
-                      await FirebaseAuth.instance.signOut();
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(
-                          Icons.flight_land,
+            // const SizedBox(
+            //   height: kSpacing * 2,
+            // ),
+            // _buildCommunityProfileList(),
+            const SizedBox(
+              height: kSpacing * 4,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+              child: SizedBox(
+                width: double.infinity,
+                child: PlatformElevatedButton(
+                  cupertino: (_, __) => CupertinoElevatedButtonData(
+                    originalStyle: true,
+                    color: kSecondaryColor,
+                  ),
+                  material: (_, __) => MaterialElevatedButtonData(
+                    style: ElevatedButton.styleFrom(primary: kSecondaryColor),
+                  ),
+                  onPressed: () async {
+                    badgeCurrentValues.resetToDefault();
+                    activityInterface.resetToDefault();
+                    userProvider.resetToDefault();
+                    await FirebaseAuth.instance.signOut();
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(
+                        Icons.flight_land,
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        width: kSpacing,
+                      ),
+                      Text(
+                        "Sign out",
+                        style: TextStyle(
                           color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(
-                          width: kSpacing,
-                        ),
-                        Text(
-                          "Sign out",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(
-                height: kSpacing * 4,
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(
+              height: kSpacing * 4,
+            ),
+          ],
         ),
       ),
     );
