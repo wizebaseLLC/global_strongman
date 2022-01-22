@@ -161,144 +161,150 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
   @override
   Widget build(BuildContext context) {
     final UserProvider _user = context.watch<UserProvider>();
-    return SizedBox(
-      height: 700,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(kSpacing),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  _shouldEditReview ? "Edit review" : "Create review",
-                  style: platformThemeData(
-                    context,
-                    material: (data) =>
-                        data.textTheme.headline6?.copyWith(fontSize: 26),
-                    cupertino: (data) =>
-                        data.textTheme.navTitleTextStyle.copyWith(fontSize: 26),
-                  ),
-                ),
-                Expanded(child: Container()),
-                PlatformTextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(
-                    "Cancel",
-                    style: platformThemeData(
-                      context,
-                      material: (data) => data.textTheme.bodyText1?.copyWith(
-                        color: Colors.blueAccent,
-                      ),
-                      cupertino: (data) => data.textTheme.textStyle.copyWith(
-                        color: CupertinoColors.activeBlue,
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: SizedBox(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(kSpacing),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      _shouldEditReview ? "Edit review" : "Create review",
+                      style: platformThemeData(
+                        context,
+                        material: (data) =>
+                            data.textTheme.headline6?.copyWith(fontSize: 26),
+                        cupertino: (data) => data.textTheme.navTitleTextStyle
+                            .copyWith(fontSize: 26),
                       ),
                     ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(height: kSpacing * 2),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Overall rating",
-                  style: _subtitleStyle(context),
-                ),
-                const SizedBox(height: kSpacing),
-                RatingBar.builder(
-                  initialRating: _rating.toDouble(),
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemSize: 30,
-                  itemCount: 5,
-                  // itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.yellowAccent.shade700,
-                  ),
-                  onRatingUpdate: (rating) {
-                    setState(() {
-                      _rating = rating;
-                    });
-                  },
-                ),
-                const SizedBox(height: kSpacing * 4),
-                Text(
-                  "Add a written review",
-                  style: _subtitleStyle(context),
-                ),
-                const SizedBox(height: kSpacing),
-                PlatformWidgetBuilder(
-                  cupertino: (_, child, __) => child,
-                  material: (_, child, __) => Material(
-                    borderRadius: BorderRadius.circular(8),
-                    child: child,
-                  ),
-                  child: PlatformTextField(
-                    controller: _controller,
-                    minLines: 5,
-                    maxLines: 10,
-                    keyboardType: TextInputType.multiline,
-                    hintText: "What did you like or dislike?",
-                    cupertino: (_, __) => CupertinoTextFieldData(
-                      textCapitalization: TextCapitalization.sentences,
-                    ),
-                    material: (_, __) => MaterialTextFieldData(
-                      textCapitalization: TextCapitalization.sentences,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.all(kSpacing),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: kSpacing * 4),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kSpacing * 2,
-                  ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: PlatformElevatedButton(
-                      material: (_, __) => MaterialElevatedButtonData(
-                        style: ElevatedButton.styleFrom(primary: kPrimaryColor),
-                      ),
-                      cupertino: (_, __) => CupertinoElevatedButtonData(
-                          color: kPrimaryColor, originalStyle: true),
-                      onPressed: () async {
-                        _shouldEditReview
-                            ? await onEditSubmit()
-                            : await onSubmit(_user.authUser?.email);
-                        Navigator.pop(context);
-                      },
+                    Expanded(child: Container()),
+                    PlatformTextButton(
+                      onPressed: () => Navigator.pop(context),
                       child: Text(
-                        "Submit Review",
+                        "Cancel",
                         style: platformThemeData(
                           context,
                           material: (data) =>
                               data.textTheme.bodyText1?.copyWith(
-                            color: Colors.white,
+                            color: Colors.blueAccent,
                           ),
                           cupertino: (data) =>
                               data.textTheme.textStyle.copyWith(
-                            color: Colors.white,
+                            color: CupertinoColors.activeBlue,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: kSpacing * 2),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Overall rating",
+                      style: _subtitleStyle(context),
+                    ),
+                    const SizedBox(height: kSpacing),
+                    RatingBar.builder(
+                      initialRating: _rating.toDouble(),
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemSize: 30,
+                      itemCount: 5,
+                      // itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => Icon(
+                        Icons.star,
+                        color: Colors.yellowAccent.shade700,
+                      ),
+                      onRatingUpdate: (rating) {
+                        setState(() {
+                          _rating = rating;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: kSpacing * 4),
+                    Text(
+                      "Add a written review",
+                      style: _subtitleStyle(context),
+                    ),
+                    const SizedBox(height: kSpacing),
+                    PlatformWidgetBuilder(
+                      cupertino: (_, child, __) => child,
+                      material: (_, child, __) => Material(
+                        borderRadius: BorderRadius.circular(8),
+                        child: child,
+                      ),
+                      child: PlatformTextField(
+                        controller: _controller,
+                        minLines: 5,
+                        maxLines: 10,
+                        keyboardType: TextInputType.multiline,
+                        hintText: "Tell us about the program",
+                        cupertino: (_, __) => CupertinoTextFieldData(
+                          textCapitalization: TextCapitalization.sentences,
+                        ),
+                        material: (_, __) => MaterialTextFieldData(
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.all(kSpacing),
+                            border: InputBorder.none,
                           ),
                         ),
                       ),
                     ),
-                  ),
-                )
-              ],
-            ),
+                    const SizedBox(height: kSpacing * 4),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: kSpacing * 2,
+                      ),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: PlatformElevatedButton(
+                          material: (_, __) => MaterialElevatedButtonData(
+                            style: ElevatedButton.styleFrom(
+                                primary: kPrimaryColor),
+                          ),
+                          cupertino: (_, __) => CupertinoElevatedButtonData(
+                              color: kPrimaryColor, originalStyle: true),
+                          onPressed: () async {
+                            _shouldEditReview
+                                ? await onEditSubmit()
+                                : await onSubmit(_user.authUser?.email);
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Submit Review",
+                            style: platformThemeData(
+                              context,
+                              material: (data) =>
+                                  data.textTheme.bodyText1?.copyWith(
+                                color: Colors.white,
+                              ),
+                              cupertino: (data) =>
+                                  data.textTheme.textStyle.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

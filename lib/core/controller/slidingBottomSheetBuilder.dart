@@ -1,42 +1,38 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class SlidingBottomSheetBuilder {
   SlidingBottomSheetBuilder({
     required this.context,
     required this.child,
-    this.snappings = const [0.4, 0.7, 1.0],
-    this.initialSnap = .7,
+    this.expand = false,
   });
 
   final BuildContext context;
   final Widget child;
-  final List<double> snappings;
-  final double initialSnap;
+  final bool? expand;
 
   Future<T?> showAsBottomSheet<T>() async {
-    final T? result = await showSlidingBottomSheet(context, builder: (context) {
-      return SlidingSheetDialog(
-        elevation: 8,
-        cornerRadius: 16,
-        avoidStatusBar: true,
-        duration: const Duration(milliseconds: 500),
-        color: platformThemeData(
-          context,
-          material: (data) => data.cardColor,
-          cupertino: (data) => data.barBackgroundColor.withOpacity(1),
-        ),
-        snapSpec: SnapSpec(
-          snap: true,
-          initialSnap: initialSnap,
-          snappings: snappings,
-        ),
-        builder: (context, state) {
-          return child;
-        },
-      );
-    });
+    final T? result = Platform.isIOS
+        ? await showCupertinoModalBottomSheet(
+            context: context,
+            builder: (context) => child,
+            backgroundColor: CupertinoColors.darkBackgroundGray,
+            bounce: true,
+            expand: expand ?? false,
+            useRootNavigator: true,
+          )
+        : await showMaterialModalBottomSheet(
+            context: context,
+            builder: (context) => child,
+            expand: expand ?? false,
+            backgroundColor: Theme.of(context).cardColor,
+            bounce: true,
+            useRootNavigator: true,
+          );
 
     return result;
   }

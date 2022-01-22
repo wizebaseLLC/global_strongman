@@ -119,6 +119,7 @@ class ReviewTileData extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   onPressed: () => SlidingBottomSheetBuilder(
                     context: context,
+                    expand: true,
                     child: ReviewBottomSheetWidget(
                       program: program,
                       currentReview: review.review,

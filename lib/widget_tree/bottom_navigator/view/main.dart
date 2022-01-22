@@ -20,8 +20,8 @@ class BottomNavigator extends StatefulWidget {
 
 class _BottomNavigatorState extends State<BottomNavigator> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  int _selectedTabIndex = 1;
-  PlatformTabController tabController = PlatformTabController(initialIndex: 1);
+  int _selectedTabIndex = 0;
+  PlatformTabController tabController = PlatformTabController(initialIndex: 0);
 
   List<PlatformAppBar?> get appBar => screens.map((e) => e.appBar).toList();
 
@@ -59,12 +59,17 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       itemChanged: (index) => setState(() {
         _selectedTabIndex = index;
       }),
-      iosContentPadding: true,
-      iosContentBottomPadding: true,
       cupertino: (context, platform) => CupertinoTabScaffoldData(),
+      material: (context, platform) => MaterialTabScaffoldData(),
+      materialTabs: (context, platform) => MaterialNavBarData(
+        fixedColor: Colors.blue,
+      ),
       items: [
         BottomNavigationBarItem(
-          icon: Icon(PlatformIcons(context).home),
+          icon: Icon(
+            PlatformIcons(context).home,
+            color: _getIconColor(0),
+          ),
           label: "Home",
         ),
         // BottomNavigationBarItem(
@@ -72,28 +77,34 @@ class _BottomNavigatorState extends State<BottomNavigator> {
         //   label: "Watch",
         // ),
 
-        const BottomNavigationBarItem(
-          icon: FaIcon(FontAwesomeIcons.chartLine),
+        BottomNavigationBarItem(
+          icon: FaIcon(
+            FontAwesomeIcons.chartLine,
+            color: _getIconColor(1),
+          ),
           label: "Activity",
         ),
         BottomNavigationBarItem(
-          icon: SvgPicture.asset(
-            "assets/images/muscle.svg",
-            color: Platform.isIOS
-                ? _selectedTabIndex == 2
-                    ? CupertinoColors.activeBlue
-                    : CupertinoColors.systemGrey
-                : _selectedTabIndex == 2
-                    ? Colors.blue
-                    : Colors.grey.withOpacity(.2),
-          ),
+          icon: SvgPicture.asset("assets/images/muscle.svg",
+              color: _getIconColor(2)),
           label: "Workouts",
         ),
         BottomNavigationBarItem(
-          icon: Icon(PlatformIcons(context).person),
+          icon: Icon(
+            PlatformIcons(context).person,
+            color: _getIconColor(3),
+          ),
           label: "Profile",
         ),
       ],
     );
   }
+
+  Color _getIconColor(int index) => Platform.isIOS
+      ? _selectedTabIndex == index
+          ? CupertinoColors.activeBlue
+          : CupertinoColors.systemGrey
+      : _selectedTabIndex == index
+          ? Colors.blue
+          : Colors.grey.withOpacity(.2);
 }

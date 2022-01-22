@@ -50,6 +50,7 @@ class ReviewButton extends StatelessWidget {
           onPressed: () => SlidingBottomSheetBuilder(
             context: context,
             child: ReviewBottomSheetWidget(program: program),
+            expand: true,
           ).showAsBottomSheet(),
         ),
       ],
