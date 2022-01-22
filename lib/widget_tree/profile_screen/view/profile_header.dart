@@ -110,6 +110,7 @@ class ProfileHeader extends StatelessWidget {
                               fullscreenDialog: true,
                               builder: (context) => ProfileImageView(
                                 url: firebaseUser.avatar!,
+                                heroTag: "profile_gallery_avatar",
                               ),
                             ),
                           ),
