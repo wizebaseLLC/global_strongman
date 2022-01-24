@@ -4,21 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/ProgressGalleryCard.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProgressLineChart extends StatelessWidget {
   const ProgressLineChart({
     required this.streamedGallery,
-    required this.initialWeight,
-    required this.currentWeight,
     Key? key,
   }) : super(key: key);
 
   final List<QueryDocumentSnapshot<ProgressGalleryCard>>? streamedGallery;
-  final String initialWeight;
-  final String currentWeight;
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider firebaseUser = context.watch<UserProvider>();
+    final String initialWeight = firebaseUser.firebaseUser?.weight ?? "0";
+    final String currentWeight =
+        firebaseUser.firebaseUser?.current_weight ?? "0";
     final direction =
         int.parse(initialWeight) > int.parse(currentWeight) ? "-" : "+";
     final difference = direction == "-"

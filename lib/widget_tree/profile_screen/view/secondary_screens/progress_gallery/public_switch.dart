@@ -58,6 +58,11 @@ class _PublicSwitchState extends State<PublicSwitch> {
               ),
               actions: <Widget>[
                 PlatformDialogAction(
+                  cupertino: (context, platform) => CupertinoDialogActionData(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                   child: PlatformText("Ok"),
                   onPressed: () => Navigator.pop(context),
                 ),

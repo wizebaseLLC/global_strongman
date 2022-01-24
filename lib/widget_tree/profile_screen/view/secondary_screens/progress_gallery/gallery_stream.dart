@@ -63,8 +63,6 @@ class GalleryStream extends StatelessWidget {
                         ),
                         child: ProgressLineChart(
                           streamedGallery: streamedGallery,
-                          initialWeight: firebaseUser.weight ?? "0",
-                          currentWeight: firebaseUser.current_weight ?? "0",
                         ),
                       ),
                     Padding(
