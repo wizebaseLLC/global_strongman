@@ -34,7 +34,10 @@ class FilteredVaultListScreen extends StatelessWidget {
                 heroId: heroId,
                 image: image,
               ),
-              VaultGrid(query: query)
+              VaultGrid(
+                query: query,
+                title: title,
+              )
             ],
           ),
         ),

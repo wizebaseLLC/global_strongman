@@ -9,15 +9,16 @@ class ProgressLineChart extends StatelessWidget {
   const ProgressLineChart({
     required this.streamedGallery,
     required this.initialWeight,
+    required this.currentWeight,
     Key? key,
   }) : super(key: key);
 
   final List<QueryDocumentSnapshot<ProgressGalleryCard>>? streamedGallery;
   final String initialWeight;
+  final String currentWeight;
 
   @override
   Widget build(BuildContext context) {
-    final currentWeight = streamedGallery?.first.data().weight ?? initialWeight;
     final direction =
         int.parse(initialWeight) > int.parse(currentWeight) ? "-" : "+";
     final difference = direction == "-"

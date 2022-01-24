@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:global_strongman/core/model/ProgressGalleryCard.dart';
 import 'package:global_strongman/widget_tree/login_screen/controller/sign_in_controller.dart';
 
@@ -23,6 +24,7 @@ class FirebaseUser {
     this.gender,
     this.height,
     this.weight,
+    this.current_weight,
     this.goals,
     this.is_gallery_public,
     this.injuries,
@@ -40,6 +42,7 @@ class FirebaseUser {
   final String? gender;
   final String? height;
   final String? weight;
+  final String? current_weight;
   final int? strength;
   final int? rehab;
   final int? strongman;
@@ -58,6 +61,7 @@ class FirebaseUser {
           avatar: json['avatar'] as String?,
           email: json['email'] as String,
           experience: json['experience'] as String?,
+          current_weight: json['current_weight'] as String?,
           first_name: json['first_name'] as String?,
           last_name: json['last_name'] as String?,
           gender: json['gender'] as String?,
@@ -92,6 +96,7 @@ class FirebaseUser {
       "rehab": active_days,
       "strongman": active_days,
       "cardio": active_days,
+      "current_weight": current_weight,
     };
   }
 
@@ -219,6 +224,18 @@ class FirebaseUser {
       ref.delete();
     } catch (e) {
       SignInController().showDialog(context, "Failed to upload image: $e");
+    }
+  }
+
+  Future<void> updateCurrentWeight({required String value}) async {
+    try {
+      getDocumentReference().update({
+        "current_weight": value,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }

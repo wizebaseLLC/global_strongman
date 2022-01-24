@@ -39,7 +39,7 @@ class _ProgressPhotoScreenState extends State<ProgressPhotoScreen> {
   @override
   void initState() {
     setState(() {
-      weight = widget.firebaseUser.weight;
+      weight = widget.firebaseUser.current_weight ?? widget.firebaseUser.weight;
     });
     super.initState();
   }
@@ -192,13 +192,16 @@ class _ProgressPhotoScreenState extends State<ProgressPhotoScreen> {
                   color: Colors.grey,
                 ),
           onPress: () async {
-            final picker =
-                PlatformPicker(pickerValue: widget.firebaseUser.weight, list: [
-              "None",
-              ...[
-                for (var i = 80; i <= 600; i++) i.toString(),
-              ]
-            ]);
+            final picker = PlatformPicker(
+                pickerValue: widget.firebaseUser.current_weight ??
+                    widget.firebaseUser.weight ??
+                    "0",
+                list: [
+                  "None",
+                  ...[
+                    for (var i = 80; i <= 600; i++) i.toString(),
+                  ]
+                ]);
 
             await picker.showPicker(
               context: context,
@@ -500,6 +503,9 @@ class _ProgressPhotoScreenState extends State<ProgressPhotoScreen> {
                 description: description,
                 date: date,
               );
+              if (weight != null) {
+                await widget.firebaseUser.updateCurrentWeight(value: weight!);
+              }
               setState(() {
                 saving = false;
               });

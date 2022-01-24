@@ -60,4 +60,85 @@ final List<VaultItem> vaultItems = [
         .where("categories", arrayContains: "rehab")
         .orderBy("name"),
   ),
+  VaultItem(
+    title: "Compound",
+    subtitle: "Train multiple muscles at once",
+    image: "compound.jpg",
+    query: FirebaseProgramWorkouts()
+        .getWorkoutCatalogCollectionReference()
+        .where("categories", arrayContains: "compound")
+        .orderBy("name"),
+  ),
+  VaultItem(
+    title: "Isolation",
+    subtitle: "Give your specific muscle groups some love",
+    image: "isolation.jpg",
+    query: FirebaseProgramWorkouts()
+        .getWorkoutCatalogCollectionReference()
+        .where("categories", arrayContains: "isolation")
+        .orderBy("name"),
+  ),
+  VaultItem(
+    title: "Arms",
+    subtitle: "Experience a sick arm pump",
+    image: "bicep_curls.jpg",
+    query: FirebaseProgramWorkouts()
+        .getWorkoutCatalogCollectionReference()
+        .where("categories", arrayContains: "arms")
+        .orderBy("name"),
+  ),
+  VaultItem(
+    title: "Legs",
+    subtitle: "Never skip leg day",
+    image: "fitness_background_2.jpg",
+    query: FirebaseProgramWorkouts()
+        .getWorkoutCatalogCollectionReference()
+        .where("categories", arrayContains: "legs")
+        .orderBy("name"),
+  ),
+  VaultItem(
+    title: "Back",
+    subtitle: "Earn your wings with these lat workouts",
+    image: "pullups.jpg",
+    query: FirebaseProgramWorkouts()
+        .getWorkoutCatalogCollectionReference()
+        .where("categories", arrayContains: "back")
+        .orderBy("name"),
+  ),
+  VaultItem(
+    title: "Shoulders",
+    subtitle: "Activate your delts with these workouts",
+    image: "barbell_press.jpg",
+    query: FirebaseProgramWorkouts()
+        .getWorkoutCatalogCollectionReference()
+        .where("categories", arrayContains: "shoulders")
+        .orderBy("name"),
+  ),
+  VaultItem(
+    title: "Chest",
+    subtitle: "Fill out your shirts with these chest workouts",
+    image: "bench_press.jpg",
+    query: FirebaseProgramWorkouts()
+        .getWorkoutCatalogCollectionReference()
+        .where("categories", arrayContains: "chest")
+        .orderBy("name"),
+  ),
+  VaultItem(
+    title: "Traps",
+    subtitle: "Get Yoked with these trap workouts",
+    image: "traps.jpg",
+    query: FirebaseProgramWorkouts()
+        .getWorkoutCatalogCollectionReference()
+        .where("categories", arrayContains: "traps")
+        .orderBy("name"),
+  ),
+  VaultItem(
+    title: "Core",
+    subtitle: "Washboard abs are built here",
+    image: "abs.jpg",
+    query: FirebaseProgramWorkouts()
+        .getWorkoutCatalogCollectionReference()
+        .where("categories", arrayContains: "core")
+        .orderBy("name"),
+  ),
 ];

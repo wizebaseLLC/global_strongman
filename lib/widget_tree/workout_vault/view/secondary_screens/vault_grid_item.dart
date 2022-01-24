@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:focused_menu/modals.dart';
+import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/view_workout_screen.dart';
 import 'package:focused_menu/focused_menu.dart';
@@ -70,7 +71,10 @@ class VaultGridItem extends StatelessWidget {
           ),
         ],
         child: CupertinoButton(
-          child: child!,
+          child: Hero(
+            tag: "${workout.name}_vault",
+            child: child!,
+          ),
           padding: EdgeInsets.zero,
           onPressed: () => _onTap(context),
         ),
@@ -118,24 +122,28 @@ class VaultGridItem extends StatelessWidget {
               onPressed: () {}),
         ],
         onPressed: () {},
-        child: Container(
-          decoration: _buildBoxDecoration(),
-          child: child,
+        child: Hero(
+          tag: "${workout.name}_vault",
+          child: Container(
+            decoration: _buildBoxDecoration(),
+            child: child,
+          ),
         ),
       ),
       child: Container(
         alignment: Alignment.center,
         decoration: Platform.isIOS ? _buildBoxDecoration() : null,
+        padding: const EdgeInsets.symmetric(horizontal: kSpacing),
         child: Text(
           workout.name!,
           style: platformThemeData(
             context,
             material: (data) => data.textTheme.subtitle1?.copyWith(
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.w900,
             ),
             cupertino: (data) => data.textTheme.navTitleTextStyle.copyWith(
-              fontSize: 16,
+              fontSize: 15,
               fontWeight: FontWeight.w900,
             ),
           ),

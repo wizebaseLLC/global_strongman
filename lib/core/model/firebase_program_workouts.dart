@@ -22,6 +22,7 @@ class FirebaseProgramWorkouts {
     this.percent,
     this.weekly_increment,
     this.categories,
+    this.has_video,
   });
 
   final String? description;
@@ -36,6 +37,7 @@ class FirebaseProgramWorkouts {
   final String? percent;
   final int? weekly_increment;
   final List<dynamic>? categories;
+  final bool? has_video;
 
   FirebaseProgramWorkouts.fromJson(Map<String, Object?> json)
       : this(
@@ -48,6 +50,7 @@ class FirebaseProgramWorkouts {
           short_video_url: json['short_video_url'] as String?,
           thumbnail: json['thumbnail'] as String?,
           minutes: json['minutes'] as int?,
+          has_video: json['has_video'] as bool?,
           percent: json['percent'] as String?,
           weekly_increment: json['weekly_increment'] as int?,
           categories: json['categories'] as List<dynamic>?,
@@ -67,6 +70,7 @@ class FirebaseProgramWorkouts {
       'percent': percent,
       'weekly_increment': weekly_increment,
       'categories': categories,
+      'has_video': has_video,
     };
   }
 

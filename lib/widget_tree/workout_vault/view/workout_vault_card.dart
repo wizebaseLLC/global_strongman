@@ -26,7 +26,7 @@ class WorkoutVaultCard extends StatelessWidget {
       platformPageRoute(
         context: context,
         builder: (_) => FilteredVaultListScreen(
-          heroId: "assets/images/$image",
+          heroId: "assets/images/${image}_$title",
           image: "assets/images/$image",
           title: title,
           query: query,
@@ -45,7 +45,7 @@ class WorkoutVaultCard extends StatelessWidget {
     return PlatformWidgetBuilder(
       cupertino: (_, child, __) => CupertinoButton(
         child: Hero(
-          tag: "assets/images/$image",
+          tag: "assets/images/${image}_$title",
           child: Container(
             width: double.infinity,
             height: _height,
@@ -57,7 +57,7 @@ class WorkoutVaultCard extends StatelessWidget {
         padding: EdgeInsets.zero,
       ),
       material: (_, child, __) => Hero(
-        tag: "assets/images/$image",
+        tag: "assets/images/${image}_$title",
         child: Material(
           child: Ink(
             width: double.infinity,

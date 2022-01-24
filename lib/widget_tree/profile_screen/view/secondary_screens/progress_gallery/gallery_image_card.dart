@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutterfire_ui/firestore.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/controller/showPlatformActionSheet.dart';
 import 'package:global_strongman/core/model/ProgressGalleryCard.dart';
@@ -16,10 +17,12 @@ class GalleryImageCardContainer extends StatelessWidget {
     Key? key,
     required this.firebaseUser,
     required this.galleryList,
+    required this.snapshot,
   }) : super(key: key);
 
   final FirebaseUser firebaseUser;
   final List<GalleryImageCard> galleryList;
+  final FirestoreQueryBuilderSnapshot<ProgressGalleryCard> snapshot;
 
   /// Delete document on long press.
   Future<void> _deleteDocument({
@@ -44,64 +47,77 @@ class GalleryImageCardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      primary: false,
-      itemCount: galleryList.length,
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      physics: const ScrollPhysics(),
-      itemBuilder: (context, index) => GestureDetector(
-        onLongPress: () async {
-          final actionSheetData =
-              PlatformActionSheet(title: "Progress Photo", model: [
-            ActionSheetModel(
-              title: 'Delete',
-              iconMaterial: const Icon(Icons.delete),
-              onTap: () => _deleteDocument(index: index, context: context),
-              textStyle: const TextStyle(color: Colors.redAccent),
+    return SliverFixedExtentList(
+      itemExtent: 200,
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+            snapshot.fetchMore();
+          }
+          return Material(
+            color: platformThemeData(
+              context,
+              material: (data) => data.scaffoldBackgroundColor,
+              cupertino: (data) => data.scaffoldBackgroundColor,
             ),
-          ]);
+            child: GestureDetector(
+              onLongPress: () async {
+                final actionSheetData =
+                    PlatformActionSheet(title: "Progress Photo", model: [
+                  ActionSheetModel(
+                    title: 'Delete',
+                    iconMaterial: const Icon(Icons.delete),
+                    onTap: () =>
+                        _deleteDocument(index: index, context: context),
+                    textStyle: const TextStyle(color: Colors.redAccent),
+                  ),
+                ]);
 
-          showPlatformActionSheet(
-            context: context,
-            actionSheetData: actionSheetData,
+                showPlatformActionSheet(
+                  context: context,
+                  actionSheetData: actionSheetData,
+                );
+              },
+              child: PlatformWidget(
+                cupertino: (context, _) => CupertinoButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        fullscreenDialog: true,
+                        builder: (context) => ProfileImageView(
+                          heroTag: galleryList[index].imageUrl,
+                          title: "Progress Photo",
+                          url: galleryList[index].imageUrl,
+                        ),
+                      ),
+                    );
+                  },
+                  padding: EdgeInsets.zero,
+                  child: galleryList[index],
+                ),
+                material: (context, _) => InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      platformPageRoute(
+                        context: context,
+                        builder: (context) => ProfileImageView(
+                          heroTag: galleryList[index].imageUrl,
+                          title: "Progress Photo",
+                          url: galleryList[index].imageUrl,
+                        ),
+                      ),
+                    );
+                  },
+                  child: galleryList[index],
+                ),
+              ),
+            ),
           );
         },
-        child: PlatformWidget(
-          cupertino: (context, _) => CupertinoButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  fullscreenDialog: true,
-                  builder: (context) => ProfileImageView(
-                    heroTag: galleryList[index].imageUrl,
-                    title: "Progress Photo",
-                    url: galleryList[index].imageUrl,
-                  ),
-                ),
-              );
-            },
-            padding: EdgeInsets.zero,
-            child: galleryList[index],
-          ),
-          material: (context, _) => InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: () {
-              Navigator.push(
-                context,
-                platformPageRoute(
-                  context: context,
-                  builder: (context) => ProfileImageView(
-                    heroTag: galleryList[index].imageUrl,
-                    title: "Progress Photo",
-                    url: galleryList[index].imageUrl,
-                  ),
-                ),
-              );
-            },
-            child: galleryList[index],
-          ),
-        ),
+        childCount: galleryList.length,
       ),
     );
   }

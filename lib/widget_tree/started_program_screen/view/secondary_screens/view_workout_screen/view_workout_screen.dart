@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/controller/badges_controller.dart';
@@ -200,6 +199,32 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
     //     .get()
     //     .then((value) =>
     //         value.data()?.createCatalogWorkout(docName: widget.workout_id));
+
+    // FirebaseProgramWorkouts(
+    //   name: "Yushchevel Walk",
+    //   categories: [
+    //     "strength",
+    //     "cardio",
+    //     "strongman",
+    //     // "rehab",
+    //     //"arms",
+    //     "legs",
+    //     "back",
+    //     //"shoulders",
+    //     // "chest",
+    //     "compound",
+    //     //  "traps",
+    //     //"isolation",
+    //     "core",
+    //   ],
+    //   description: "temp",
+    //   has_video: false,
+    //   thumbnail:
+    //       "https://firebasestorage.googleapis.com/v0/b/global-strongman.appspot.com/o/Programs%2Fthumbnails%2FB707D09F-03F3-44A2-959F-2F724AA18FF4.jpeg?alt=media&token=510d1716-a083-4ee5-93fc-9b9719f80fa6",
+    // ).createCatalogWorkout(
+    //   docName: "yushchevel_walk",
+    // );
+
     super.initState();
   }
 
@@ -232,164 +257,175 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                       Expanded(
                         flex: 10,
                         child: CustomScrollView(
-                          physics: const BouncingScrollPhysics(),
                           slivers: [
                             SliverVideoAppBar(workout: widget.workout),
-                            SliverList(
-                              delegate: SliverChildListDelegate(
-                                [
-                                  WorkoutTitle(workout: widget.workout),
-                                  if (snapshot.data!.docs.length > 1)
-                                    const SizedBox(height: kSpacing * 3),
-                                  if (snapshot.data!.docs.length > 1)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing,
-                                      ),
-                                      child: ProgressionLineChart(
-                                        seriesList: snapshot.data!.docs,
-                                        animate: true,
-                                      ),
-                                    ),
-                                  const SizedBox(height: kSpacing * 4),
-                                  WorkoutDescription(
-                                    title: "Training tips",
-                                    subtitle: widget.workout.description!,
-                                  ),
-                                  if (widget.workout.weekly_increment != null)
-                                    const SizedBox(height: kSpacing * 4),
-                                  if (widget.workout.weekly_increment != null)
-                                    WorkoutDescription(
-                                      title: "Progression",
-                                      subtitle:
-                                          "Increase the weight by ${widget.workout.weekly_increment!}lbs (${(widget.workout.weekly_increment! / 2.2046).toStringAsFixed(1)}kg) weekly",
-                                    ),
-                                  const SizedBox(height: kSpacing * 4),
-                                  const WorkoutDescription(
-                                    title: "Log today's session",
-                                    subtitle: "",
-                                  ),
-                                  const SizedBox(height: kSpacing),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: kSpacing,
-                                    ),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          flex: 3,
-                                          child: PlatformTextField(
-                                            textCapitalization:
-                                                TextCapitalization.sentences,
-                                            hintText: measurement ==
-                                                    Measurement.seconds
-                                                ? "Seconds"
-                                                : "Working weight",
-                                            controller: _controller,
-                                            keyboardType: const TextInputType
-                                                .numberWithOptions(),
-                                            cupertino: (_, __) =>
-                                                CupertinoTextFieldData(
-                                              textCapitalization:
-                                                  TextCapitalization.sentences,
-                                              decoration: const BoxDecoration(
-                                                color: CupertinoColors
-                                                    .darkBackgroundGray,
-                                              ),
-                                            ),
-                                            material: (_, __) =>
-                                                MaterialTextFieldData(
-                                              textCapitalization:
-                                                  TextCapitalization.sentences,
-                                              decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 2,
-                                          child: MeasurementRadioButtons(
-                                            measurement: measurement,
-                                            setState: (value) => setState(
-                                              () {
-                                                measurement = value;
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: kSpacing * 4),
-                                  const WorkoutDescription(
-                                    title: "Notes",
-                                    subtitle: "",
-                                  ),
-                                  const SizedBox(height: kSpacing),
-                                  if (foundKey != null)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing,
-                                      ),
-                                      child: Text(
-                                        foundKey!,
-                                        style: platformThemeData(
-                                          context,
-                                          material: (data) => data
-                                              .textTheme.headline6
-                                              ?.copyWith(
-                                            fontSize: 14,
-                                            color: Colors.white30,
-                                          ),
-                                          cupertino: (data) => data
-                                              .textTheme.navTitleTextStyle
-                                              .copyWith(
-                                            fontSize: 14,
-                                            color: CupertinoColors.systemGrey,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  if (foundKey != null)
+                            SliverPadding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing,
+                              ),
+                              sliver: SliverList(
+                                delegate: SliverChildListDelegate(
+                                  [
                                     const SizedBox(
-                                      height: kSpacing * 2,
+                                      height: kSpacing,
                                     ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: kSpacing,
-                                    ),
-                                    child: PlatformTextField(
-                                      textCapitalization:
-                                          TextCapitalization.sentences,
-                                      hintText: "What did I learn this session",
-                                      minLines: 2,
-                                      maxLines: 10,
-                                      controller: _notesController,
-                                      keyboardType: TextInputType.multiline,
-                                      cupertino: (_, __) =>
-                                          CupertinoTextFieldData(
-                                        textCapitalization:
-                                            TextCapitalization.sentences,
-                                        decoration: const BoxDecoration(
-                                          color: CupertinoColors
-                                              .darkBackgroundGray,
+                                    WorkoutTitle(workout: widget.workout),
+                                    if (snapshot.data!.docs.length > 1)
+                                      const SizedBox(height: kSpacing * 3),
+                                    if (snapshot.data!.docs.length > 1)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: kSpacing,
+                                        ),
+                                        child: ProgressionLineChart(
+                                          seriesList: snapshot.data!.docs,
+                                          animate: true,
                                         ),
                                       ),
-                                      material: (_, __) =>
-                                          MaterialTextFieldData(
+                                    const SizedBox(height: kSpacing * 4),
+                                    WorkoutDescription(
+                                      title: "Training tips",
+                                      subtitle: widget.workout.description!,
+                                    ),
+                                    if (widget.workout.weekly_increment != null)
+                                      const SizedBox(height: kSpacing * 4),
+                                    if (widget.workout.weekly_increment != null)
+                                      WorkoutDescription(
+                                        title: "Progression",
+                                        subtitle:
+                                            "Increase the weight by ${widget.workout.weekly_increment!}lbs (${(widget.workout.weekly_increment! / 2.2046).toStringAsFixed(1)}kg) weekly",
+                                      ),
+                                    const SizedBox(height: kSpacing * 4),
+                                    const WorkoutDescription(
+                                      title: "Log today's session",
+                                      subtitle: "",
+                                    ),
+                                    const SizedBox(height: kSpacing),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing,
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            flex: 3,
+                                            child: PlatformTextField(
+                                              textCapitalization:
+                                                  TextCapitalization.sentences,
+                                              hintText: measurement ==
+                                                      Measurement.seconds
+                                                  ? "Seconds"
+                                                  : "Working weight",
+                                              controller: _controller,
+                                              keyboardType: const TextInputType
+                                                  .numberWithOptions(),
+                                              cupertino: (_, __) =>
+                                                  CupertinoTextFieldData(
+                                                textCapitalization:
+                                                    TextCapitalization
+                                                        .sentences,
+                                                decoration: const BoxDecoration(
+                                                  color: CupertinoColors
+                                                      .darkBackgroundGray,
+                                                ),
+                                              ),
+                                              material: (_, __) =>
+                                                  MaterialTextFieldData(
+                                                textCapitalization:
+                                                    TextCapitalization
+                                                        .sentences,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: MeasurementRadioButtons(
+                                              measurement: measurement,
+                                              setState: (value) => setState(
+                                                () {
+                                                  measurement = value;
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: kSpacing * 4),
+                                    const WorkoutDescription(
+                                      title: "Notes",
+                                      subtitle: "",
+                                    ),
+                                    const SizedBox(height: kSpacing),
+                                    if (foundKey != null)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: kSpacing,
+                                        ),
+                                        child: Text(
+                                          foundKey!,
+                                          style: platformThemeData(
+                                            context,
+                                            material: (data) => data
+                                                .textTheme.headline6
+                                                ?.copyWith(
+                                              fontSize: 14,
+                                              color: Colors.white30,
+                                            ),
+                                            cupertino: (data) => data
+                                                .textTheme.navTitleTextStyle
+                                                .copyWith(
+                                              fontSize: 14,
+                                              color: CupertinoColors.systemGrey,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    if (foundKey != null)
+                                      const SizedBox(
+                                        height: kSpacing * 2,
+                                      ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: kSpacing,
+                                      ),
+                                      child: PlatformTextField(
                                         textCapitalization:
                                             TextCapitalization.sentences,
-                                        decoration: const InputDecoration(
-                                          border: OutlineInputBorder(),
+                                        hintText:
+                                            "What did I learn this session",
+                                        minLines: 2,
+                                        maxLines: 10,
+                                        controller: _notesController,
+                                        keyboardType: TextInputType.multiline,
+                                        cupertino: (_, __) =>
+                                            CupertinoTextFieldData(
+                                          textCapitalization:
+                                              TextCapitalization.sentences,
+                                          decoration: const BoxDecoration(
+                                            color: CupertinoColors
+                                                .darkBackgroundGray,
+                                          ),
+                                        ),
+                                        material: (_, __) =>
+                                            MaterialTextFieldData(
+                                          textCapitalization:
+                                              TextCapitalization.sentences,
+                                          decoration: const InputDecoration(
+                                            border: OutlineInputBorder(),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(height: kSpacing * 4),
-                                ],
+                                    const SizedBox(height: kSpacing * 4),
+                                  ],
+                                ),
                               ),
                             )
                           ],
@@ -397,8 +433,8 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                          left: kSpacing,
-                          right: kSpacing,
+                          left: kSpacing * 2,
+                          right: kSpacing * 2,
                           bottom: kSpacing * 2,
                         ),
                         child: SizedBox(

@@ -9,9 +9,11 @@ class VaultGrid extends StatelessWidget {
   const VaultGrid({
     Key? key,
     required this.query,
+    required this.title,
   }) : super(key: key);
 
   final Query<FirebaseProgramWorkouts> query;
+  final String title;
   @override
   Widget build(BuildContext context) {
     return FirestoreQueryBuilder<FirebaseProgramWorkouts>(
