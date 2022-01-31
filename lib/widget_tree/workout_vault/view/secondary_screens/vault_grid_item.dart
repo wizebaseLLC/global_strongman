@@ -24,6 +24,7 @@ class VaultGridItem extends StatelessWidget {
       context,
       platformPageRoute(
         context: context,
+        fullscreenDialog: true,
         builder: (context) => ViewWorkoutScreen(
           workout: workout,
           workout_id: workoutId,
@@ -35,6 +36,7 @@ class VaultGridItem extends StatelessWidget {
         image: DecorationImage(
           image: CachedNetworkImageProvider(
             workout.thumbnail!,
+            maxWidth: 642,
           ),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(

@@ -49,6 +49,7 @@ class FilteredVaultAppBar extends StatelessWidget {
           heroId: heroId,
           image: Image.asset(
             image,
+            cacheHeight: 741,
             fit: BoxFit.cover,
           ),
         ),

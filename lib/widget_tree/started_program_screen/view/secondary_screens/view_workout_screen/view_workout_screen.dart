@@ -215,8 +215,6 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(list.items.map((x) => x.toJson()));
-
     return PlatformScaffold(
       body: GestureDetector(
         onTap: () {
