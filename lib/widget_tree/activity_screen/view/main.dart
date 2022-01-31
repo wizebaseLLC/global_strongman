@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/providers/activity_interace_provider.dart';
 import 'package:global_strongman/core/providers/badge_current_values.dart';
@@ -33,65 +35,83 @@ class _ActivityScreenState extends State<ActivityScreen> {
       completedWorkouts: activityInterfaceProvider.completedWorkouts,
     );
     return SafeArea(
-      child: RefreshIndicator(
-        backgroundColor: kPrimaryColor,
-        color: Colors.white,
-        onRefresh: () async {
-          HapticFeedback.mediumImpact();
-          context.read<BadgeCurrentValues>().runSetMetrics();
-          context.read<ActivityInterfaceProvider>().createWorkoutInterface();
-        },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-            child: Column(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    WorkoutSetsCard(
-                      activityInterface: activityInterface,
-                    ),
-                    const SizedBox(
-                      height: kSpacing * 4,
-                    ),
-                    const WorkoutDescription(
-                      title: "Categories",
-                      subtitle: "Workouts completed by category",
-                    ),
-                    WorkoutsCompletedByCategory(
-                      activityInterface: activityInterface,
-                    ),
-                    const SizedBox(
-                      height: kSpacing * 4,
-                    ),
-                    const WorkoutDescription(
-                      title: "Workout Calendar",
-                      subtitle: "",
-                    ),
-                    ActivityCalendar(
-                      activityInterface: activityInterface,
-                      selectedDay: selectedDay,
-                      setActivityScreenState: (pickedDate) {
-                        setState(() {
-                          selectedDay = pickedDate;
-                        });
-                      },
-                    ),
-                    // const SizedBox(
-                    //   height: kSpacing * 3,
-                    // ),
-                  ],
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 2,
-                  child: WorkoutListByDay(
-                    selectedDate: selectedDay,
-                  ),
-                ),
-              ],
+      child: PlatformWidgetBuilder(
+        cupertino: (_, child, __) => CustomScrollView(
+          slivers: [
+            CupertinoSliverRefreshControl(
+              onRefresh: () async {
+                HapticFeedback.mediumImpact();
+                context.read<BadgeCurrentValues>().runSetMetrics();
+                context
+                    .read<ActivityInterfaceProvider>()
+                    .createWorkoutInterface();
+              },
             ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [child!],
+              ),
+            ),
+          ],
+        ),
+        material: (_, child, __) => RefreshIndicator(
+          backgroundColor: kPrimaryColor,
+          color: Colors.white,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: child!,
+          ),
+          onRefresh: () async {
+            HapticFeedback.mediumImpact();
+            context.read<BadgeCurrentValues>().runSetMetrics();
+            context.read<ActivityInterfaceProvider>().createWorkoutInterface();
+          },
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+          child: Column(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WorkoutSetsCard(
+                    activityInterface: activityInterface,
+                  ),
+                  const SizedBox(
+                    height: kSpacing * 4,
+                  ),
+                  const WorkoutDescription(
+                    title: "Categories",
+                    subtitle: "Workouts completed by category",
+                  ),
+                  WorkoutsCompletedByCategory(
+                    activityInterface: activityInterface,
+                  ),
+                  const SizedBox(
+                    height: kSpacing * 4,
+                  ),
+                  const WorkoutDescription(
+                    title: "Workout Calendar",
+                    subtitle: "",
+                  ),
+                  ActivityCalendar(
+                    activityInterface: activityInterface,
+                    selectedDay: selectedDay,
+                    setActivityScreenState: (pickedDate) {
+                      setState(() {
+                        selectedDay = pickedDate;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 2,
+                child: WorkoutListByDay(
+                  selectedDate: selectedDay,
+                ),
+              ),
+            ],
           ),
         ),
       ),
