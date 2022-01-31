@@ -103,6 +103,7 @@ class WorkoutSetListItem {
       : this(
           working_weight_lbs: json['working_weight_lbs'] as num?,
           working_weight_kgs: json['working_weight_kgs'] as num?,
+          measurement: json['measurement'] as String?,
           seconds: json['seconds'] as num?,
         );
 
@@ -111,6 +112,7 @@ class WorkoutSetListItem {
       'working_weight_lbs': working_weight_lbs,
       'working_weight_kgs': working_weight_kgs,
       'seconds': seconds,
+      'measurement': measurement,
     };
   }
 }

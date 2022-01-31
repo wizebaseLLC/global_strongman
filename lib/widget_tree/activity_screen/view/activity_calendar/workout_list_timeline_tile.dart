@@ -42,20 +42,33 @@ class WorkoutListTimelineTile extends StatelessWidget {
   final bool? shouldShowDate;
 
   String? get _notes => completedWorkout.notes;
-  String? get _previousWeight => _workingSets
-      ?.map((workingSet) {
+  int? get _previousWeight => _workingSets?.map((workingSet) {
         if (workingSet.seconds != null && workingSet.seconds! > 0) {
           return workingSet.seconds?.toInt() ?? 0;
         } else {
           return workingSet.working_weight_lbs?.toInt() ?? 0;
         }
-      })
-      .reduce(max)
-      .toString();
+      }).reduce(max);
 
   List<WorkoutSetListItem>? get _workingSets => completedWorkout.working_sets
       ?.map((e) => WorkoutSetListItem.fromJson(e))
       .toList();
+
+  bool _workingSetIsSeconds() {
+    final List<WorkoutSetListItem>? workingSet = _workingSets?.where((e) {
+      if (e.seconds != null && e.working_weight_lbs != null) {
+        e.seconds == _previousWeight ||
+            e.working_weight_lbs?.toInt() == _previousWeight;
+      }
+      return false;
+    }).toList();
+
+    if (workingSet != null && workingSet.isNotEmpty) {
+      return workingSet.first.measurement == "seconds";
+    }
+
+    return false;
+  }
 
   Future<void> _deleteWorkout(BuildContext context, String? _user) async {
     if (_user != null) {
@@ -176,7 +189,7 @@ class WorkoutListTimelineTile extends StatelessWidget {
             ),
           ),
           endChild: (_notes == null || _notes?.isEmpty == true) &&
-                  _previousWeight?.isEmpty == true
+                  _previousWeight == null
               ? Padding(
                   padding: const EdgeInsets.only(
                     left: kSpacing * 2,
@@ -226,9 +239,10 @@ class WorkoutListTimelineTile extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if (_previousWeight != null)
+                                  if (_previousWeight != null &&
+                                      _previousWeight! > 0)
                                     Text(
-                                      _previousWeight!,
+                                      "$_previousWeight ${_workingSetIsSeconds() == true ? "seconds" : "lbs"}",
                                       style: platformThemeData(
                                         context,
                                         material: (data) =>

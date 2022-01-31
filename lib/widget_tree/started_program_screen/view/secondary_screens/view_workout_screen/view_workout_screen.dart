@@ -86,6 +86,13 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
 
   Future<void> _handleSubmitWorkoutComplete(BuildContext context) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      prefs.setString(
+        "${_user}_${widget.program_id}_${widget.workout_id}_notes",
+        _notesController.text,
+      );
+
       await FirebaseUserWorkoutComplete(
         created_on: DateTime.now(),
         program_id: widget.program_id,
@@ -459,7 +466,7 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                             onPressed: () =>
                                 _handleSubmitWorkoutComplete(context),
                             child: const Text(
-                              "Mark Workout as Completed",
+                              "Complete Workout",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,

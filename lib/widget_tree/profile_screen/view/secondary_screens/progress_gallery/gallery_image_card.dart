@@ -175,8 +175,8 @@ class GalleryImageCard extends StatelessWidget {
                 child: CachedNetworkImage(
                   imageUrl: imageUrl,
                   fit: BoxFit.cover,
-                  memCacheWidth: 340,
-                  width: MediaQuery.of(context).size.width * .4,
+                  memCacheHeight: 500,
+                  width: MediaQuery.of(context).size.width * .5,
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),

@@ -21,6 +21,7 @@ class SliverVideoAppBar extends StatelessWidget {
         stretchModes: const [
           StretchMode.fadeTitle,
           StretchMode.zoomBackground,
+          StretchMode.blurBackground,
         ],
         background: workout.short_video_url != null
             ? WorkoutVideo(

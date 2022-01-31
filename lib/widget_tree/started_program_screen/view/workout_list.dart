@@ -104,7 +104,7 @@ class _WorkoutListDayTilesState extends State<WorkoutListDayTiles> {
                       Navigator.popUntil(context, (route) => route.isFirst);
                     },
                     child: const Text(
-                      "Mark Program as Complete",
+                      "Complete Program",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

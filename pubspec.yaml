@@ -58,7 +58,7 @@ dev_dependencies:
 
 dependency_overrides:
   provider: ^6.0.0 # for chewie 1.2.2
-  platform: ^3.1.0
+  # platform: ^3.1.0
 
 flutter_icons:
   android: "launcher_icon"
