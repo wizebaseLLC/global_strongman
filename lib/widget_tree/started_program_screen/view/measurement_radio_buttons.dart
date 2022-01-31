@@ -26,79 +26,85 @@ class MeasurementRadioButtons extends StatelessWidget {
       );
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: [
-        ListTile(
-          visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-          dense: true,
-          title: Text(
-            'lbs',
-            style: platformThemeData(
-              context,
-              material: (data) => data.textTheme.bodyText1?.copyWith(
-                fontSize: 16,
-                color: Colors.white70,
-              ),
-              cupertino: (data) => data.textTheme.textStyle.copyWith(
-                fontSize: 16,
-                color: CupertinoColors.systemGrey3,
+        Expanded(
+          child: ListTile(
+            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+            dense: true,
+            title: Text(
+              'lbs',
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.bodyText1?.copyWith(
+                  fontSize: 16,
+                  color: Colors.white70,
+                ),
+                cupertino: (data) => data.textTheme.textStyle.copyWith(
+                  fontSize: 16,
+                  color: CupertinoColors.systemGrey3,
+                ),
               ),
             ),
-          ),
-          leading: Radio<Measurement>(
-            activeColor: kPrimaryColor,
-            fillColor: _fillColor,
-            value: Measurement.lbs,
-            groupValue: measurement,
-            onChanged: setState,
+            leading: Radio<Measurement>(
+              activeColor: kPrimaryColor,
+              fillColor: _fillColor,
+              value: Measurement.lbs,
+              groupValue: measurement,
+              onChanged: setState,
+            ),
           ),
         ),
-        ListTile(
-          visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-          dense: true,
-          title: Text(
-            'kgs',
-            style: platformThemeData(
-              context,
-              material: (data) => data.textTheme.bodyText1?.copyWith(
-                fontSize: 16,
-                color: Colors.white70,
-              ),
-              cupertino: (data) => data.textTheme.textStyle.copyWith(
-                fontSize: 16,
-                color: CupertinoColors.systemGrey3,
+        Expanded(
+          child: ListTile(
+            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+            dense: true,
+            title: Text(
+              'kgs',
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.bodyText1?.copyWith(
+                  fontSize: 16,
+                  color: Colors.white70,
+                ),
+                cupertino: (data) => data.textTheme.textStyle.copyWith(
+                  fontSize: 16,
+                  color: CupertinoColors.systemGrey3,
+                ),
               ),
             ),
-          ),
-          leading: Radio<Measurement>(
-            fillColor: _fillColor,
-            value: Measurement.kgs,
-            groupValue: measurement,
-            onChanged: setState,
+            leading: Radio<Measurement>(
+              fillColor: _fillColor,
+              value: Measurement.kgs,
+              groupValue: measurement,
+              onChanged: setState,
+            ),
           ),
         ),
-        ListTile(
-          visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
-          dense: true,
-          title: Text(
-            'secs',
-            style: platformThemeData(
-              context,
-              material: (data) => data.textTheme.bodyText1?.copyWith(
-                fontSize: 16,
-                color: Colors.white70,
-              ),
-              cupertino: (data) => data.textTheme.textStyle.copyWith(
-                fontSize: 16,
-                color: CupertinoColors.systemGrey3,
+        Expanded(
+          child: ListTile(
+            visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+            dense: true,
+            title: Text(
+              'secs',
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.bodyText1?.copyWith(
+                  fontSize: 16,
+                  color: Colors.white70,
+                ),
+                cupertino: (data) => data.textTheme.textStyle.copyWith(
+                  fontSize: 16,
+                  color: CupertinoColors.systemGrey3,
+                ),
               ),
             ),
-          ),
-          leading: Radio<Measurement>(
-            fillColor: _fillColor,
-            value: Measurement.seconds,
-            groupValue: measurement,
-            onChanged: setState,
+            leading: Radio<Measurement>(
+              fillColor: _fillColor,
+              value: Measurement.seconds,
+              groupValue: measurement,
+              onChanged: setState,
+            ),
           ),
         ),
       ],

@@ -1,4 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,20 @@ class WorkoutListTimelineTile extends StatelessWidget {
   final bool? shouldShowDate;
 
   String? get _notes => completedWorkout.notes;
-  String? get _previousWeight => completedWorkout.weight_used_string;
+  String? get _previousWeight => _workingSets
+      ?.map((workingSet) {
+        if (workingSet.seconds != null && workingSet.seconds! > 0) {
+          return workingSet.seconds?.toInt() ?? 0;
+        } else {
+          return workingSet.working_weight_lbs?.toInt() ?? 0;
+        }
+      })
+      .reduce(max)
+      .toString();
+
+  List<WorkoutSetListItem>? get _workingSets => completedWorkout.working_sets
+      ?.map((e) => WorkoutSetListItem.fromJson(e))
+      .toList();
 
   Future<void> _deleteWorkout(BuildContext context, String? _user) async {
     if (_user != null) {
@@ -49,7 +63,7 @@ class WorkoutListTimelineTile extends StatelessWidget {
       prefs.remove("${_user}_${program}_${completedWorkout.workout_id}");
     }
 
-    HapticFeedback.heavyImpact();
+    HapticFeedback.mediumImpact();
     _decrementUserCompletedWorkouts(_user);
     _updatedCompletedCategorizedWorkout();
     snapshot.reference.delete();

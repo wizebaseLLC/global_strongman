@@ -162,119 +162,85 @@ class GalleryImageCard extends StatelessWidget {
           material: (data) => data.cardColor,
           cupertino: (data) => data.barBackgroundColor,
         ),
-        child: Container(
-          padding: const EdgeInsets.all(kSpacing),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Hero(
-                  tag: imageUrl,
-                  child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    fit: BoxFit.cover,
-                    memCacheWidth: 340,
-                    width: MediaQuery.of(context).size.width * .3,
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                bottomLeft: Radius.circular(16),
+              ),
+              child: Hero(
+                tag: imageUrl,
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl,
+                  fit: BoxFit.cover,
+                  memCacheWidth: 340,
+                  width: MediaQuery.of(context).size.width * .4,
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
-              Expanded(
+            ),
+            Expanded(
+              child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: kSpacing),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CardStatText(
-                                title:
-                                    'Weight: ${weight ?? ""} ${weight != null ? "lbs" : ""}',
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: kSpacing),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: kSpacing / 2,
                               ),
-                              CardStatText(
-                                title:
-                                    'Bust: ${bust ?? ""} ${bust != null ? "in" : ""}',
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CardStatText(
+                                    title:
+                                        'Weight: ${weight ?? ""} ${weight != null ? "lbs" : ""}',
+                                  ),
+                                  CardStatText(
+                                    title:
+                                        'Bust: ${bust ?? ""} ${bust != null ? "in" : ""}',
+                                  ),
+                                  CardStatText(
+                                    title: 'BMI: ${bmi ?? ""}',
+                                  ),
+                                  CardStatText(
+                                    title:
+                                        'Waist: ${waist ?? ""}  ${waist != null ? "in" : ""}',
+                                  ),
+                                  CardStatText(
+                                    title:
+                                        'Hip: ${hip ?? ""}  ${hip != null ? "in" : ""}',
+                                  ),
+                                  CardStatText(
+                                    title:
+                                        'Body Fat: ${bodyFat ?? ""}  ${bodyFat != null ? "%" : ""}',
+                                  ),
+                                  CardStatText(
+                                    title: 'Date Taken: $date',
+                                  ),
+                                  CardStatText(
+                                    title: 'Notes: ${caption ?? ""}',
+                                  ),
+                                ],
                               ),
-                              CardStatText(
-                                title: 'BMI: ${bmi ?? ""}',
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: kSpacing * 2),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CardStatText(
-                                title:
-                                    'Waist: ${waist ?? ""}  ${waist != null ? "in" : ""}',
-                              ),
-                              CardStatText(
-                                title:
-                                    'Hip: ${hip ?? ""}  ${hip != null ? "in" : ""}',
-                              ),
-                              CardStatText(
-                                title:
-                                    'Body Fat: ${bodyFat ?? ""}  ${bodyFat != null ? "%" : ""}',
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: kSpacing),
-                      child: Text(
-                        date,
-                        style: platformThemeData(
-                          context,
-                          material: (data) =>
-                              data.textTheme.bodyText1?.copyWith(
-                            fontSize: 14,
-                            color: Colors.red.shade300,
-                          ),
-                          cupertino: (data) =>
-                              data.textTheme.textStyle.copyWith(
-                            fontSize: 16,
-                            color: Colors.red.shade300,
-                          ),
-                        ),
-                      ),
-                    ),
-                    if (caption != null)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: kSpacing * 2,
-                        ),
-                        child: Text(
-                          caption!,
-                          textAlign: TextAlign.center,
-                          style: platformThemeData(
-                            context,
-                            material: (data) =>
-                                data.textTheme.bodyText1?.copyWith(
-                              fontSize: 14,
-                            ),
-                            cupertino: (data) =>
-                                data.textTheme.textStyle.copyWith(
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -7,12 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/controller/badges_controller.dart';
+import 'package:global_strongman/core/controller/platformPicker.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
 import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
 import 'package:global_strongman/core/providers/activity_interace_provider.dart';
 import 'package:global_strongman/core/providers/badge_current_values.dart';
+import 'package:global_strongman/core/view/animated_sliver_list_wrapper.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/measurement_radio_buttons.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/description.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/progression_line_chart.dart';
@@ -43,9 +45,15 @@ class ViewWorkoutScreen extends StatefulWidget {
 
 class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
   Measurement? measurement = Measurement.lbs;
-  final TextEditingController _controller = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
   String? foundKey;
+
+  ListModel<WorkoutSetListItem> list = ListModel<WorkoutSetListItem>(
+    listKey: GlobalKey<SliverAnimatedListState>(),
+    items: <WorkoutSetListItem>[
+      WorkoutSetListItem(),
+    ],
+  );
 
   String get _user => FirebaseAuth.instance.currentUser!.email!;
 
@@ -78,50 +86,14 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
 
   Future<void> _handleSubmitWorkoutComplete(BuildContext context) async {
     try {
-      num lbs = 0;
-      num kgs = 0;
-      num seconds = 0;
-
-      if (_controller.text.isNotEmpty) {
-        if (measurement == Measurement.lbs) {
-          lbs = num.parse(_controller.text);
-          kgs = (num.parse(_controller.text)) / 2.2046;
-        } else if (measurement == Measurement.kgs) {
-          kgs = num.parse(_controller.text);
-          lbs = (num.parse(_controller.text)) * 2.2046;
-        } else {
-          seconds = num.parse(_controller.text);
-        }
-      }
-
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      prefs.setString(
-        "${_user}_${widget.program_id}_${widget.workout_id}_notes",
-        _notesController.text,
-      );
-
-      final String previousWeight = lbs > 0
-          ? ",  current: ${lbs.toStringAsFixed(1)} lbs (${kgs.toStringAsFixed(1)} kgs)"
-          : seconds > 0
-              ? ",  current: $seconds seconds"
-              : "";
-      prefs.setString(
-        "${_user}_${widget.program_id}_${widget.workout_id}_previousWeight",
-        previousWeight,
-      );
-
       await FirebaseUserWorkoutComplete(
         created_on: DateTime.now(),
-        seconds: seconds,
         program_id: widget.program_id,
-        working_weight_kgs: kgs,
-        working_weight_lbs: lbs,
+        working_sets: list.items.map((x) => x.toJson()).toList(),
         workout_id: widget.workout_id,
         categories: widget.workout.categories,
         day: widget.programDay?.id,
         notes: _notesController.text,
-        weight_used_string: previousWeight.replaceAll(",  current: ", ""),
         name: widget.workout.name,
       ).addCompletedWorkout(
         user: _user,
@@ -230,13 +202,14 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
     _notesController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(list.items.map((x) => x.toJson()));
+
     return PlatformScaffold(
       body: GestureDetector(
         onTap: () {
@@ -296,65 +269,99 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                                             "Increase the weight by ${widget.workout.weekly_increment!}lbs (${(widget.workout.weekly_increment! / 2.2046).toStringAsFixed(1)}kg) weekly",
                                       ),
                                     const SizedBox(height: kSpacing * 4),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SliverPadding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing,
+                              ),
+                              sliver: SliverList(
+                                delegate: SliverChildListDelegate(
+                                  [
                                     const WorkoutDescription(
                                       title: "Log today's session",
                                       subtitle: "",
                                     ),
                                     const SizedBox(height: kSpacing),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: kSpacing,
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            flex: 3,
-                                            child: PlatformTextField(
-                                              textCapitalization:
-                                                  TextCapitalization.sentences,
-                                              hintText: measurement ==
-                                                      Measurement.seconds
-                                                  ? "Seconds"
-                                                  : "Working weight",
-                                              controller: _controller,
-                                              keyboardType: const TextInputType
-                                                  .numberWithOptions(),
-                                              cupertino: (_, __) =>
-                                                  CupertinoTextFieldData(
-                                                textCapitalization:
-                                                    TextCapitalization
-                                                        .sentences,
-                                                decoration: const BoxDecoration(
-                                                  color: CupertinoColors
-                                                      .darkBackgroundGray,
-                                                ),
-                                              ),
-                                              material: (_, __) =>
-                                                  MaterialTextFieldData(
-                                                textCapitalization:
-                                                    TextCapitalization
-                                                        .sentences,
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: OutlineInputBorder(),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: MeasurementRadioButtons(
-                                              measurement: measurement,
-                                              setState: (value) => setState(
-                                                () {
-                                                  measurement = value;
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SliverPadding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing,
+                              ),
+                              sliver: AnimatedSliverListWrapper(
+                                dense: true,
+                                list: list,
+                                onTap: (index) async {
+                                  num lbs = 0;
+                                  num kgs = 0;
+                                  num seconds = 0;
+                                  String measurementToString = "lbs";
+                                  final picker = PlatformPicker(
+                                    pickerValue: "0",
+                                    list: [
+                                      for (var i = 0; i <= 1200; i++)
+                                        i.toString(),
+                                    ],
+                                  );
+
+                                  await picker.showPicker(
+                                    context: context,
+                                    title: "Working Set",
+                                    message: measurement == Measurement.seconds
+                                        ? "Long long did you last?"
+                                        : "How much weight did you lift this set?",
+                                  );
+
+                                  if (picker.pickerValue != null &&
+                                      picker.pickerValue!.isNotEmpty) {
+                                    if (measurement == Measurement.lbs) {
+                                      measurementToString = "lbs";
+                                      lbs = num.parse(picker.pickerValue!);
+                                      kgs = (num.parse(picker.pickerValue!)) /
+                                          2.2046;
+                                    } else if (measurement == Measurement.kgs) {
+                                      measurementToString = "kgs";
+                                      kgs = num.parse(picker.pickerValue!);
+                                      lbs = (num.parse(picker.pickerValue!)) *
+                                          2.2046;
+                                    } else {
+                                      measurementToString = "seconds";
+                                      seconds = num.parse(picker.pickerValue!);
+                                    }
+                                  }
+
+                                  setState(
+                                    () {
+                                      list.items[index] = WorkoutSetListItem(
+                                        seconds: seconds,
+                                        working_weight_kgs: kgs,
+                                        working_weight_lbs: lbs,
+                                        measurement: measurementToString,
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                            SliverPadding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: kSpacing,
+                              ),
+                              sliver: SliverList(
+                                delegate: SliverChildListDelegate(
+                                  [
+                                    const SizedBox(height: kSpacing * 2),
+                                    MeasurementRadioButtons(
+                                      measurement: measurement,
+                                      setState: (value) => setState(
+                                        () {
+                                          measurement = value;
+                                        },
                                       ),
                                     ),
                                     const SizedBox(height: kSpacing * 4),

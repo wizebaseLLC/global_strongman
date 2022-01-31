@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -128,7 +130,12 @@ class BadgesController {
               .get();
 
       if (completedWorkouts.docs.isNotEmpty) {
-        return completedWorkouts.docs.first.data().working_weight_lbs?.toInt();
+        return completedWorkouts.docs.first
+            .data()
+            .working_sets
+            ?.map((e) =>
+                WorkoutSetListItem.fromJson(e).working_weight_lbs?.toInt() ?? 0)
+            .reduce(max);
       }
       return 0;
     } catch (e) {
@@ -136,6 +143,7 @@ class BadgesController {
         print(e);
       }
     }
+    return null;
   }
 
   Future<int> getActiveDays() async {

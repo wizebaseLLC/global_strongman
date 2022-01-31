@@ -49,7 +49,7 @@ class PlatformPicker {
               isDestructiveAction: true,
               child: const Text(
                 'Done',
-                style: TextStyle(color: Colors.lightBlueAccent),
+                style: TextStyle(color: CupertinoColors.activeBlue),
               ),
               onPressed: () {
                 scrollController?.dispose();
@@ -66,7 +66,7 @@ class PlatformPicker {
         enableDrag: true,
         isDismissible: true,
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
         ),
         isScrollControlled: true,
         builder: (context) => SizedBox(
@@ -172,7 +172,6 @@ class PlatformPicker {
                     dense: true,
                     trailing: const Icon(
                       Icons.chevron_right,
-                      color: Colors.lightGreenAccent,
                     ),
                     onTap: () {
                       pickerValue = list[index];

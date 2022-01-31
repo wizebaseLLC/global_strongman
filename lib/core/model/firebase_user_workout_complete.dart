@@ -8,12 +8,9 @@ class FirebaseUserWorkoutComplete {
     this.program_id,
     this.workout_id,
     this.day,
-    this.working_weight_lbs,
-    this.working_weight_kgs,
-    this.seconds,
     this.categories,
-    this.weight_used_string,
     this.notes,
+    this.working_sets,
     this.name,
   });
 
@@ -21,12 +18,9 @@ class FirebaseUserWorkoutComplete {
   final String? program_id;
   final String? workout_id;
   final String? notes;
-  final String? weight_used_string;
   final String? day;
   final String? name;
-  final num? working_weight_lbs;
-  final num? working_weight_kgs;
-  final num? seconds;
+  final List<dynamic>? working_sets;
   final List<dynamic>? categories;
 
   FirebaseUserWorkoutComplete.fromJson(Map<String, Object?> json)
@@ -35,13 +29,10 @@ class FirebaseUserWorkoutComplete {
           program_id: json['program_id'] as String?,
           workout_id: json['workout_id'] as String?,
           notes: json['notes'] as String?,
-          weight_used_string: json['weight_used_string'] as String?,
           name: json['name'] as String?,
           day: json['day'] as String?,
-          working_weight_lbs: json['working_weight_lbs'] as num?,
-          working_weight_kgs: json['working_weight_kgs'] as num?,
-          seconds: json['seconds'] as num?,
           categories: json['categories'] as List<dynamic>?,
+          working_sets: json['working_sets'] as List<dynamic>?,
         );
 
   Map<String, Object?> toJson() {
@@ -49,14 +40,11 @@ class FirebaseUserWorkoutComplete {
       'created_on': created_on,
       'program_id': program_id,
       'workout_id': workout_id,
-      'working_weight_lbs': working_weight_lbs,
-      'working_weight_kgs': working_weight_kgs,
-      'seconds': seconds,
       'categories': categories,
       'day': day,
-      'weight_used_string': weight_used_string,
       'notes': notes,
       'name': name,
+      'working_sets': working_sets,
     };
   }
 
@@ -96,5 +84,33 @@ class FirebaseUserWorkoutComplete {
     required String user,
   }) async {
     getCollectionReference(user: user).add(this);
+  }
+}
+
+class WorkoutSetListItem {
+  WorkoutSetListItem({
+    this.working_weight_lbs,
+    this.working_weight_kgs,
+    this.seconds,
+    this.measurement,
+  });
+  final num? working_weight_lbs;
+  final num? working_weight_kgs;
+  final num? seconds;
+  final String? measurement;
+
+  WorkoutSetListItem.fromJson(Map<String, Object?> json)
+      : this(
+          working_weight_lbs: json['working_weight_lbs'] as num?,
+          working_weight_kgs: json['working_weight_kgs'] as num?,
+          seconds: json['seconds'] as num?,
+        );
+
+  Map<String, Object?> toJson() {
+    return {
+      'working_weight_lbs': working_weight_lbs,
+      'working_weight_kgs': working_weight_kgs,
+      'seconds': seconds,
+    };
   }
 }

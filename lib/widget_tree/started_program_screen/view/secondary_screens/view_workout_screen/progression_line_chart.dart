@@ -1,3 +1,5 @@
+// ignore_for_file: implementation_imports
+
 import 'dart:math';
 
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -52,9 +54,21 @@ class ProgressionLineChart extends StatelessWidget {
     var chartData = seriesList
         .map((e) {
           final data = e.data();
-          final num value =
-              data.seconds! > 0 ? data.seconds! : data.working_weight_lbs!;
-          return TimeSeries(data.created_on!, value.toInt());
+          final int? value = data.working_sets?.map(
+            (e) {
+              final WorkoutSetListItem workingSet =
+                  WorkoutSetListItem.fromJson(e);
+              if (workingSet.seconds != null && workingSet.seconds! > 0) {
+                return WorkoutSetListItem.fromJson(e).seconds?.toInt() ?? 0;
+              } else {
+                return WorkoutSetListItem.fromJson(e)
+                        .working_weight_lbs
+                        ?.toInt() ??
+                    0;
+              }
+            },
+          ).reduce(max);
+          return TimeSeries(data.created_on!, value ?? 0);
         })
         .toList()
         .where((element) => element.value > 0)

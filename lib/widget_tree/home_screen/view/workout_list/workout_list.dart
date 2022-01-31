@@ -96,7 +96,7 @@ class WorkoutList extends StatelessWidget {
               ),
             );
           } else {
-            return const CircularProgressIndicator.adaptive();
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
         });
   }
