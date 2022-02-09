@@ -88,14 +88,14 @@ class _BottomNavigatorState extends State<BottomNavigator> {
         BottomNavigationBarItem(
           backgroundColor: Platform.isAndroid ? Colors.grey.shade900 : null,
           icon: SvgPicture.asset("assets/images/muscle.svg",
-              color: _getIconColor(3)),
+              color: _getIconColor(2)),
           label: "Workouts",
         ),
         BottomNavigationBarItem(
           backgroundColor: Platform.isAndroid ? Colors.grey.shade900 : null,
           icon: Icon(
             PlatformIcons(context).person,
-            color: _getIconColor(4),
+            color: _getIconColor(3),
           ),
           label: "Profile",
         ),
