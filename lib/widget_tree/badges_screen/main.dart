@@ -1,12 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/badge.dart';
 import 'package:global_strongman/core/providers/badge_current_values.dart';
-import 'package:global_strongman/core/view/platform_scaffold_ios_sliver_title.dart';
+import 'package:global_strongman/core/view/platform_sliver_scaffold_ios_title_appbar.dart';
 import 'package:global_strongman/widget_tree/badges_screen/badge_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -24,16 +23,14 @@ class BadgesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Badge> badgeList =
         context.watch<BadgeCurrentValues>().getAllSortedBadges();
-    return PlatformScaffoldIosSliverTitle(
+    return PlatformSliverScaffold(
       title: "Badges",
       trailingActions: const [],
       previousPageTitle: previousPageTitle,
-      body: SingleChildScrollView(
-        child: SizedBox(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
+      sliverChildren: [
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -77,32 +74,32 @@ class BadgesScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (!Platform.isIOS)
-                    const SizedBox(
-                      height: kSpacing * 4,
-                    ),
-                ],
-              ),
-              Expanded(
-                child: ListView.builder(
-                  primary: false,
-                  itemCount: badgeList.length,
-                  physics: const ScrollPhysics(),
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(bottom: kSpacing * 2),
-                    child: BadgeTile(
-                      title: badgeList[index].title,
-                      image: badgeList[index].badgeImage,
-                      currentValue: badgeList[index].currentValue,
-                      maxValue: badgeList[index].value,
-                    ),
+                  const SizedBox(
+                    height: kSpacing * 4,
                   ),
-                ),
-              ),
+                ],
+              )
             ],
           ),
         ),
-      ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => Material(
+              color: Colors.transparent,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: kSpacing * 2),
+                child: BadgeTile(
+                  title: badgeList[index].title,
+                  image: badgeList[index].badgeImage,
+                  currentValue: badgeList[index].currentValue,
+                  maxValue: badgeList[index].value,
+                ),
+              ),
+            ),
+            childCount: badgeList.length,
+          ),
+        ),
+      ],
     );
   }
 }
