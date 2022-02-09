@@ -31,11 +31,11 @@ class ProgramTabs extends StatelessWidget {
                 "Overview",
                 style: cupertinoSegmentTextColor(context),
               ),
+              // 1: Text(
+              //   "Workout list",
+              //   style: cupertinoSegmentTextColor(context),
+              // ),
               1: Text(
-                "Workout list",
-                style: cupertinoSegmentTextColor(context),
-              ),
-              2: Text(
                 "Reviews",
                 style: cupertinoSegmentTextColor(context),
               )

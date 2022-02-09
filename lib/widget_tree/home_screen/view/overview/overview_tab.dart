@@ -100,80 +100,84 @@ class _OverviewTabState extends State<OverviewTab> {
   @override
   Widget build(BuildContext context) {
     final UserProvider _user = context.watch<UserProvider>();
-    return Padding(
-      padding: const EdgeInsets.all(kSpacing),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            programData.long_description!.replaceAll("\\n", "\n"),
-            style: platformThemeData(
-              context,
-              material: (data) => data.textTheme.bodyText1,
-              cupertino: (data) =>
-                  data.textTheme.textStyle.copyWith(fontSize: 16),
-            ),
-          ),
-          const SizedBox(
-            height: kSpacing * 4,
-          ),
-          Text(
-            "Learn more",
-            style: platformThemeData(
-              context,
-              material: (data) => data.textTheme.headline6
-                  ?.copyWith(fontWeight: FontWeight.bold),
-              cupertino: (data) => data.textTheme.navTitleTextStyle
-                  .copyWith(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(
-            height: kSpacing * 2,
-          ),
-          _chewieController != null
-              ? AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: Chewie(
-                    controller: _chewieController!,
-                  ),
-                )
-              : const Center(child: CircularProgressIndicator.adaptive()),
-          const SizedBox(
-            height: kSpacing * 2,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(kSpacing * 2),
-            child: SizedBox(
-              width: double.infinity,
-              child: PlatformElevatedButton(
-                material: (_, __) => MaterialElevatedButtonData(
-                  style: ElevatedButton.styleFrom(primary: kPrimaryColor),
+    return SliverList(
+      delegate: SliverChildListDelegate([
+        Padding(
+          padding: const EdgeInsets.all(kSpacing),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                programData.long_description!.replaceAll("\\n", "\n"),
+                style: platformThemeData(
+                  context,
+                  material: (data) => data.textTheme.bodyText1,
+                  cupertino: (data) =>
+                      data.textTheme.textStyle.copyWith(fontSize: 16),
                 ),
-                cupertino: (_, __) => CupertinoElevatedButtonData(
-                  color: kPrimaryColor,
-                  originalStyle: true,
+              ),
+              const SizedBox(
+                height: kSpacing * 4,
+              ),
+              Text(
+                "Learn more",
+                style: platformThemeData(
+                  context,
+                  material: (data) => data.textTheme.headline6
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                  cupertino: (data) => data.textTheme.navTitleTextStyle
+                      .copyWith(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-                onPressed: () => OverviewTab.handleGetStarted(
-                  programId: widget.program.id,
-                  userId: _user.authUser?.email,
-                  context: context,
-                  program: widget.program,
-                ),
-                child: const Text(
-                  "Get Started",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(
+                height: kSpacing * 2,
+              ),
+              _chewieController != null
+                  ? AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: Chewie(
+                        controller: _chewieController!,
+                      ),
+                    )
+                  : const Center(child: CircularProgressIndicator.adaptive()),
+              const SizedBox(
+                height: kSpacing * 2,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(kSpacing * 2),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: PlatformElevatedButton(
+                    material: (_, __) => MaterialElevatedButtonData(
+                      style: ElevatedButton.styleFrom(primary: kPrimaryColor),
+                    ),
+                    cupertino: (_, __) => CupertinoElevatedButtonData(
+                      color: kPrimaryColor,
+                      originalStyle: true,
+                    ),
+                    onPressed: () => OverviewTab.handleGetStarted(
+                      programId: widget.program.id,
+                      userId: _user.authUser?.email,
+                      context: context,
+                      program: widget.program,
+                    ),
+                    child: const Text(
+                      "Get Started",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+              const SizedBox(
+                height: kSpacing * 2,
+              ),
+            ],
           ),
-          const SizedBox(
-            height: kSpacing * 2,
-          ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 }

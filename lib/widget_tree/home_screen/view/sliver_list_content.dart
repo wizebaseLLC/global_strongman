@@ -7,39 +7,30 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
-import 'package:global_strongman/widget_tree/home_screen/view/overview/overview_tab.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/program_tabs.dart';
-import 'package:global_strongman/widget_tree/home_screen/view/review/reviews.dart';
-import 'package:global_strongman/widget_tree/home_screen/view/workout_list/workout_list.dart';
+import 'package:global_strongman/widget_tree/home_screen/view/review/review_button.dart';
 
 class SliverListContent extends StatefulWidget {
   const SliverListContent({
     required this.program,
+    required this.currentTab,
+    required this.setState,
     Key? key,
   }) : super(key: key);
 
   final QueryDocumentSnapshot<FirebaseProgram> program;
-
+  final int currentTab;
+  final void Function(int?) setState;
   @override
   State<SliverListContent> createState() => _SliverListContentState();
 }
 
 class _SliverListContentState extends State<SliverListContent>
     with SingleTickerProviderStateMixin {
-  int currentTab = 0;
-
   get createdOn =>
       "${programData.created_on?.toUtc().month}-${programData.created_on?.toUtc().day}-${programData.created_on?.toUtc().year}";
 
   FirebaseProgram get programData => widget.program.data();
-
-  get tabScreens => [
-        OverviewTab(
-          program: widget.program,
-        ),
-        WorkoutList(program: widget.program),
-        Reviews(program: widget.program),
-      ];
 
   @override
   Widget build(BuildContext context) {
@@ -105,16 +96,12 @@ class _SliverListContentState extends State<SliverListContent>
                 ),
                 const SizedBox(height: kSpacing * 2),
                 ProgramTabs(
-                  currentTab: currentTab,
-                  setTab: (value) => setState(() {
-                    currentTab = value as int;
-                  }),
+                  currentTab: widget.currentTab,
+                  setTab: widget.setState,
                 ),
                 const SizedBox(height: kSpacing * 2),
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: tabScreens[currentTab],
-                )
+                if (widget.currentTab == 1)
+                  ReviewButton(program: widget.program),
               ],
             ),
           )
