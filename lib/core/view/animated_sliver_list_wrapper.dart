@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
 
@@ -9,10 +11,14 @@ class AnimatedSliverListWrapper extends StatefulWidget {
   const AnimatedSliverListWrapper({
     Key? key,
     this.dense,
-    required this.onTap,
+    required this.onWeightTap,
+    required this.onRepsTap,
+    required this.onDurationTap,
     required this.list,
   }) : super(key: key);
-  final Function(int index) onTap;
+  final Function(int index) onWeightTap;
+  final Function(int index) onRepsTap;
+  final Function(int index) onDurationTap;
   final bool? dense;
   final ListModel<WorkoutSetListItem> list;
   @override
@@ -40,7 +46,9 @@ class _AnimatedSliverListWrapperState extends State<AnimatedSliverListWrapper> {
       remove: _remove,
       animation: animation,
       item: widget.list.items[index],
-      onTap: widget.onTap,
+      onWeightTap: widget.onWeightTap,
+      onRepsTap: widget.onRepsTap,
+      onDurationTap: widget.onDurationTap,
       dense: widget.dense,
       isFirst: index == 0,
       isLast: index == widget.list.length - 1,
@@ -60,7 +68,9 @@ class _AnimatedSliverListWrapperState extends State<AnimatedSliverListWrapper> {
   ) {
     return CardItem(
       remove: _remove,
-      onTap: widget.onTap,
+      onWeightTap: widget.onWeightTap,
+      onRepsTap: widget.onRepsTap,
+      onDurationTap: widget.onDurationTap,
       index: item,
       insert: () => _insert(item),
       animation: animation,
@@ -160,7 +170,9 @@ class CardItem extends StatelessWidget {
     Key? key,
     this.dense = false,
     required this.index,
-    required this.onTap,
+    required this.onWeightTap,
+    required this.onDurationTap,
+    required this.onRepsTap,
     required this.animation,
     required this.item,
     required this.insert,
@@ -170,7 +182,9 @@ class CardItem extends StatelessWidget {
   }) : super(key: key);
 
   final Animation<double> animation;
-  final Function(int index) onTap;
+  final Function(int index) onWeightTap;
+  final Function(int index) onRepsTap;
+  final Function(int index) onDurationTap;
   final WorkoutSetListItem item;
   final Function(int index) remove;
   final Function() insert;
@@ -210,39 +224,109 @@ class CardItem extends StatelessWidget {
               bottomRight: Radius.circular(isLast ? kSpacing : 0),
             ),
           ),
-          child: ListTile(
-            onTap: () => onTap(index),
-            title: Text(
-              "Set ${index + 1}",
-              style: platformThemeData(
-                context,
-                material: (data) => data.textTheme.subtitle1,
-                cupertino: (data) => data.textTheme.textStyle.copyWith(
-                  fontSize: 16,
-                ),
+          child: FocusedMenuHolder(
+            onPressed: () {},
+            menuWidth: MediaQuery.of(context).size.width * 0.50,
+            blurSize: 5.0,
+            menuItemExtent: 45,
+            menuBoxDecoration: const BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.all(
+                Radius.circular(15.0),
               ),
             ),
-            dense: dense,
-            trailing: index == 0
-                ? _trailingRow(
-                    context: context,
-                    item: item,
-                    child: TrailingIconButton(
-                      fn: insert,
-                      icon: PlatformIcons(context).addCircled,
-                    ),
-                  )
-                : _trailingRow(
-                    context: context,
-                    item: item,
-                    child: TrailingIconButton(
-                      fn: () {
-                        remove(index);
-                        // removeFromState(index);
-                      },
-                      icon: PlatformIcons(context).removeCircled,
-                    ),
+            duration: const Duration(milliseconds: 100),
+            animateMenuItems: true,
+            blurBackgroundColor: Colors.black54,
+            openWithTap: true,
+            menuOffset: 10.0,
+            bottomOffsetHeight: 10.0,
+            menuItems: [
+              FocusedMenuItem(
+                backgroundColor: platformThemeData(
+                  context,
+                  material: (data) => data.cardColor,
+                  cupertino: (data) => data.barBackgroundColor,
+                ),
+                title: Text(
+                  "Add Weight",
+                  style: platformThemeData(
+                    context,
+                    material: (data) => data.textTheme.subtitle1,
+                    cupertino: (data) => data.textTheme.textStyle,
                   ),
+                ),
+                trailingIcon: Icon(PlatformIcons(context).addCircled),
+                onPressed: () => onWeightTap(index),
+              ),
+              FocusedMenuItem(
+                backgroundColor: platformThemeData(
+                  context,
+                  material: (data) => data.cardColor,
+                  cupertino: (data) => data.barBackgroundColor,
+                ),
+                title: Text(
+                  "Add Duration",
+                  style: platformThemeData(
+                    context,
+                    material: (data) => data.textTheme.subtitle1,
+                    cupertino: (data) => data.textTheme.textStyle,
+                  ),
+                ),
+                trailingIcon: Icon(PlatformIcons(context).addCircled),
+                onPressed: () => onDurationTap(index),
+              ),
+              FocusedMenuItem(
+                backgroundColor: platformThemeData(
+                  context,
+                  material: (data) => data.cardColor,
+                  cupertino: (data) => data.barBackgroundColor,
+                ),
+                title: Text(
+                  "Add Reps",
+                  style: platformThemeData(
+                    context,
+                    material: (data) => data.textTheme.subtitle1,
+                    cupertino: (data) => data.textTheme.textStyle,
+                  ),
+                ),
+                trailingIcon: Icon(PlatformIcons(context).addCircled),
+                onPressed: () => onRepsTap(index),
+              ),
+            ],
+            child: ListTile(
+              title: Text(
+                "Set ${index + 1}",
+                style: platformThemeData(
+                  context,
+                  material: (data) => data.textTheme.subtitle1,
+                  cupertino: (data) => data.textTheme.textStyle.copyWith(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              dense: dense,
+              trailing: index == 0
+                  ? _trailingRow(
+                      context: context,
+                      item: item,
+                      child: TrailingIconButton(
+                        fn: insert,
+                        icon: PlatformIcons(context).addCircled,
+                      ),
+                    )
+                  : _trailingRow(
+                      context: context,
+                      item: item,
+                      child: TrailingIconButton(
+                        fn: () {
+                          remove(index);
+                          // removeFromState(index);
+                        },
+                        icon: PlatformIcons(context).removeCircled,
+                      ),
+                    ),
+            ),
           ),
         ),
       ),
@@ -254,38 +338,58 @@ class CardItem extends StatelessWidget {
     required Widget child,
     required WorkoutSetListItem item,
   }) {
-    String value = "";
-    switch (item.measurement) {
-      case "lbs":
-        value = "${item.working_weight_lbs}";
-        break;
-      case "kgs":
-        value = "${item.working_weight_kgs}";
-        break;
-      case "seconds":
-        value = "${item.seconds}";
-        break;
-      default:
-        break;
-    }
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        item.measurement != null
-            ? Text(
-                "$value ${item.measurement}",
-                style: platformThemeData(
-                  context,
-                  material: (data) => data.textTheme.subtitle1,
-                  cupertino: (data) => data.textTheme.textStyle.copyWith(
-                    fontSize: 16,
-                  ),
+        if (item.working_weight_lbs != null)
+          Padding(
+            padding: const EdgeInsets.only(left: kSpacing),
+            child: Text(
+              "${item.working_weight_lbs} lbs",
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.subtitle1,
+                cupertino: (data) => data.textTheme.textStyle.copyWith(
+                  fontSize: 16,
                 ),
-              )
-            : Icon(
-                PlatformIcons(context).rightChevron,
-                color: Colors.white,
               ),
+            ),
+          ),
+        if (item.duration != null)
+          Padding(
+            padding: const EdgeInsets.only(left: kSpacing),
+            child: Text(
+              "${item.duration} duration",
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.subtitle1,
+                cupertino: (data) => data.textTheme.textStyle.copyWith(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        if (item.reps != null)
+          Padding(
+            padding: const EdgeInsets.only(left: kSpacing),
+            child: Text(
+              "${item.reps} reps",
+              style: platformThemeData(
+                context,
+                material: (data) => data.textTheme.subtitle1,
+                cupertino: (data) => data.textTheme.textStyle.copyWith(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        if (item.reps == null &&
+            item.duration == null &&
+            item.working_weight_lbs == null)
+          Icon(
+            PlatformIcons(context).rightChevron,
+            color: Colors.white,
+          ),
         child,
       ],
     );

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:global_strongman/constants.dart';
+import 'package:duration_picker/duration_picker.dart';
 
 class PlatformPicker {
   PlatformPicker({required this.list, this.pickerValue});
@@ -10,7 +11,16 @@ class PlatformPicker {
   final List<String> list;
   String? pickerValue;
   DateTime? dateTimeValue;
+  Duration? timerPickerValue;
 
+  static String printDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+// TODO Add a previous value for android.
   Future<void> showPicker({
     required BuildContext context,
     required String title,
@@ -78,6 +88,65 @@ class PlatformPicker {
           ),
         ),
       );
+    }
+  }
+
+  Future<void> showDurationTimerPicker({
+    required BuildContext context,
+    required String title,
+    String? message,
+  }) async {
+    if (Platform.isIOS) {
+      await showCupertinoModalPopup(
+        context: context,
+        builder: (context) {
+          final FixedExtentScrollController? scrollController =
+              pickerValue != null
+                  ? FixedExtentScrollController(
+                      initialItem: list.indexOf(pickerValue!),
+                    )
+                  : null;
+          return CupertinoActionSheet(
+            title: Text(
+              title,
+              style: CupertinoTheme.of(context)
+                  .textTheme
+                  .navTitleTextStyle
+                  .copyWith(fontSize: 20),
+            ),
+            message: message != null
+                ? Text(
+                    message,
+                    style:
+                        CupertinoTheme.of(context).textTheme.textStyle.copyWith(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                  )
+                : null,
+            cancelButton: CupertinoActionSheetAction(
+              isDestructiveAction: true,
+              child: const Text(
+                'Done',
+                style: TextStyle(color: CupertinoColors.activeBlue),
+              ),
+              onPressed: () {
+                scrollController?.dispose();
+                Navigator.pop(context);
+              },
+            ),
+            actions: [createCupertinoTimerPicker()],
+          );
+        },
+      );
+    } else {
+      final Duration? resultingDuration = await showDurationPicker(
+        context: context,
+        initialTime: const Duration(minutes: 0),
+        baseUnit: BaseUnit.second,
+      );
+
+      timerPickerValue = resultingDuration;
     }
   }
 
@@ -189,12 +258,27 @@ class PlatformPicker {
         ],
       );
 
+  Widget createCupertinoTimerPicker() => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 300,
+            child: CupertinoTimerPicker(
+              onTimerDurationChanged: (value) {
+                timerPickerValue = value;
+              },
+              mode: CupertinoTimerPickerMode.hms,
+            ),
+          ),
+        ],
+      );
+
   Widget createCupertinoPicker(FixedExtentScrollController? scrollController) =>
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 200,
+            height: 300,
             child: CupertinoPicker(
               itemExtent: 48,
               onSelectedItemChanged: (value) {

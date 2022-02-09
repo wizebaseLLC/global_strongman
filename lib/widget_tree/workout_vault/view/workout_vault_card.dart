@@ -59,6 +59,7 @@ class WorkoutVaultCard extends StatelessWidget {
       material: (_, child, __) => Hero(
         tag: "assets/images/${image}_$title",
         child: Material(
+          color: Colors.transparent,
           child: Ink(
             width: double.infinity,
             height: _height,

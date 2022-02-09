@@ -23,9 +23,11 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   int _selectedTabIndex = 0;
   PlatformTabController tabController = PlatformTabController(initialIndex: 0);
 
-  List<PlatformAppBar?> get appBar => screens.map((e) => e.appBar).toList();
+  List<PlatformAppBar?> appBar({required BuildContext context}) =>
+      screens(context: context).map((e) => e.appBar).toList();
 
-  final List<Widget> childScreens = screens.map((e) => e.child).toList();
+  List<Widget> childScreens({required BuildContext context}) =>
+      screens(context: context).map((e) => e.child).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -51,14 +53,16 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       bodyBuilder: (context, index) => AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: IndexedStack(
-          children: childScreens,
+          children: childScreens(context: context),
           index: index,
         ),
       ),
-      appBarBuilder: (_, index) => appBar[index],
-      itemChanged: (index) => setState(() {
-        _selectedTabIndex = index;
-      }),
+      appBarBuilder: (_, index) => appBar(context: context)[index],
+      itemChanged: (index) {
+        setState(() {
+          _selectedTabIndex = index;
+        });
+      },
       cupertino: (context, platform) => CupertinoTabScaffoldData(),
       material: (context, platform) => MaterialTabScaffoldData(),
       materialTabs: (context, platform) => MaterialNavBarData(
@@ -66,18 +70,15 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       ),
       items: [
         BottomNavigationBarItem(
+          backgroundColor: Platform.isAndroid ? Colors.grey.shade900 : null,
           icon: Icon(
             PlatformIcons(context).home,
             color: _getIconColor(0),
           ),
           label: "Home",
         ),
-        // BottomNavigationBarItem(
-        //   icon: Icon(PlatformIcons(context).playCircle),
-        //   label: "Watch",
-        // ),
-
         BottomNavigationBarItem(
+          backgroundColor: Platform.isAndroid ? Colors.grey.shade900 : null,
           icon: FaIcon(
             FontAwesomeIcons.chartLine,
             color: _getIconColor(1),
@@ -85,14 +86,16 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           label: "Activity",
         ),
         BottomNavigationBarItem(
+          backgroundColor: Platform.isAndroid ? Colors.grey.shade900 : null,
           icon: SvgPicture.asset("assets/images/muscle.svg",
-              color: _getIconColor(2)),
+              color: _getIconColor(3)),
           label: "Workouts",
         ),
         BottomNavigationBarItem(
+          backgroundColor: Platform.isAndroid ? Colors.grey.shade900 : null,
           icon: Icon(
             PlatformIcons(context).person,
-            color: _getIconColor(3),
+            color: _getIconColor(4),
           ),
           label: "Profile",
         ),

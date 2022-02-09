@@ -22,7 +22,7 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
     this.shouldDisplayVertical,
   }) : super(key: key);
 
-  final List<QueryDocumentSnapshot<FirebaseProgram>> docs;
+  final List<QueryDocumentSnapshot<FirebaseProgram>>? docs;
   final bool? isContinue;
   final bool cardio;
   final bool strength;
@@ -41,12 +41,13 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
       ];
   @override
   Widget build(BuildContext context) {
+    if (docs == null || (docs != null && docs!.isEmpty)) return Container();
     return SingleChildScrollView(
       scrollDirection:
           _shouldScrollVertically ? Axis.vertical : Axis.horizontal,
       child: _shouldScrollVertically
           ? Column(
-              children: docs
+              children: docs!
                   .map((program) => Padding(
                         padding: const EdgeInsets.only(top: kSpacing * 2),
                         child: _card(
@@ -58,7 +59,7 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
                   .toList(),
             )
           : Row(
-              children: docs
+              children: docs!
                   .map((program) => AnimatedOpacity(
                         duration: const Duration(milliseconds: 300),
                         opacity: program

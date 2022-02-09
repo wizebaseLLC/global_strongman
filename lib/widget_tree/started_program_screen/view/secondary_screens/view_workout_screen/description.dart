@@ -4,12 +4,16 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/constants.dart';
 
 class WorkoutDescription extends StatelessWidget {
-  const WorkoutDescription(
-      {required this.title, required this.subtitle, Key? key})
-      : super(key: key);
+  const WorkoutDescription({
+    required this.title,
+    required this.subtitle,
+    this.trailing,
+    Key? key,
+  }) : super(key: key);
 
   final String title;
   final String subtitle;
+  final Widget? trailing;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -17,15 +21,21 @@ class WorkoutDescription extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: platformThemeData(
-              context,
-              material: (data) =>
-                  data.textTheme.headline6?.copyWith(fontSize: 20),
-              cupertino: (data) =>
-                  data.textTheme.navTitleTextStyle.copyWith(fontSize: 20),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: platformThemeData(
+                  context,
+                  material: (data) =>
+                      data.textTheme.headline6?.copyWith(fontSize: 20),
+                  cupertino: (data) =>
+                      data.textTheme.navTitleTextStyle.copyWith(fontSize: 20),
+                ),
+              ),
+              if (trailing != null) trailing!,
+            ],
           ),
           if (subtitle.length > 1)
             const SizedBox(

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:global_strongman/widget_tree/activity_screen/view/workout_history/workout_history_detail_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -23,7 +24,6 @@ class WorkoutListTimelineTile extends StatelessWidget {
   const WorkoutListTimelineTile({
     required this.program,
     required this.day,
-    required this.doc,
     required this.completedWorkout,
     required this.snapshot,
     this.isFirst = false,
@@ -34,7 +34,6 @@ class WorkoutListTimelineTile extends StatelessWidget {
 
   final String? program;
   final String? day;
-  final String doc;
   final bool isFirst;
   final bool isLast;
   final FirebaseUserWorkoutComplete completedWorkout;
@@ -43,32 +42,16 @@ class WorkoutListTimelineTile extends StatelessWidget {
 
   String? get _notes => completedWorkout.notes;
   int? get _previousWeight => _workingSets?.map((workingSet) {
-        if (workingSet.seconds != null && workingSet.seconds! > 0) {
-          return workingSet.seconds?.toInt() ?? 0;
-        } else {
-          return workingSet.working_weight_lbs?.toInt() ?? 0;
-        }
+        return workingSet.working_weight_lbs?.toInt() ?? 0;
       }).reduce(max);
+
+  int? get _maxWorkingReps => _workingSets
+      ?.map((workingSet) => workingSet.reps?.toInt() ?? 0)
+      .reduce(max);
 
   List<WorkoutSetListItem>? get _workingSets => completedWorkout.working_sets
       ?.map((e) => WorkoutSetListItem.fromJson(e))
       .toList();
-
-  bool _workingSetIsSeconds() {
-    final List<WorkoutSetListItem>? workingSet = _workingSets?.where((e) {
-      if (e.seconds != null && e.working_weight_lbs != null) {
-        e.seconds == _previousWeight ||
-            e.working_weight_lbs?.toInt() == _previousWeight;
-      }
-      return false;
-    }).toList();
-
-    if (workingSet != null && workingSet.isNotEmpty) {
-      return workingSet.first.measurement == "seconds";
-    }
-
-    return false;
-  }
 
   Future<void> _deleteWorkout(BuildContext context, String? _user) async {
     if (_user != null) {
@@ -154,66 +137,77 @@ class WorkoutListTimelineTile extends StatelessWidget {
       onDismissed: (_) => _deleteWorkout(context, _user.authUser?.email),
       child: SizedBox(
         height: _notes?.isEmpty == true ? 100 : 150,
-        child: TimelineTile(
-          isFirst: isFirst,
-          isLast: isLast,
-          axis: TimelineAxis.vertical,
-          alignment: TimelineAlign.manual,
-          lineXY: 0.35,
-          indicatorStyle: IndicatorStyle(
-            width: 50,
-            height: 50,
-            indicator: CircleAvatar(
-              backgroundColor: kPrimaryColor,
-              child: SvgPicture.asset(
-                "assets/images/${_chooseIconImage(completedWorkout.categories)}.svg",
-                color: Colors.white,
+        child: InkWell(
+          onTap: () => Navigator.push(
+            context,
+            platformPageRoute(
+              context: context,
+              builder: (_) => WorkoutHistoryDetailScreen(
+                completedWorkout: completedWorkout,
               ),
             ),
           ),
-          startChild: Padding(
-            padding: const EdgeInsets.only(left: kSpacing * 2),
-            child: Text(
-              dateFormat.format(completedWorkout.created_on!),
-              style: platformThemeData(
-                context,
-                material: (data) => data.textTheme.bodyText2?.copyWith(
-                  color: Colors.white70,
-                  fontSize: 14,
-                ),
-                cupertino: (data) => data.textTheme.textStyle.copyWith(
-                  fontSize: 14,
-                  color: CupertinoColors.systemGrey3,
+          child: TimelineTile(
+            isFirst: isFirst,
+            isLast: isLast,
+            axis: TimelineAxis.vertical,
+            alignment: TimelineAlign.manual,
+            lineXY: 0.35,
+            indicatorStyle: IndicatorStyle(
+              width: 50,
+              height: 50,
+              indicator: CircleAvatar(
+                backgroundColor: kPrimaryColor,
+                child: SvgPicture.asset(
+                  "assets/images/${_chooseIconImage(completedWorkout.categories)}.svg",
+                  color: Colors.white,
                 ),
               ),
             ),
-          ),
-          endChild: (_notes == null || _notes?.isEmpty == true) &&
-                  _previousWeight == null
-              ? Padding(
-                  padding: const EdgeInsets.only(
-                    left: kSpacing * 2,
+            startChild: Padding(
+              padding: const EdgeInsets.only(left: kSpacing * 2),
+              child: Text(
+                dateFormat.format(completedWorkout.created_on!),
+                style: platformThemeData(
+                  context,
+                  material: (data) => data.textTheme.bodyText2?.copyWith(
+                    color: Colors.white70,
+                    fontSize: 14,
                   ),
-                  child: Text(
-                    completedWorkout.name ?? "",
-                    style: platformThemeData(
-                      context,
-                      material: (data) => data.textTheme.subtitle1?.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      cupertino: (data) => data.textTheme.textStyle.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                  cupertino: (data) => data.textTheme.textStyle.copyWith(
+                    fontSize: 14,
+                    color: CupertinoColors.systemGrey3,
+                  ),
+                ),
+              ),
+            ),
+            endChild: (_notes == null || _notes?.isEmpty == true) &&
+                    _previousWeight == null
+                ? Padding(
+                    padding: const EdgeInsets.only(
+                      left: kSpacing * 2,
+                    ),
+                    child: Text(
+                      completedWorkout.name ?? "",
+                      style: platformThemeData(
+                        context,
+                        material: (data) => data.textTheme.subtitle1?.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        cupertino: (data) => data.textTheme.textStyle.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(top: kSpacing * 2),
-                  child: ListTile(
+                  )
+                : ListTile(
                     dense: true,
-                    isThreeLine: true,
+                    trailing: Icon(
+                      PlatformIcons(context).rightChevron,
+                      color: Colors.white,
+                    ),
                     title: Text(
                       completedWorkout.name ?? "",
                       style: platformThemeData(
@@ -228,64 +222,62 @@ class WorkoutListTimelineTile extends StatelessWidget {
                         ),
                       ),
                     ),
-                    subtitle: (_previousWeight == null && _notes == null)
+                    subtitle: ((_previousWeight == null ||
+                                (_previousWeight != null &&
+                                    _previousWeight! < 1)) &&
+                            (_notes == null ||
+                                (_notes != null && _notes!.isEmpty)))
                         ? null
-                        : Padding(
-                            padding: const EdgeInsets.only(
-                              bottom: kSpacing * 3,
-                              top: kSpacing / 2,
-                            ),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (_previousWeight != null &&
-                                      _previousWeight! > 0)
-                                    Text(
-                                      "$_previousWeight ${_workingSetIsSeconds() == true ? "seconds" : "lbs"}",
-                                      style: platformThemeData(
-                                        context,
-                                        material: (data) =>
-                                            data.textTheme.bodyText2?.copyWith(
-                                          color: Colors.white70,
-                                          fontSize: 12,
-                                        ),
-                                        cupertino: (data) =>
-                                            data.textTheme.textStyle.copyWith(
-                                          fontSize: 12,
-                                          color: CupertinoColors.systemGrey3,
-                                        ),
+                        : SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (_previousWeight != null &&
+                                    _previousWeight! > 0)
+                                  Text(
+                                    "$_previousWeight ${"max lbs"} ${_maxWorkingReps != null && _maxWorkingReps! > 0 ? " - $_maxWorkingReps max reps" : ""}",
+                                    style: platformThemeData(
+                                      context,
+                                      material: (data) =>
+                                          data.textTheme.bodyText2?.copyWith(
+                                        color: Colors.white70,
+                                        fontSize: 12,
+                                      ),
+                                      cupertino: (data) =>
+                                          data.textTheme.textStyle.copyWith(
+                                        fontSize: 12,
+                                        color: CupertinoColors.systemGrey3,
                                       ),
                                     ),
-                                  if (_notes != null &&
-                                      _notes!.isNotEmpty &&
-                                      _previousWeight != null)
-                                    const SizedBox(
-                                      height: 4,
-                                    ),
-                                  if (_notes != null && _notes!.isNotEmpty)
-                                    Text(
-                                      _notes!,
-                                      style: platformThemeData(
-                                        context,
-                                        material: (data) =>
-                                            data.textTheme.bodyText2?.copyWith(
-                                          color: Colors.white70,
-                                          fontSize: 10,
-                                        ),
-                                        cupertino: (data) =>
-                                            data.textTheme.textStyle.copyWith(
-                                          fontSize: 10,
-                                          color: CupertinoColors.systemGrey3,
-                                        ),
+                                  ),
+                                if (_notes != null &&
+                                    _notes!.isNotEmpty &&
+                                    _previousWeight != null)
+                                  const SizedBox(
+                                    height: 4,
+                                  ),
+                                if (_notes != null && _notes!.isNotEmpty)
+                                  Text(
+                                    _notes!,
+                                    style: platformThemeData(
+                                      context,
+                                      material: (data) =>
+                                          data.textTheme.bodyText2?.copyWith(
+                                        color: Colors.white70,
+                                        fontSize: 10,
+                                      ),
+                                      cupertino: (data) =>
+                                          data.textTheme.textStyle.copyWith(
+                                        fontSize: 10,
+                                        color: CupertinoColors.systemGrey3,
                                       ),
                                     ),
-                                ],
-                              ),
+                                  ),
+                              ],
                             ),
                           ),
                   ),
-                ),
+          ),
         ),
       ),
     );

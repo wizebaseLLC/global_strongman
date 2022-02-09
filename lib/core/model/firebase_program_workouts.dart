@@ -127,7 +127,7 @@ class FirebaseProgramWorkouts {
   /// Get a reference to the single workout.
   DocumentReference<FirebaseProgramWorkouts>
       getWorkoutCatalogDocumentReference({
-    required String doc,
+    required String? doc,
   }) {
     return FirebaseFirestore.instance
         .collection('workout_catalog')

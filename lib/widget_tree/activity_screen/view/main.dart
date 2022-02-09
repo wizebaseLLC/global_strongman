@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,11 +8,8 @@ import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/providers/activity_interace_provider.dart';
 import 'package:global_strongman/core/providers/badge_current_values.dart';
 import 'package:global_strongman/widget_tree/activity_screen/model/activity_interface.dart';
-import 'package:global_strongman/widget_tree/activity_screen/view/activity_calendar/activity_calendar.dart';
+import 'package:global_strongman/widget_tree/activity_screen/view/activity_body.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/activity_calendar/workout_list_by_day.dart';
-import 'package:global_strongman/widget_tree/activity_screen/view/workout_set_count/workout_sets_card.dart';
-import 'package:global_strongman/widget_tree/activity_screen/view/workoutsCategories/workoutsCategories.dart';
-import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/description.dart';
 import 'package:provider/provider.dart';
 
 class ActivityScreen extends StatefulWidget {
@@ -36,83 +35,48 @@ class _ActivityScreenState extends State<ActivityScreen> {
     );
     return SafeArea(
       child: PlatformWidgetBuilder(
-        cupertino: (_, child, __) => CustomScrollView(
-          slivers: [
-            CupertinoSliverRefreshControl(
-              onRefresh: () async {
-                HapticFeedback.mediumImpact();
-                context.read<BadgeCurrentValues>().runSetMetrics();
-                context
-                    .read<ActivityInterfaceProvider>()
-                    .createWorkoutInterface();
-              },
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [child!],
-              ),
-            ),
-          ],
-        ),
+        cupertino: (_, child, __) => child,
         material: (_, child, __) => RefreshIndicator(
           backgroundColor: kPrimaryColor,
           color: Colors.white,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: child!,
-          ),
+          child: child!,
           onRefresh: () async {
             HapticFeedback.mediumImpact();
             context.read<BadgeCurrentValues>().runSetMetrics();
             context.read<ActivityInterfaceProvider>().createWorkoutInterface();
           },
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-          child: Column(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  WorkoutSetsCard(
-                    activityInterface: activityInterface,
-                  ),
-                  const SizedBox(
-                    height: kSpacing * 4,
-                  ),
-                  const WorkoutDescription(
-                    title: "Categories",
-                    subtitle: "Workouts completed by category",
-                  ),
-                  WorkoutsCompletedByCategory(
-                    activityInterface: activityInterface,
-                  ),
-                  const SizedBox(
-                    height: kSpacing * 4,
-                  ),
-                  const WorkoutDescription(
-                    title: "Workout Calendar",
-                    subtitle: "",
-                  ),
-                  ActivityCalendar(
+        child: CustomScrollView(
+          slivers: [
+            if (Platform.isIOS)
+              CupertinoSliverRefreshControl(
+                onRefresh: () async {
+                  HapticFeedback.mediumImpact();
+                  context.read<BadgeCurrentValues>().runSetMetrics();
+                  context
+                      .read<ActivityInterfaceProvider>()
+                      .createWorkoutInterface();
+                },
+              ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  ActivityBody(
                     activityInterface: activityInterface,
                     selectedDay: selectedDay,
-                    setActivityScreenState: (pickedDate) {
-                      setState(() {
+                    setState: (pickedDate) => setState(
+                      () {
                         selectedDay = pickedDate;
-                      });
-                    },
+                      },
+                    ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 2,
-                child: WorkoutListByDay(
-                  selectedDate: selectedDay,
-                ),
-              ),
-            ],
-          ),
+            ),
+            WorkoutListByDay(
+              selectedDate: selectedDay,
+            ),
+          ],
         ),
       ),
     );

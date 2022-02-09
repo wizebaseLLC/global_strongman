@@ -7,8 +7,12 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:focused_menu/modals.dart';
 import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program_workouts.dart';
+import 'package:global_strongman/core/model/firebase_user_workout_complete.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
+import 'package:global_strongman/widget_tree/activity_screen/view/filtered_workout_screen/filtered_workout_screen.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/view_workout_screen.dart';
 import 'package:focused_menu/focused_menu.dart';
+import 'package:provider/provider.dart';
 
 class VaultGridItem extends StatelessWidget {
   const VaultGridItem({
@@ -45,30 +49,65 @@ class VaultGridItem extends StatelessWidget {
           ),
         ),
       );
+
+  void _onHistoryPress({
+    required String title,
+    required String? user,
+    required BuildContext context,
+  }) {
+    Navigator.push(
+      context,
+      platformPageRoute(
+        context: context,
+        builder: (_) => FilteredWorkoutScreen(
+          title: title,
+          query: FirebaseUserWorkoutComplete()
+              .getCollectionReference(user: user)
+              .where("workout_id", isEqualTo: workoutId)
+              .orderBy("created_on", descending: true),
+          key: GlobalKey(),
+          previousPageTitle: "Workouts",
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PlatformWidgetBuilder(
-      cupertino: (_, child, __) => CupertinoContextMenu(
+      cupertino: (context, child, __) => CupertinoContextMenu(
         actions: <Widget>[
           CupertinoContextMenuAction(
             child: const Text('Review'),
             trailingIcon: CupertinoIcons.airplane,
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(context, rootNavigator: true).pop();
             },
           ),
           CupertinoContextMenuAction(
             child: const Text('Schedule'),
             trailingIcon: CupertinoIcons.airplane,
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(context, rootNavigator: true).pop();
             },
           ),
           CupertinoContextMenuAction(
             child: const Text('Build Routine'),
             trailingIcon: CupertinoIcons.airplane,
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+          ),
+          CupertinoContextMenuAction(
+            child: const Text('View History'),
+            trailingIcon: CupertinoIcons.clock,
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              _onHistoryPress(
+                context: context,
+                title: "History",
+                user: context.read<UserProvider>().authUser?.email,
+              );
             },
           ),
         ],
@@ -81,7 +120,7 @@ class VaultGridItem extends StatelessWidget {
           onPressed: () => _onTap(context),
         ),
       ),
-      material: (_, child, __) => FocusedMenuHolder(
+      material: (context, child, __) => FocusedMenuHolder(
         menuWidth: MediaQuery.of(context).size.width * 0.50,
         blurSize: 5.0,
         menuItemExtent: 45,
@@ -91,39 +130,48 @@ class VaultGridItem extends StatelessWidget {
         duration: const Duration(milliseconds: 100),
         animateMenuItems: true,
         blurBackgroundColor: Colors.black54,
-        openWithTap: true, // Open Focused-Menu on Tap rather than Long Press
-        menuOffset:
-            10.0, // Offset value to show menuItem from the selected item
-        bottomOffsetHeight:
-            80.0, // Offset height to consider, for showing the menu item ( for example bottom navigation bar), so that the popup menu will be shown on top of selected item.
+        openWithTap: false,
+        menuOffset: 10.0,
+        bottomOffsetHeight: 10.0,
         menuItems: [
-          // Add Each FocusedMenuItem  for Menu Options
           FocusedMenuItem(
-              backgroundColor: Theme.of(context).cardColor,
-              title: const Text("View"),
-              trailingIcon: const Icon(Icons.open_in_new),
-              onPressed: () => _onTap(context)),
+            backgroundColor: Theme.of(context).cardColor,
+            title: const Text("Review"),
+            trailingIcon: const Icon(Icons.rate_review),
+            onPressed: () {},
+          ),
           FocusedMenuItem(
-              backgroundColor: Theme.of(context).cardColor,
-              title: const Text("Review"),
-              trailingIcon: const Icon(Icons.rate_review),
-              onPressed: () {}),
+            backgroundColor: Theme.of(context).cardColor,
+            title: const Text("Schedule"),
+            trailingIcon: const Icon(Icons.calendar_today),
+            onPressed: () {},
+          ),
           FocusedMenuItem(
-              backgroundColor: Theme.of(context).cardColor,
-              title: const Text("Schedule"),
-              trailingIcon: const Icon(Icons.calendar_today),
-              onPressed: () {}),
+            backgroundColor: Theme.of(context).cardColor,
+            title: const Text(
+              "Build Routine",
+            ),
+            trailingIcon: const Icon(
+              Icons.emoji_people,
+            ),
+            onPressed: () {},
+          ),
           FocusedMenuItem(
-              backgroundColor: Theme.of(context).cardColor,
-              title: const Text(
-                "Build Routine",
-              ),
-              trailingIcon: const Icon(
-                Icons.emoji_people,
-              ),
-              onPressed: () {}),
+            backgroundColor: Theme.of(context).cardColor,
+            title: const Text(
+              "View History",
+            ),
+            trailingIcon: Icon(
+              PlatformIcons(context).clockSolid,
+            ),
+            onPressed: () => _onHistoryPress(
+              context: context,
+              title: "History",
+              user: context.read<UserProvider>().authUser?.email,
+            ),
+          ),
         ],
-        onPressed: () {},
+        onPressed: () => _onTap(context),
         child: Hero(
           tag: "${workout.name}_vault",
           child: Container(

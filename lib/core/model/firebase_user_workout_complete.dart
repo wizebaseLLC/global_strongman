@@ -91,28 +91,28 @@ class WorkoutSetListItem {
   WorkoutSetListItem({
     this.working_weight_lbs,
     this.working_weight_kgs,
-    this.seconds,
-    this.measurement,
+    this.duration,
+    this.reps,
   });
   final num? working_weight_lbs;
   final num? working_weight_kgs;
-  final num? seconds;
-  final String? measurement;
+  final String? duration;
+  final num? reps;
 
   WorkoutSetListItem.fromJson(Map<String, Object?> json)
       : this(
           working_weight_lbs: json['working_weight_lbs'] as num?,
           working_weight_kgs: json['working_weight_kgs'] as num?,
-          measurement: json['measurement'] as String?,
-          seconds: json['seconds'] as num?,
+          duration: json['duration'] as String?,
+          reps: json['reps'] as num?,
         );
 
   Map<String, Object?> toJson() {
     return {
       'working_weight_lbs': working_weight_lbs,
       'working_weight_kgs': working_weight_kgs,
-      'seconds': seconds,
-      'measurement': measurement,
+      'duration': duration,
+      'reps': reps,
     };
   }
 }

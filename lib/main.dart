@@ -151,6 +151,11 @@ class MyAppScreen extends StatelessWidget {
             primaryColor: kPrimaryColor,
             visualDensity: VisualDensity.adaptivePlatformDensity,
             brightness: Brightness.dark,
+            scaffoldBackgroundColor: Colors.grey.shade900,
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.grey[900],
+            ),
+            cardColor: Colors.grey[850],
           ),
         ),
         cupertino: (_, __) => CupertinoAppData(

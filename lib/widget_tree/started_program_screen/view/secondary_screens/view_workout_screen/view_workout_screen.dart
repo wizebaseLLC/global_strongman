@@ -15,15 +15,13 @@ import 'package:global_strongman/core/model/firebase_user_workout_complete.dart'
 import 'package:global_strongman/core/providers/activity_interace_provider.dart';
 import 'package:global_strongman/core/providers/badge_current_values.dart';
 import 'package:global_strongman/core/view/animated_sliver_list_wrapper.dart';
-import 'package:global_strongman/widget_tree/started_program_screen/view/measurement_radio_buttons.dart';
+import 'package:global_strongman/widget_tree/activity_screen/view/filtered_workout_screen/filtered_workout_screen.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/description.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/progression_line_chart.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/sliver_video_app_bar.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/secondary_screens/view_workout_screen/workout_title.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:provider/provider.dart";
-
-enum Measurement { lbs, kgs, seconds }
 
 class ViewWorkoutScreen extends StatefulWidget {
   const ViewWorkoutScreen({
@@ -44,9 +42,9 @@ class ViewWorkoutScreen extends StatefulWidget {
 }
 
 class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
-  Measurement? measurement = Measurement.lbs;
   final TextEditingController _notesController = TextEditingController();
   String? foundKey;
+  String _pickerValue = "0";
 
   ListModel<WorkoutSetListItem> list = ListModel<WorkoutSetListItem>(
     listKey: GlobalKey<SliverAnimatedListState>(),
@@ -81,7 +79,9 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
           print(e);
         }
       },
-    ).catchError((err) => print(err));
+    ).catchError((err) {
+      print(err);
+    });
   }
 
   Future<void> _handleSubmitWorkoutComplete(BuildContext context) async {
@@ -153,13 +153,127 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
           isEqualTo: widget.program_id,
         )
         .where("workout_id", isEqualTo: widget.workout_id)
-        // .limit(20)
         .get()
         .catchError((e) {
       if (true) {
         print(e);
       }
     });
+  }
+
+  void _setWeight(index) async {
+    num lbs = 0;
+    num kgs = 0;
+    final picker = PlatformPicker(
+      pickerValue: _pickerValue,
+      list: [
+        for (var i = 0; i <= 1200; i++) i.toString(),
+      ],
+    );
+
+    await picker.showPicker(
+      context: context,
+      title: "Working Set",
+      message: "How much weight (lbs) did you lift this set?",
+    );
+
+    if (picker.pickerValue != null && picker.pickerValue!.isNotEmpty) {
+      lbs = num.parse(picker.pickerValue!);
+      kgs = (num.parse(picker.pickerValue!)) / 2.2046;
+
+      setState(() {
+        _pickerValue = picker.pickerValue!;
+      });
+    }
+
+    setState(
+      () {
+        list.items[index] = WorkoutSetListItem(
+          duration: list.items[index].duration,
+          working_weight_kgs: kgs,
+          working_weight_lbs: lbs,
+          reps: list.items[index].reps,
+        );
+      },
+    );
+  }
+
+  void _setReps(index) async {
+    num reps = 0;
+    final picker = PlatformPicker(
+      list: [
+        for (var i = 0; i <= 100; i++) i.toString(),
+      ],
+    );
+
+    await picker.showPicker(
+      context: context,
+      title: "Working Set",
+      message: "How many repetitions did you complete?",
+    );
+
+    if (picker.pickerValue != null && picker.pickerValue!.isNotEmpty) {
+      reps = num.parse(picker.pickerValue!);
+    }
+
+    setState(
+      () {
+        list.items[index] = WorkoutSetListItem(
+          duration: list.items[index].duration,
+          working_weight_kgs: list.items[index].working_weight_kgs,
+          working_weight_lbs: list.items[index].working_weight_lbs,
+          reps: reps,
+        );
+      },
+    );
+  }
+
+  void _setDuration(index) async {
+    String? duration;
+    final picker = PlatformPicker(
+      list: [],
+    );
+
+    await picker.showDurationTimerPicker(
+      context: context,
+      title: "Working Set",
+      message: "How long did you go for?",
+    );
+
+    if (picker.timerPickerValue != null) {
+      duration = PlatformPicker.printDuration(picker.timerPickerValue!);
+    }
+
+    setState(
+      () {
+        list.items[index] = WorkoutSetListItem(
+          duration: duration,
+          working_weight_kgs: list.items[index].working_weight_kgs,
+          working_weight_lbs: list.items[index].working_weight_lbs,
+          reps: list.items[index].reps,
+        );
+      },
+    );
+  }
+
+  void _onHistoryPress({
+    required String title,
+    required BuildContext context,
+  }) {
+    Navigator.push(
+      context,
+      platformPageRoute(
+        context: context,
+        builder: (_) => FilteredWorkoutScreen(
+          title: title,
+          query: FirebaseUserWorkoutComplete()
+              .getCollectionReference(user: _user)
+              .where("workout_id", isEqualTo: widget.workout_id)
+              .orderBy("created_on", descending: true),
+          previousPageTitle: "Workout",
+        ),
+      ),
+    );
   }
 
   @override
@@ -285,9 +399,31 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                               sliver: SliverList(
                                 delegate: SliverChildListDelegate(
                                   [
-                                    const WorkoutDescription(
+                                    WorkoutDescription(
                                       title: "Log today's session",
                                       subtitle: "",
+                                      trailing: PlatformTextButton(
+                                        child: Text(
+                                          "History",
+                                          style: platformThemeData(
+                                            context,
+                                            material: (data) => data
+                                                .textTheme.bodyText1
+                                                ?.copyWith(
+                                              color: Colors.blue,
+                                            ),
+                                            cupertino: (data) => data
+                                                .textTheme.textStyle
+                                                .copyWith(
+                                              color: CupertinoColors.activeBlue,
+                                            ),
+                                          ),
+                                        ),
+                                        onPressed: () => _onHistoryPress(
+                                          context: context,
+                                          title: "History",
+                                        ),
+                                      ),
                                     ),
                                     const SizedBox(height: kSpacing),
                                   ],
@@ -301,56 +437,9 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                               sliver: AnimatedSliverListWrapper(
                                 dense: true,
                                 list: list,
-                                onTap: (index) async {
-                                  num lbs = 0;
-                                  num kgs = 0;
-                                  num seconds = 0;
-                                  String measurementToString = "lbs";
-                                  final picker = PlatformPicker(
-                                    pickerValue: "0",
-                                    list: [
-                                      for (var i = 0; i <= 1200; i++)
-                                        i.toString(),
-                                    ],
-                                  );
-
-                                  await picker.showPicker(
-                                    context: context,
-                                    title: "Working Set",
-                                    message: measurement == Measurement.seconds
-                                        ? "Long long did you last?"
-                                        : "How much weight did you lift this set?",
-                                  );
-
-                                  if (picker.pickerValue != null &&
-                                      picker.pickerValue!.isNotEmpty) {
-                                    if (measurement == Measurement.lbs) {
-                                      measurementToString = "lbs";
-                                      lbs = num.parse(picker.pickerValue!);
-                                      kgs = (num.parse(picker.pickerValue!)) /
-                                          2.2046;
-                                    } else if (measurement == Measurement.kgs) {
-                                      measurementToString = "kgs";
-                                      kgs = num.parse(picker.pickerValue!);
-                                      lbs = (num.parse(picker.pickerValue!)) *
-                                          2.2046;
-                                    } else {
-                                      measurementToString = "seconds";
-                                      seconds = num.parse(picker.pickerValue!);
-                                    }
-                                  }
-
-                                  setState(
-                                    () {
-                                      list.items[index] = WorkoutSetListItem(
-                                        seconds: seconds,
-                                        working_weight_kgs: kgs,
-                                        working_weight_lbs: lbs,
-                                        measurement: measurementToString,
-                                      );
-                                    },
-                                  );
-                                },
+                                onWeightTap: _setWeight,
+                                onRepsTap: _setReps,
+                                onDurationTap: _setDuration,
                               ),
                             ),
                             SliverPadding(
@@ -360,22 +449,23 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                               sliver: SliverList(
                                 delegate: SliverChildListDelegate(
                                   [
-                                    const SizedBox(height: kSpacing * 2),
-                                    MeasurementRadioButtons(
-                                      measurement: measurement,
-                                      setState: (value) => setState(
-                                        () {
-                                          measurement = value;
-                                        },
-                                      ),
-                                    ),
+                                    // const SizedBox(height: kSpacing * 2),
+                                    // MeasurementRadioButtons(
+                                    //   measurement: measurement,
+                                    //   setState: (value) => setState(
+                                    //     () {
+                                    //       measurement = value;
+                                    //     },
+                                    //   ),
+                                    // ),
                                     const SizedBox(height: kSpacing * 4),
                                     const WorkoutDescription(
                                       title: "Notes",
                                       subtitle: "",
                                     ),
                                     const SizedBox(height: kSpacing),
-                                    if (foundKey != null)
+                                    if (foundKey != null &&
+                                        foundKey!.isNotEmpty)
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: kSpacing,
@@ -420,7 +510,9 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                                             CupertinoTextFieldData(
                                           textCapitalization:
                                               TextCapitalization.sentences,
-                                          decoration: const BoxDecoration(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                             color: CupertinoColors
                                                 .darkBackgroundGray,
                                           ),

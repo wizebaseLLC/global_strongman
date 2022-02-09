@@ -18,6 +18,7 @@ class PlatformSliverScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
+      primary: true,
       slivers: [
         PlatformWidget(
           material: (context, _) => SliverAppBar(

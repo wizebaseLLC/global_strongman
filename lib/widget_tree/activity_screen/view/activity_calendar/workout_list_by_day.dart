@@ -39,6 +39,7 @@ class WorkoutListByDay extends StatelessWidget {
             descending: true,
           );
     }
+    return null;
   }
 
   @override
@@ -54,38 +55,34 @@ class WorkoutListByDay extends StatelessWidget {
           final List<QueryDocumentSnapshot<FirebaseUserWorkoutComplete>> docs =
               snapshot.docs;
 
-          return ListView.builder(
-            itemCount: docs.length,
-            padding: EdgeInsets.zero,
-            itemBuilder: (context, index) {
-              final FirebaseUserWorkoutComplete snapshotData =
-                  docs[index].data();
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final FirebaseUserWorkoutComplete snapshotData =
+                    docs[index].data();
 
-              if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
-                // Tell FirestoreQueryBuilder to try to obtain more items.
-                // It is safe to call this function from within the build method.
-                snapshot.fetchMore();
-              }
+                if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+                  // Tell FirestoreQueryBuilder to try to obtain more items.
+                  // It is safe to call this function from within the build method.
+                  snapshot.fetchMore();
+                }
 
-              if (snapshot.hasData) {
                 return WorkoutListTimelineTile(
                   program: snapshotData.program_id,
                   day: snapshotData.day,
-                  doc: snapshotData.workout_id!,
                   key: ValueKey<String>(docs[index].id),
                   completedWorkout: snapshotData,
                   snapshot: docs[index],
                   isFirst: index == 0,
                   isLast: docs.length == index + 1,
                 );
-              }
-
-              return const CircularProgressIndicator.adaptive();
-            },
+              },
+              childCount: docs.length,
+            ),
           );
         },
       );
     }
-    return const CircularProgressIndicator.adaptive();
+    return const Center(child: CircularProgressIndicator.adaptive());
   }
 }

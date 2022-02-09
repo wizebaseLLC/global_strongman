@@ -49,7 +49,7 @@ class ProgramsCompletedScreen extends StatelessWidget {
               previousPageTitle: previousPageTitle,
               trailingActions: const [],
               body: ExclusiveWorkoutPrograms(
-                docs: programSnapshot.data!.docs
+                docs: programSnapshot.data?.docs
                     .where((doc) => ongoingPrograms!.contains(doc.id))
                     .toList(),
                 isContinue: false,

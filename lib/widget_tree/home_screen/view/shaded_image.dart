@@ -1,17 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 
 class ShadedImage extends StatelessWidget {
   const ShadedImage({
     Key? key,
-    required this.heroId,
+    this.heroId,
     this.program,
     this.image,
   }) : super(key: key);
 
-  final String heroId;
+  final String? heroId;
   final QueryDocumentSnapshot<FirebaseProgram>? program;
   final Widget? image;
 
@@ -28,25 +29,33 @@ class ShadedImage extends StatelessWidget {
     return Container();
   }
 
+  Color _scaffoldColor(BuildContext context) => platformThemeData(
+        context,
+        material: (data) => data.scaffoldBackgroundColor,
+        cupertino: (data) => data.scaffoldBackgroundColor,
+      );
+
   @override
   Widget build(BuildContext context) {
     return ShaderMask(
       shaderCallback: (rect) {
         return LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomRight,
+          begin: Alignment.center,
+          end: Alignment.bottomCenter,
           colors: [
-            Colors.black.withOpacity(.9),
-            Colors.black.withOpacity(.7),
-            Colors.black.withOpacity(.1),
+            _scaffoldColor(context).withOpacity(.7),
+            _scaffoldColor(context).withOpacity(.4),
+            _scaffoldColor(context).withOpacity(0),
           ],
         ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
       },
       blendMode: BlendMode.dstIn,
-      child: Hero(
-        tag: heroId,
-        child: _buildHeroChild(),
-      ),
+      child: heroId != null
+          ? Hero(
+              tag: heroId!,
+              child: _buildHeroChild(),
+            )
+          : _buildHeroChild(),
     );
   }
 }

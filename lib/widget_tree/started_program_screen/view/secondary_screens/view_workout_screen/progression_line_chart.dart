@@ -58,14 +58,11 @@ class ProgressionLineChart extends StatelessWidget {
             (e) {
               final WorkoutSetListItem workingSet =
                   WorkoutSetListItem.fromJson(e);
-              if (workingSet.seconds != null && workingSet.seconds! > 0) {
-                return WorkoutSetListItem.fromJson(e).seconds?.toInt() ?? 0;
-              } else {
-                return WorkoutSetListItem.fromJson(e)
-                        .working_weight_lbs
-                        ?.toInt() ??
-                    0;
-              }
+
+              return WorkoutSetListItem.fromJson(e)
+                      .working_weight_lbs
+                      ?.toInt() ??
+                  0;
             },
           ).reduce(max);
           return TimeSeries(data.created_on!, value ?? 0);
