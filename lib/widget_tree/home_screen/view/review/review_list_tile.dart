@@ -37,28 +37,29 @@ class ReviewListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot<FirebaseUser>?>(
-        future: _getUser(review?.uid),
-        builder: (context, snapshot) {
-          final user = snapshot.data?.data();
-          return Column(
-            children: [
-              if (review != null)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: kSpacing),
-                  child: ReviewTileData(
-                    user: user,
-                    review: review!,
-                    program: program,
-                    reviewId: reviewId,
-                  ),
+      future: _getUser(review?.uid),
+      builder: (context, snapshot) {
+        final user = snapshot.data?.data();
+        return Column(
+          children: [
+            if (review != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: kSpacing),
+                child: ReviewTileData(
+                  user: user,
+                  review: review!,
+                  program: program,
+                  reviewId: reviewId,
                 ),
-              const Divider(
-                height: 2,
-                color: Colors.grey,
-                indent: 45 + kSpacing * 4,
-              )
-            ],
-          );
-        });
+              ),
+            const Divider(
+              height: 2,
+              color: Colors.grey,
+              indent: 45 + kSpacing * 4,
+            )
+          ],
+        );
+      },
+    );
   }
 }

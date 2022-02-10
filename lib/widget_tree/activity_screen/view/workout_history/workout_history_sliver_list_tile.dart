@@ -39,7 +39,7 @@ class WorkoutHistorySliverListTile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: kSpacing / 2),
                 child: Text(
-                  "Duration - ${workingSet.duration}",
+                  "Duration - ${workingSet.duration} (hh:mm:ss)",
                   style: platformThemeData(
                     context,
                     material: (data) => data.textTheme.bodyMedium,

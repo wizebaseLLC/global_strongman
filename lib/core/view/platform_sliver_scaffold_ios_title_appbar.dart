@@ -17,29 +17,31 @@ class PlatformSliverScaffold extends StatelessWidget {
   final List<Widget> sliverChildren;
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      primary: true,
-      slivers: [
-        PlatformWidget(
-          material: (context, _) => SliverAppBar(
-            pinned: false,
-            floating: true,
-            stretch: false,
-            snap: true,
-            actions: trailingActions,
-            title: Text(title),
-          ),
-          cupertino: (context, _) => CupertinoSliverNavigationBar(
-            largeTitle: Text(title),
-            previousPageTitle: previousPageTitle,
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: trailingActions,
+    return PlatformScaffold(
+      body: CustomScrollView(
+        primary: true,
+        slivers: [
+          PlatformWidget(
+            material: (context, _) => SliverAppBar(
+              pinned: false,
+              floating: true,
+              stretch: false,
+              snap: true,
+              actions: trailingActions,
+              title: Text(title),
+            ),
+            cupertino: (context, _) => CupertinoSliverNavigationBar(
+              largeTitle: Text(title),
+              previousPageTitle: previousPageTitle,
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: trailingActions,
+              ),
             ),
           ),
-        ),
-        ...sliverChildren,
-      ],
+          ...sliverChildren,
+        ],
+      ),
     );
   }
 }

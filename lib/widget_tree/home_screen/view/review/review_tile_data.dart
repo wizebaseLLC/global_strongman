@@ -147,15 +147,18 @@ class ReviewTileData extends StatelessWidget {
                         actions: <Widget>[
                           PlatformDialogAction(
                             child: const Text("Cancel"),
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () =>
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop(),
                           ),
                           PlatformDialogAction(
-                              child: const Text(
-                                "Delete",
-                              ),
-                              onPressed: () async => await _removeRating(
-                                    context: context,
-                                  )),
+                            child: const Text(
+                              "Delete",
+                            ),
+                            onPressed: () async => await _removeRating(
+                              context: context,
+                            ),
+                          ),
                         ],
                       ),
                     );
@@ -212,6 +215,6 @@ class ReviewTileData extends StatelessWidget {
         print(e);
       }
     }).catchError((err) => print(err));
-    Navigator.pop(context);
+    Navigator.of(context, rootNavigator: true).pop();
   }
 }

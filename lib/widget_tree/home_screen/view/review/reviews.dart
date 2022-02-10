@@ -31,20 +31,23 @@ class Reviews extends StatelessWidget {
             snapshot.docs;
 
         return SliverList(
-          delegate: SliverChildBuilderDelegate((context, index) {
-            if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
-              // Tell FirestoreQueryBuilder to try to obtain more items.
-              // It is safe to call this function from within the build method.
-              snapshot.fetchMore();
-            }
-            final FirebaseProgramRating snapshotData = docs[index].data();
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+                // Tell FirestoreQueryBuilder to try to obtain more items.
+                // It is safe to call this function from within the build method.
+                snapshot.fetchMore();
+              }
+              final FirebaseProgramRating snapshotData = docs[index].data();
 
-            return ReviewListTile(
-              program: program,
-              review: snapshotData,
-              reviewId: docs[index].id,
-            );
-          }, childCount: docs.length),
+              return ReviewListTile(
+                program: program,
+                review: snapshotData,
+                reviewId: docs[index].id,
+              );
+            },
+            childCount: docs.length,
+          ),
         );
       },
     );
