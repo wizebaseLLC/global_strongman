@@ -141,10 +141,12 @@ class PlatformPicker {
       );
     } else {
       final Duration? resultingDuration = await showDurationPicker(
-        context: context,
-        initialTime: const Duration(minutes: 0),
-        baseUnit: BaseUnit.second,
-      );
+          context: context,
+          initialTime: const Duration(minutes: 0),
+          baseUnit: BaseUnit.second,
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+          ));
 
       timerPickerValue = resultingDuration;
     }
