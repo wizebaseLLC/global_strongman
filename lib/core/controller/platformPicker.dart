@@ -75,9 +75,9 @@ class PlatformPicker {
         context: context,
         enableDrag: true,
         isDismissible: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
-        ),
+        // shape: const RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.vertical(top: Radius.circular(8)),
+        // ),
         isScrollControlled: true,
         builder: (context) => SizedBox(
           height: 400,

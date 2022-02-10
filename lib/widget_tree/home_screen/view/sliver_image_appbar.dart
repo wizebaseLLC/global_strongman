@@ -23,7 +23,7 @@ class SliverImageAppBar extends StatelessWidget {
         cupertino: (data) => data.barBackgroundColor,
       ),
       floating: true,
-      expandedHeight: 300,
+      expandedHeight: 250,
       stretch: true,
       pinned: true,
       bottom: PreferredSize(

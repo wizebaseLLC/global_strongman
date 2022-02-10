@@ -31,6 +31,7 @@ class ReviewListTile extends StatelessWidget {
         print(e);
       }
     }
+    return null;
   }
 
   @override
@@ -39,24 +40,24 @@ class ReviewListTile extends StatelessWidget {
         future: _getUser(review?.uid),
         builder: (context, snapshot) {
           final user = snapshot.data?.data();
-          return SizedBox(
-            height: 150,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  if (review != null)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: kSpacing),
-                      child: ReviewTileData(
-                        user: user,
-                        review: review!,
-                        program: program,
-                        reviewId: reviewId,
-                      ),
-                    ),
-                ],
-              ),
-            ),
+          return Column(
+            children: [
+              if (review != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: kSpacing),
+                  child: ReviewTileData(
+                    user: user,
+                    review: review!,
+                    program: program,
+                    reviewId: reviewId,
+                  ),
+                ),
+              const Divider(
+                height: 2,
+                color: Colors.grey,
+                indent: 45 + kSpacing * 4,
+              )
+            ],
           );
         });
   }

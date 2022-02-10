@@ -42,7 +42,7 @@ class ProgramTabs extends StatelessWidget {
             },
             onValueChanged: setTab),
         material: (_, __) => DefaultTabController(
-          length: 3,
+          length: 2,
           child: TabBar(
             onTap: setTab,
             indicatorColor: kPrimaryColor,
@@ -50,7 +50,7 @@ class ProgramTabs extends StatelessWidget {
               Tab(
                 text: "Overview",
               ),
-              Tab(text: "Workout list"),
+              // Tab(text: "Workout list"),
               Tab(text: "Reviews"),
             ],
           ),
