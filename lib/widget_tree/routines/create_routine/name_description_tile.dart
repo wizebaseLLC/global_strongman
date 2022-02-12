@@ -18,11 +18,6 @@ class NameDescriptionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      // tileColor: platformThemeData(
-      //   context,
-      //   material: (data) => data.cardColor,
-      //   cupertino: (data) => data.barBackgroundColor,
-      // ),
       title: Text(
         nameDescriptionValue.name ?? "Name",
         style: platformThemeData(

@@ -84,22 +84,30 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.zero,
                   ),
-                  child: Column(children: [
-                    Text(
-                      "Name",
-                      style: platformThemeData(
-                        context,
-                        material: (data) => data.textTheme.headline6?.copyWith(
-                          fontSize: 24,
-                        ),
-                        cupertino: (data) =>
-                            data.textTheme.navTitleTextStyle.copyWith(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )
-                  ]),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: kSpacing * 2),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Name",
+                          style: platformThemeData(
+                            context,
+                            material: (data) =>
+                                data.textTheme.headline6?.copyWith(
+                              fontSize: 24,
+                            ),
+                            cupertino: (data) =>
+                                data.textTheme.navTitleTextStyle.copyWith(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 )
               ],
             ),
