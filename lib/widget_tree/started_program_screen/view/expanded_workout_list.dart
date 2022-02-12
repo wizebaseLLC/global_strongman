@@ -20,6 +20,7 @@ class ExpandedWorkoutList extends StatefulWidget {
     required this.program_id,
     required this.workout_id,
     required this.programDay,
+    required this.isLast,
     Key? key,
   }) : super(key: key);
 
@@ -27,6 +28,7 @@ class ExpandedWorkoutList extends StatefulWidget {
   final FirebaseProgramWorkouts workoutTile;
   final String program_id;
   final String workout_id;
+  final bool isLast;
 
   static String getSubtitle({required FirebaseProgramWorkouts workoutTile}) {
     if (workoutTile.reps != null &&
@@ -49,8 +51,8 @@ class ExpandedWorkoutList extends StatefulWidget {
 
 class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
   bool _workoutComplete = false;
-  String previousSession = "";
   String? get user => FirebaseAuth.instance.currentUser?.email;
+
   Future<void> _checkIfWorkoutWasCompleted({
     required SharedPreferences prefs,
   }) async {
@@ -64,19 +66,6 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
           _workoutComplete = true;
         });
       }
-    }
-  }
-
-  Future<void> _getPreviousSessionAttempt({
-    required SharedPreferences prefs,
-  }) async {
-    final String? foundKey = prefs.getString(
-        "${user}_${widget.program_id}_${widget.workout_id}_previousWeight");
-
-    if (foundKey != null) {
-      setState(() {
-        previousSession = foundKey;
-      });
     }
   }
 
@@ -113,7 +102,6 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
   void initState() {
     SharedPreferences.getInstance().then((prefs) {
       _checkIfWorkoutWasCompleted(prefs: prefs);
-      _getPreviousSessionAttempt(prefs: prefs);
     });
 
     super.initState();
@@ -121,101 +109,91 @@ class _ExpandedWorkoutListState extends State<ExpandedWorkoutList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        widget.workoutTile.name!,
-        style: platformThemeData(
-          context,
-          material: (data) => data.textTheme.bodyText1?.copyWith(
-            color: Colors.white,
-          ),
-          cupertino: (data) => data.textTheme.textStyle.copyWith(
-            fontSize: 14,
-            color: CupertinoColors.white,
-          ),
-        ),
-      ),
-      subtitle: Text(
-        "${ExpandedWorkoutList.getSubtitle(workoutTile: widget.workoutTile)} $previousSession",
-        style: platformThemeData(
-          context,
-          material: (data) => data.textTheme.bodyText1?.copyWith(
-            color: Colors.white70,
-          ),
-          cupertino: (data) => data.textTheme.textStyle.copyWith(
-            fontSize: 12,
-            color: CupertinoColors.systemGrey3,
-          ),
-        ),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (_workoutComplete)
-            Icon(
-              PlatformIcons(context).checkMark,
-              color: Platform.isIOS ? CupertinoColors.activeBlue : Colors.blue,
-              size: 16,
-            ),
-          if (_workoutComplete)
-            const SizedBox(
-              width: kSpacing,
-            ),
-          Icon(
-            PlatformIcons(context).rightChevron,
-            color: Colors.white60,
-          ),
-        ],
-      ),
-      dense: true,
-      onTap: () async {
-        if (user != null) {
-          final bool? didCompleteWorkout = await Navigator.push(
-            context,
-            platformPageRoute(
-              context: context,
-              builder: (_) => ViewWorkoutScreen(
-                workout: widget.workoutTile,
-                program_id: widget.program_id,
-                workout_id: widget.workout_id,
-                programDay: widget.programDay,
+    return Column(
+      children: [
+        ListTile(
+          title: Text(
+            widget.workoutTile.name!,
+            style: platformThemeData(
+              context,
+              material: (data) => data.textTheme.bodyText1?.copyWith(
+                color: Colors.white,
+              ),
+              cupertino: (data) => data.textTheme.textStyle.copyWith(
+                fontSize: 14,
+                color: CupertinoColors.white,
               ),
             ),
-          );
-          if (didCompleteWorkout != null && didCompleteWorkout == true) {
-            final SharedPreferences prefs =
-                await SharedPreferences.getInstance();
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (_workoutComplete)
+                Icon(
+                  PlatformIcons(context).checkMark,
+                  color:
+                      Platform.isIOS ? CupertinoColors.activeBlue : Colors.blue,
+                  size: 16,
+                ),
+              if (_workoutComplete)
+                const SizedBox(
+                  width: kSpacing,
+                ),
+              Icon(
+                PlatformIcons(context).rightChevron,
+                color: Colors.white60,
+              ),
+            ],
+          ),
+          dense: true,
+          onTap: () async {
+            if (user != null) {
+              final bool? didCompleteWorkout = await Navigator.push(
+                context,
+                platformPageRoute(
+                  context: context,
+                  builder: (_) => ViewWorkoutScreen(
+                    workout: widget.workoutTile,
+                    program_id: widget.program_id,
+                    workout_id: widget.workout_id,
+                    programDay: widget.programDay,
+                  ),
+                ),
+              );
+              if (didCompleteWorkout != null && didCompleteWorkout == true) {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
 
-            await prefs.setString(
-              "${user}_${widget.program_id}_${widget.workout_id}",
-              DateTime.now().toString(),
-            );
+                final DateTime now = DateTime.now();
 
-            final String? foundKey = prefs.getString(
-                "${user}_${widget.program_id}_${widget.workout_id}_previousWeight");
+                final String? previousDate = prefs
+                    .getString("${user}_${now.day}_${now.month}_${now.year}");
+                await prefs.setString(
+                  "${user}_${now.day}_${now.month}_${now.year}",
+                  "${user}_${now.day}_${now.month}_${now.year}",
+                );
 
-            final DateTime now = DateTime.now();
+                if (previousDate == null) {
+                  await _incrementActiveDays();
+                }
 
-            final String? previousDate =
-                prefs.getString("${user}_${now.day}_${now.month}_${now.year}");
-            await prefs.setString(
-              "${user}_${now.day}_${now.month}_${now.year}",
-              "${user}_${now.day}_${now.month}_${now.year}",
-            );
-
-            if (previousDate == null) {
-              await _incrementActiveDays();
+                setState(
+                  () {
+                    _workoutComplete = true;
+                  },
+                );
+              }
             }
-
-            setState(
-              () {
-                _workoutComplete = true;
-                previousSession = foundKey ?? "";
-              },
-            );
-          }
-        }
-      },
+          },
+        ),
+        if (!widget.isLast)
+          const Divider(
+            color: Colors.grey,
+            height: 2,
+            indent: kSpacing * 2,
+            endIndent: kSpacing * 2,
+          )
+      ],
     );
   }
 }

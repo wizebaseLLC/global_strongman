@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/core/providers/activity_interace_provider.dart';
 import 'package:global_strongman/core/providers/badge_current_values.dart';
+import 'package:global_strongman/core/providers/user_provider.dart';
 import 'package:global_strongman/widget_tree/bottom_navigator/model/screen_list.dart';
 import 'package:provider/provider.dart';
 
@@ -23,11 +24,23 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   int _selectedTabIndex = 0;
   PlatformTabController tabController = PlatformTabController(initialIndex: 0);
 
-  List<PlatformAppBar?> appBar({required BuildContext context}) =>
-      screens(context: context).map((e) => e.appBar).toList();
+  List<PlatformAppBar?> appBar({
+    required BuildContext context,
+    required FirebaseUser? user,
+  }) =>
+      screens(
+        context: context,
+        user: user,
+      ).map((e) => e.appBar).toList();
 
-  List<Widget> childScreens({required BuildContext context}) =>
-      screens(context: context).map((e) => e.child).toList();
+  List<Widget> childScreens({
+    required BuildContext context,
+    required FirebaseUser? user,
+  }) =>
+      screens(
+        context: context,
+        user: user,
+      ).map((e) => e.child).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +60,22 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       activityInterface.createWorkoutInterface();
     }
 
+    final UserProvider user = context.read<UserProvider>();
+
     return PlatformTabScaffold(
       tabController: tabController,
       key: _scaffoldKey,
-      bodyBuilder: (context, index) => AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: IndexedStack(
-          children: childScreens(context: context),
-          index: index,
+      bodyBuilder: (context, index) => IndexedStack(
+        children: childScreens(
+          context: context,
+          user: user.firebaseUser,
         ),
+        index: index,
       ),
-      appBarBuilder: (_, index) => appBar(context: context)[index],
+      appBarBuilder: (_, index) => appBar(
+        context: context,
+        user: user.firebaseUser,
+      )[index],
       itemChanged: (index) {
         setState(() {
           _selectedTabIndex = index;

@@ -13,10 +13,12 @@ import 'package:global_strongman/widget_tree/profile_screen/view/secondary_scree
 class ProgressGallery extends StatelessWidget {
   const ProgressGallery({
     required this.firebaseUser,
+    this.previousPageTitle,
     Key? key,
   }) : super(key: key);
 
   final FirebaseUser firebaseUser;
+  final String? previousPageTitle;
 
   Query<ProgressGalleryCard> _firebaseUserProgressGalleryStream() {
     final User authenticatedUser = FirebaseUser.getSignedInUserFromFireStore()!;
@@ -37,7 +39,7 @@ class ProgressGallery extends StatelessWidget {
           top: false,
           child: PlatformSliverScaffold(
             title: "My Progress",
-            previousPageTitle: "My Profile",
+            previousPageTitle: previousPageTitle ?? "My Profile",
             trailingActions: [
               Material(
                 color: Colors.transparent,

@@ -65,6 +65,39 @@ class FirebaseProgramRating {
         );
   }
 
+  /// Get a reference to the single ref.
+  DocumentReference<FirebaseProgramRating> getRoutineDocumentReference({
+    required String docId,
+    required String routineId,
+  }) {
+    return FirebaseFirestore.instance
+        .collection('routines')
+        .doc(routineId)
+        .collection("reviews")
+        .doc(docId)
+        .withConverter<FirebaseProgramRating>(
+          fromFirestore: (snapshot, _) =>
+              FirebaseProgramRating.fromJson(snapshot.data()!),
+          toFirestore: (data, _) => data.toJson(),
+        );
+  }
+
+  /// Get a reference to the entire collection.
+  /// Don't forget to add a where clause.
+  CollectionReference<FirebaseProgramRating> getRoutineCollectionReference({
+    required String routineId,
+  }) {
+    return FirebaseFirestore.instance
+        .collection('routines')
+        .doc(routineId)
+        .collection("reviews")
+        .withConverter<FirebaseProgramRating>(
+          fromFirestore: (snapshot, _) =>
+              FirebaseProgramRating.fromJson(snapshot.data()!),
+          toFirestore: (data, _) => data.toJson(),
+        );
+  }
+
   Future<void> createRating({
     required num rating,
     required String userId,
@@ -92,6 +125,44 @@ class FirebaseProgramRating {
     required String program,
   }) async {
     getDocumentReference(program: program, docId: docId).update(
+      {
+        "rating": rating,
+        "review": review,
+      },
+    );
+  }
+
+  Future<void> createRoutineRating({
+    required num rating,
+    required String userId,
+    required String review,
+    required String routineId,
+  }) async {
+    getRoutineCollectionReference(routineId: routineId)
+        .add(FirebaseProgramRating(
+      rating: rating,
+      review: review,
+      uid: userId,
+    ));
+  }
+
+  Future<void> removeRoutineRating({
+    required String docId,
+    required String routineId,
+  }) async {
+    getRoutineCollectionReference(routineId: routineId).doc(docId).delete();
+  }
+
+  Future<void> updateRoutineRating({
+    required num rating,
+    required String docId,
+    required String routineId,
+    required String review,
+  }) async {
+    getRoutineDocumentReference(
+      docId: docId,
+      routineId: routineId,
+    ).update(
       {
         "rating": rating,
         "review": review,

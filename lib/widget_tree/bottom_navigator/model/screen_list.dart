@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:full_screen_menu/full_screen_menu.dart';
+import 'package:global_strongman/core/model/firebase_user.dart';
 import 'package:global_strongman/widget_tree/activity_screen/view/main.dart';
 import 'package:global_strongman/widget_tree/bottom_navigator/controller/tab_bar_screen.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/main.dart';
 import 'package:global_strongman/widget_tree/profile_screen/view/main.rs.dart';
+import 'package:global_strongman/widget_tree/profile_screen/view/secondary_screens/progress_gallery/progress_gallery.dart';
+import 'package:global_strongman/widget_tree/routines/create_routine/main.dart';
 import 'package:global_strongman/widget_tree/workout_vault/main.dart';
 
-List<TabBarScreen> screens({required BuildContext context}) => [
+List<TabBarScreen> screens({
+  required BuildContext context,
+  required FirebaseUser? user,
+}) =>
+    [
       TabBarScreen(
         child: const HomeScreen(),
         appBar: buildStandardAppbar(
-          title: "Global Strongman",
+          title: "Home",
           context: context,
+          user: user,
         ),
       ),
       TabBarScreen(
@@ -20,6 +28,7 @@ List<TabBarScreen> screens({required BuildContext context}) => [
         appBar: buildStandardAppbar(
           title: "Activity",
           context: context,
+          user: user,
         ),
       ),
       // TabBarScreen(
@@ -28,8 +37,9 @@ List<TabBarScreen> screens({required BuildContext context}) => [
       TabBarScreen(
         child: const WorkoutVaultScreen(),
         appBar: buildStandardAppbar(
-          title: "Workout Vault",
+          title: "Vault",
           context: context,
+          user: user,
         ),
       ),
       TabBarScreen(child: const ProfileScreen()),
@@ -37,6 +47,7 @@ List<TabBarScreen> screens({required BuildContext context}) => [
 
 PlatformAppBar buildStandardAppbar({
   required String title,
+  required FirebaseUser? user,
   required BuildContext context,
 }) =>
     PlatformAppBar(
@@ -93,6 +104,15 @@ PlatformAppBar buildStandardAppbar({
                 ),
                 gradient: blueGradient,
                 onTap: () {
+                  Navigator.push(
+                    context,
+                    platformPageRoute(
+                      context: context,
+                      builder: (_) => CreateRoutineScreen(
+                        previousPageTitle: title,
+                      ),
+                    ),
+                  );
                   FullScreenMenu.hide();
                 },
               ),
@@ -123,6 +143,18 @@ PlatformAppBar buildStandardAppbar({
                 ),
                 gradient: redGradient,
                 onTap: () {
+                  if (user != null) {
+                    Navigator.push(
+                      context,
+                      platformPageRoute(
+                        context: context,
+                        builder: (_) => ProgressGallery(
+                          firebaseUser: user,
+                          previousPageTitle: title,
+                        ),
+                      ),
+                    );
+                  }
                   FullScreenMenu.hide();
                 },
               ),

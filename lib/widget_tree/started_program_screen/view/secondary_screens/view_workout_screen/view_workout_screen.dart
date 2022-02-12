@@ -45,6 +45,8 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
   final TextEditingController _notesController = TextEditingController();
   String? foundKey;
   String _pickerValue = "0";
+  String _repsPickerValue = "0";
+  bool isSubmitting = false;
 
   ListModel<WorkoutSetListItem> list = ListModel<WorkoutSetListItem>(
     listKey: GlobalKey<SliverAnimatedListState>(),
@@ -86,6 +88,7 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
 
   Future<void> _handleSubmitWorkoutComplete(BuildContext context) async {
     try {
+      isSubmitting = true;
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
       prefs.setString(
@@ -201,6 +204,7 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
   void _setReps(index) async {
     num reps = 0;
     final picker = PlatformPicker(
+      pickerValue: _repsPickerValue,
       list: [
         for (var i = 0; i <= 100; i++) i.toString(),
       ],
@@ -214,6 +218,10 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
 
     if (picker.pickerValue != null && picker.pickerValue!.isNotEmpty) {
       reps = num.parse(picker.pickerValue!);
+
+      setState(() {
+        _repsPickerValue = picker.pickerValue!;
+      });
     }
 
     setState(
@@ -553,8 +561,9 @@ class _ViewWorkoutScreenState extends State<ViewWorkoutScreen> {
                               color: kPrimaryColor,
                               originalStyle: true,
                             ),
-                            onPressed: () =>
-                                _handleSubmitWorkoutComplete(context),
+                            onPressed: () => isSubmitting != true
+                                ? _handleSubmitWorkoutComplete(context)
+                                : false,
                             child: const Text(
                               "Complete Workout",
                               style: TextStyle(

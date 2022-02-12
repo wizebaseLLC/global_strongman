@@ -39,6 +39,7 @@ class _WorkoutListDayTilesState extends State<WorkoutListDayTiles> {
         print(err.toString());
       }
     }
+    return null;
   }
 
   Future<DocumentReference<FirebaseProgram>> _getProgramDay(String day) async =>

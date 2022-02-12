@@ -15,11 +15,7 @@ class WorkoutHistorySliverAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      backgroundColor: platformThemeData(
-        context,
-        material: (data) => data.appBarTheme.backgroundColor,
-        cupertino: (data) => data.barBackgroundColor,
-      ),
+      backgroundColor: Colors.transparent,
       floating: true,
       expandedHeight: 200,
       stretch: true,

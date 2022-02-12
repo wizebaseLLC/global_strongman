@@ -80,11 +80,12 @@ class PlatformPicker {
         // ),
         isScrollControlled: true,
         builder: (context) => SizedBox(
-          height: 400,
+          height: MediaQuery.of(context).size.height * .65,
           child: createMaterialPicker(
             title: title,
             message: message,
             context: context,
+            initialValue: pickerValue,
           ),
         ),
       );
@@ -211,31 +212,40 @@ class PlatformPicker {
   Widget createMaterialPicker({
     required BuildContext context,
     required String title,
+    String? initialValue,
     String? message,
-  }) =>
-      Column(
-        children: [
+  }) {
+    final ScrollController? scrollController = initialValue != null
+        ? ScrollController(
+            initialScrollOffset: list.indexOf(initialValue) * 52,
+          )
+        : null;
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(kSpacing),
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.headline6,
+          ),
+        ),
+        if (message != null)
           Padding(
             padding: const EdgeInsets.all(kSpacing),
             child: Text(
-              title,
-              style: Theme.of(context).textTheme.headline6,
+              message,
+              style: Theme.of(context).textTheme.caption,
             ),
           ),
-          if (message != null)
-            Padding(
-              padding: const EdgeInsets.all(kSpacing),
-              child: Text(
-                message,
-                style: Theme.of(context).textTheme.caption,
-              ),
-            ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: list.length,
-              itemBuilder: (context, index) => Column(
-                children: [
-                  ListTile(
+        Expanded(
+          child: ListView.builder(
+            controller: scrollController,
+            itemCount: list.length,
+            itemBuilder: (context, index) => Column(
+              children: [
+                SizedBox(
+                  height: 50,
+                  child: ListTile(
                     title: Text(
                       list[index],
                       style: const TextStyle(fontSize: 18),
@@ -246,19 +256,22 @@ class PlatformPicker {
                     ),
                     onTap: () {
                       pickerValue = list[index];
+                      scrollController?.dispose();
                       Navigator.pop(context);
                     },
                   ),
-                  const Divider(
-                    indent: kSpacing * 2,
-                    height: 2,
-                  )
-                ],
-              ),
+                ),
+                const Divider(
+                  indent: kSpacing * 2,
+                  height: 2,
+                )
+              ],
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 
   Widget createCupertinoTimerPicker() => Column(
         mainAxisAlignment: MainAxisAlignment.center,

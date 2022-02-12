@@ -29,6 +29,7 @@ class DayContainer extends StatelessWidget {
         print(err);
       }
     }
+    return null;
   }
 
   @override
@@ -57,8 +58,6 @@ class DayContainer extends StatelessWidget {
                   material: (data) => data.cardColor,
                   cupertino: (data) => data.barBackgroundColor,
                 ),
-                iconColor: Colors.white60,
-                collapsedIconColor: Colors.white60,
                 title: Text(
                   programDay.id.toUpperCase().replaceAll("_", " "),
                   style: platformThemeData(
@@ -89,6 +88,8 @@ class DayContainer extends StatelessWidget {
                         program_id: program.id,
                         workout_id: data.id,
                         programDay: programDay,
+                        isLast:
+                            orderedDocs.indexOf(data) == orderedDocs.length - 1,
                       ),
                     )
                     .toList(),

@@ -65,7 +65,6 @@ class VaultGridItem extends StatelessWidget {
               .getCollectionReference(user: user)
               .where("workout_id", isEqualTo: workoutId)
               .orderBy("created_on", descending: true),
-          key: GlobalKey(),
           previousPageTitle: "Workouts",
         ),
       ),
