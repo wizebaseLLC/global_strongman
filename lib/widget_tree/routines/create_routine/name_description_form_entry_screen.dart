@@ -67,7 +67,10 @@ class _NameDescriptionFormEntryScreenState
               "Save",
               style: platformThemeData(
                 context,
-                material: (data) => data.textTheme.bodyMedium,
+                material: (data) => data.textTheme.bodyMedium?.copyWith(
+                  color:
+                      nameController.text.isEmpty ? Colors.grey : Colors.white,
+                ),
                 cupertino: (data) => data.textTheme.actionTextStyle.copyWith(
                   color: nameController.text.isEmpty
                       ? CupertinoColors.systemGrey
