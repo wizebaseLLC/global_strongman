@@ -39,7 +39,11 @@ class NameDescriptionTile extends StatelessWidget {
       subtitle: Padding(
         padding: const EdgeInsets.only(top: kSpacing),
         child: Text(
-          nameDescriptionValue.description ?? "Description",
+          (nameDescriptionValue.description == null ||
+                  (nameDescriptionValue.description != null &&
+                      nameDescriptionValue.description!.isEmpty))
+              ? "Description"
+              : nameDescriptionValue.description!,
           style: platformThemeData(
             context,
             material: (data) => data.textTheme.bodyText1?.copyWith(

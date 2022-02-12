@@ -31,6 +31,8 @@ class _NameDescriptionFormEntryScreenState
         TextEditingController(text: widget.nameDescriptionValue.name);
     descriptionController =
         TextEditingController(text: widget.nameDescriptionValue.description);
+
+    nameController.addListener(() => setState(() {}));
     super.initState();
   }
 
@@ -60,13 +62,17 @@ class _NameDescriptionFormEntryScreenState
         trailingActions: [
           PlatformTextButton(
             padding: EdgeInsets.zero,
-            onPressed: _onSubmit,
+            onPressed: nameController.text.isEmpty ? null : _onSubmit,
             child: Text(
               "Save",
               style: platformThemeData(
                 context,
                 material: (data) => data.textTheme.bodyMedium,
-                cupertino: (data) => data.textTheme.actionTextStyle,
+                cupertino: (data) => data.textTheme.actionTextStyle.copyWith(
+                  color: nameController.text.isEmpty
+                      ? CupertinoColors.systemGrey
+                      : CupertinoColors.activeBlue,
+                ),
               ),
             ),
           ),
@@ -95,7 +101,8 @@ class _NameDescriptionFormEntryScreenState
                   style: const TextStyle(fontSize: 20),
                   material: (_, __) => MaterialTextFieldData(
                     decoration: const InputDecoration.collapsed(
-                        hintText: "Routine Name"),
+                      hintText: "Routine Name",
+                    ),
                   ),
                   cupertino: (_, __) => CupertinoTextFieldData(
                     decoration: const BoxDecoration(),
