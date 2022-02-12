@@ -29,7 +29,7 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
           padding: EdgeInsets.zero,
           onPressed: () {},
           child: Text(
-            "Save",
+            "Submit",
             style: platformThemeData(
               context,
               material: (data) => data.textTheme.bodyMedium,
@@ -47,26 +47,60 @@ class _CreateRoutineScreenState extends State<CreateRoutineScreen> {
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               [
-                NameDescriptionTile(
-                  nameDescriptionValue: routine,
-                  onSubmit: (NameDescriptionModel value) {
-                    setState(
-                      () {
-                        routine.name = value.name;
-                        routine.description = value.description;
-                      },
-                    );
-                  },
+                Card(
+                  elevation: 2,
+                  margin: EdgeInsets.zero,
+                  color: platformThemeData(
+                    context,
+                    material: (data) => data.cardColor,
+                    cupertino: (data) => data.barBackgroundColor,
+                  ),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  child: NameDescriptionTile(
+                    nameDescriptionValue: routine,
+                    onSubmit: (NameDescriptionModel value) {
+                      setState(
+                        () {
+                          routine.name = value.name;
+                          routine.description = value.description;
+                        },
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(
-                  height: kSpacing,
+                  height: kSpacing * 2,
                 ),
-                const Divider(
-                  height: 2,
-                  color: Colors.grey,
-                  indent: kSpacing * 2,
-                  endIndent: kSpacing * 2,
-                ),
+                Card(
+                  elevation: 2,
+                  margin: EdgeInsets.zero,
+                  color: platformThemeData(
+                    context,
+                    material: (data) => data.cardColor,
+                    cupertino: (data) => data.barBackgroundColor,
+                  ),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  child: Column(children: [
+                    Text(
+                      "Name",
+                      style: platformThemeData(
+                        context,
+                        material: (data) => data.textTheme.headline6?.copyWith(
+                          fontSize: 24,
+                        ),
+                        cupertino: (data) =>
+                            data.textTheme.navTitleTextStyle.copyWith(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ]),
+                )
               ],
             ),
           ),
