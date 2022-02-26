@@ -23,7 +23,6 @@ class SlidingBottomSheetBuilder {
             backgroundColor: CupertinoColors.darkBackgroundGray,
             bounce: true,
             expand: expand ?? false,
-            useRootNavigator: true,
           )
         : await showMaterialModalBottomSheet(
             context: context,

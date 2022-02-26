@@ -9,6 +9,7 @@ import 'package:global_strongman/constants.dart';
 import 'package:global_strongman/core/model/firebase_program.dart';
 import 'package:global_strongman/widget_tree/home_screen/view/screens/program.dart';
 import 'package:global_strongman/widget_tree/started_program_screen/view/main.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class ExclusiveWorkoutPrograms extends StatelessWidget {
   const ExclusiveWorkoutPrograms({
@@ -86,8 +87,7 @@ class ExclusiveWorkoutPrograms extends StatelessWidget {
   ) =>
       Navigator.push(
         context,
-        platformPageRoute(
-          context: context,
+        MaterialWithModalsPageRoute(
           builder: (_) => isContinue == true
               ? StartedProgramScreen(program: program)
               : ProgramScreen(program: program, heroId: heroId),
