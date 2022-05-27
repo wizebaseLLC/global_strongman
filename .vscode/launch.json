@@ -1,0 +1,48 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "global_strongman",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "iphone 13",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "4505B54B-9EBC-40E8-86EB-5E2F0BD54A64"
+    },
+    {
+      "name": "servons iphone",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "00008101-001409423689001E"
+    },
+    {
+      "name": "android nexus",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "emulator-5554"
+    },
+
+    {
+      "name": "global_strongman (profile mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Android and Ios emulators",
+      "configurations": ["iphone 13", "android nexus"]
+    },
+    {
+      "name": "Android and Servons iphone",
+      "configurations": ["servons iphone", "android nexus"]
+    }
+  ]
+}

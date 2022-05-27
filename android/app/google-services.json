@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "760421952561",
+    "project_id": "global-strongman",
+    "storage_bucket": "global-strongman.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:760421952561:android:374ffbcdfa7dd01cf1f910",
+        "android_client_info": {
+          "package_name": "com.wizebase.global_strongman"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "760421952561-ji7nctapp5430t3ag0odmsfjjeao3ge5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wizebase.global_strongman",
+            "certificate_hash": "60a90121a7b7949d48532f766ce4bed22fa0b671"
+          }
+        },
+        {
+          "client_id": "760421952561-pptuvpjj6gg0qp2h9a6nbi30pbu5amuq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwrcznI5x5rZ4ZS6bamFZM_CUrHBt0how"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "760421952561-pptuvpjj6gg0qp2h9a6nbi30pbu5amuq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "760421952561-i9mljcslbohau8i9vr9ibqn8ma6p1af2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wizebase.globalStrongman"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
